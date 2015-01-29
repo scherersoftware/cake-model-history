@@ -1,0 +1,27 @@
+{
+    "name": "codekanzlei/cake-model-history",
+    "description": "ModelHistory plugin for CakePHP",
+    "type": "cakephp-plugin",
+    "extra": {
+        "installer-name": "Notifications"
+    },
+    "require": {
+        "php": ">=5.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*",
+        "cakephp/cakephp": "3.0.x-dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "ModelHistory\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ModelHistory\\": "src",
+            "ModelHistory\\Test\\": "tests",
+            "ModelHistory\\Test\\Fixture\\": "tests/Fixture"
+        }
+    }
+}

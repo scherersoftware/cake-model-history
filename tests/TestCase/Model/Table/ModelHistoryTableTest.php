@@ -112,7 +112,7 @@ class ModelHistoryTableTest extends TestCase
         $callback = function () use ($userId) {
             return $userId;
         };
-        
+
         $this->Articles->addBehavior('ModelHistory.Historizable', [
             'userIdCallback' => $callback
         ]);
@@ -148,5 +148,47 @@ class ModelHistoryTableTest extends TestCase
 
         $entry = $this->ModelHistory->find()->first();
         $this->assertEquals($entry->user_id, $userId);
+    }
+
+    /**
+     * Test that the sequence number is incremented correctly
+     *
+     * @return void
+     */
+    public function testModelHistoryRevision()
+    {
+        $this->Articles->addBehavior('ModelHistory.Historizable');
+        $article = $this->Articles->newEntity([
+            'title' => 'foobar'
+        ]);
+        $this->Articles->save($article);
+
+        $entry = $this->ModelHistory->find()->first();
+        $this->assertEquals($entry->revision, 1);
+
+        $article->title = 'changed';
+        $this->Articles->save($article);
+        
+        $entry = $this->ModelHistory->find()
+            ->where([
+                'model' => 'Articles',
+                'foreign_key' => $article->id,
+                'action' => ModelHistory::ACTION_UPDATE
+            ])
+            ->first();
+        $this->assertEquals($entry->revision, 2);
+        
+        $article->title = 'changed again';
+        $this->Articles->save($article);
+        
+        $entry = $this->ModelHistory->find()
+            ->where([
+                'model' => 'Articles',
+                'foreign_key' => $article->id,
+                'action' => ModelHistory::ACTION_UPDATE
+            ])
+            ->order(['revision DESC'])
+            ->first();
+        $this->assertEquals($entry->revision, 3);
     }
 }

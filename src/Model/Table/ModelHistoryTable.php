@@ -50,8 +50,34 @@ class ModelHistoryTable extends Table
             'foreign_key' => $entity->id,
             'action' => $action,
             'data' => $data,
-            'user_id' => $userId
+            'user_id' => $userId,
+            'revision' => $this->getNextRevisionNumberForEntity($entity)
         ]);
         return $this->save($entry);
+    }
+
+    /**
+     * Handles the revision sequence
+     *
+     * @param EntityInterface $entity Entity to get the revision number for
+     * @return int
+     */
+    public function getNextRevisionNumberForEntity(EntityInterface $entity)
+    {
+        $revision = 1;
+        $last = $this->find()
+            ->select('revision')
+            ->where([
+                'model' => $entity->source(),
+                'foreign_key' => $entity->id
+            ])
+            ->order(['revision DESC'])
+            ->hydrate(false)
+            ->first();
+
+        if (isset($last['revision'])) {
+            $revision = $last['revision'] + 1;
+        }
+        return $revision;
     }
 }

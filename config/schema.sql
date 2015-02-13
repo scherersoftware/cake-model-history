@@ -5,6 +5,7 @@ CREATE TABLE `model_history` (
   `user_id` char(36) DEFAULT NULL,
   `action` varchar(45) DEFAULT NULL COMMENT 'e.g. "create", "update", "delete"',
   `data` mediumblob COMMENT 'JSON blob, schema per action',
+  `revision` int(8) NOT NULL,
   `created` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -5,6 +5,7 @@ use Cake\Datasource\EntityInterface;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\Utility\Hash;
 use Cake\Validation\Validator;
 use ModelHistory\Model\Entity\ModelHistory;
 
@@ -32,17 +33,29 @@ class ModelHistoryTable extends Table
     /**
      * Add a record to the ModelHistory
      *
-     * @param Table $table Table Object
      * @param EntityInterface $entity Entity
      * @param string $action One of ModelHistory::ACTION_*
      * @param string $userId User ID to assign this history entry to
+     * @param array $options Additional options
      * @return ModelHistory
      */
-    public function add(Table $table, EntityInterface $entity, $action, $userId = null)
+    public function add(EntityInterface $entity, $action, $userId = null, array $options = [])
     {
+        $options = Hash::merge([
+            'dirtyFields' => null,
+        ], $options);
+        
         $data = $entity->toArray();
         if ($action === ModelHistory::ACTION_DELETE) {
             $data = null;
+        }
+
+        if ($action === ModelHistory::ACTION_UPDATE && $options['dirtyFields']) {
+            $newData = [];
+            foreach ($options['dirtyFields'] as $field) {
+                $newData[$field] = $data[$field];
+            }
+            $data = $newData;
         }
 
         $entry = $this->newEntity([

@@ -87,7 +87,6 @@ class ModelHistoryTableTest extends TestCase
             ])
             ->first();
 
-        $this->assertEquals($entry->data['id'], $article->id);
         $this->assertEquals($entry->data['title'], 'changed');
 
         $this->Articles->delete($article);
@@ -190,5 +189,36 @@ class ModelHistoryTableTest extends TestCase
             ->order(['revision DESC'])
             ->first();
         $this->assertEquals($entry->revision, 3);
+    }
+
+    /**
+     * Test that only the diff is saved in updates
+     *
+     * @return void
+     */
+    public function testDataDiff()
+    {
+        $this->Articles->addBehavior('ModelHistory.Historizable');
+        $article = $this->Articles->newEntity([
+            'title' => 'foobar',
+            'content' => 'lorem'
+        ]);
+        $this->Articles->save($article);
+        
+        $article->title = 'changed';
+        $this->Articles->save($article);
+
+        $entry = $this->ModelHistory->find()
+            ->where([
+                'model' => 'Articles',
+                'foreign_key' => $article->id,
+                'action' => ModelHistory::ACTION_UPDATE
+            ])
+            ->first();
+
+        // make sure only the title field is persisted in the data field
+        $this->assertEquals($entry->data, [
+            'title' => 'changed'
+        ]);
     }
 }

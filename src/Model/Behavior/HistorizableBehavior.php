@@ -31,6 +31,14 @@ class HistorizableBehavior extends Behavior
     public $ModelHistory;
 
     /**
+     * Store dirty fields for entities in beforeSave to make it possible to detect
+     * them in afterSave()
+     *
+     * @var array
+     */
+    protected $_dirtyFields = [];
+
+    /**
      * Constructor hook method.
      *
      * @param array $config The configuration settings provided to this behavior.
@@ -43,6 +51,24 @@ class HistorizableBehavior extends Behavior
     }
 
     /**
+     * beforeSave callback
+     *
+     * @param Event $event CakePHP Event
+     * @param Entity $entity Entity to be saved
+     * @param ArrayObject $options Additional options
+     * @return void
+     */
+    public function beforeSave(Event $event, EntityInterface $entity, \ArrayObject $options)
+    {
+        if (!$entity->isNew() && $entity->dirty()) {
+            $fields = array_keys($entity->toArray());
+            $dirtyFields = $entity->extract($fields, true);
+            unset($dirtyFields['modified']);
+            $this->_dirtyFields[$entity->id] = array_keys($dirtyFields);
+        }
+    }
+
+    /**
      * afterSave Callback
      *
      * @param Event $event CakePHP Event
@@ -52,7 +78,15 @@ class HistorizableBehavior extends Behavior
     public function afterSave(Event $event, EntityInterface $entity)
     {
         $action = $entity->isNew() ? ModelHistory::ACTION_CREATE : ModelHistory::ACTION_UPDATE;
-        $this->ModelHistory->add($this->_table, $entity, $action, $this->_getUserId());
+
+        $dirtyFields = null;
+        if ($action === ModelHistory::ACTION_UPDATE && isset($this->_dirtyFields[$entity->id])) {
+            $dirtyFields = $this->_dirtyFields[$entity->id];
+            unset($this->_dirtyFields[$entity->id]);
+        }
+        $this->ModelHistory->add($entity, $action, $this->_getUserId(), [
+            'dirtyFields' => $dirtyFields
+        ]);
     }
 
     /**
@@ -65,7 +99,7 @@ class HistorizableBehavior extends Behavior
      */
     public function afterDelete(Event $event, EntityInterface $entity, \ArrayObject $options)
     {
-        $this->ModelHistory->add($this->_table, $entity, ModelHistory::ACTION_DELETE, $this->_getUserId());
+        $this->ModelHistory->add($entity, ModelHistory::ACTION_DELETE, $this->_getUserId());
     }
 
     /**

@@ -53,7 +53,7 @@ class ModelHistoryTableTest extends TestCase
      *
      * @return void
      */
-    public function testCreate()
+    public function testBasicCreateAndUpdateAndDelete()
     {
         $this->Articles->addBehavior('ModelHistory.Historizable');
         $article = $this->Articles->newEntity([
@@ -74,5 +74,29 @@ class ModelHistoryTableTest extends TestCase
         $this->assertTrue(is_array($entry->data));
         $this->assertEquals($entry->data['id'], $article->id);
         $this->assertEquals($entry->data['title'], $article->title);
+
+        $article->title = 'changed';
+        $this->Articles->save($article);
+
+        $entry = $this->ModelHistory->find()
+            ->where([
+                'model' => 'Articles',
+                'foreign_key' => $article->id,
+                'action' => ModelHistory::ACTION_UPDATE
+            ])
+            ->first();
+
+        $this->assertEquals($entry->data['id'], $article->id);
+        $this->assertEquals($entry->data['title'], 'changed');
+
+        $this->Articles->delete($article);
+        $entry = $this->ModelHistory->find()
+            ->where([
+                'model' => 'Articles',
+                'foreign_key' => $article->id,
+                'action' => ModelHistory::ACTION_DELETE
+            ])
+            ->first();
+        $this->assertTrue(empty($entry->data));
     }
 }

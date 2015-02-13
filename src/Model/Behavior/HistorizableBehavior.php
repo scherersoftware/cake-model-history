@@ -49,8 +49,20 @@ class HistorizableBehavior extends Behavior
      */
     public function afterSave(Event $event, EntityInterface $entity)
     {
-        if ($entity->isNew()) {
-            $entry = $this->ModelHistory->add($this->_table, $entity, ModelHistory::ACTION_CREATE);
-        }
+        $action = $entity->isNew() ? ModelHistory::ACTION_CREATE : ModelHistory::ACTION_UPDATE;
+        $this->ModelHistory->add($this->_table, $entity, $action);
+    }
+
+    /**
+     * afterDelete Callback
+     *
+     * @param Event $event CakePHP Event
+     * @param Entity $entity Entity that was deleted
+     * @param ArrayObject $options Additional options
+     * @return void
+     */
+    public function afterDelete(Event $event, EntityInterface $entity, \ArrayObject $options)
+    {
+        $this->ModelHistory->add($this->_table, $entity, ModelHistory::ACTION_DELETE);
     }
 }

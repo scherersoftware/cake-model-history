@@ -39,11 +39,16 @@ class ModelHistoryTable extends Table
      */
     public function add(Table $table, EntityInterface $entity, $action)
     {
+        $data = $entity->toArray();
+        if ($action === ModelHistory::ACTION_DELETE) {
+            $data = null;
+        }
+
         $entry = $this->newEntity([
             'model' => $entity->source(),
             'foreign_key' => $entity->id,
             'action' => $action,
-            'data' => $entity->toArray()
+            'data' => $data
         ]);
         return $this->save($entry);
     }

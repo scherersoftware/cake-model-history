@@ -10,6 +10,8 @@ class ModelHistory extends Entity
 {
 
     const ACTION_CREATE = 'create';
+    const ACTION_UPDATE = 'update';
+    const ACTION_DELETE = 'delete';
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().

@@ -3,6 +3,8 @@ namespace ModelHistory\Test\TestCase\Model\Table;
 
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use ModelHistoryTestApp\Table\ArticlesTable;
+use ModelHistory\Model\Entity\ModelHistory;
 use ModelHistory\Model\Table\ModelHistoryTable;
 
 /**
@@ -28,8 +30,10 @@ class ModelHistoryTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('ModelHistory') ? [] : ['className' => 'ModelHistory\Model\Table\ModelHistoryTable'];
-        $this->ModelHistory = TableRegistry::get('ModelHistory', $config);
+        TableRegistry::clear();
+
+        $this->ModelHistory = TableRegistry::get('ModelHistory', ['className' => 'ModelHistory\Model\Table\ModelHistoryTable']);
+        $this->Articles = TableRegistry::get('ArticlesTable', ['className' => 'ModelHistoryTestApp\Model\Table\ArticlesTable']);
     }
 
     /**
@@ -40,7 +44,7 @@ class ModelHistoryTableTest extends TestCase
     public function tearDown()
     {
         unset($this->ModelHistory);
-
+        unset($this->Articles);
         parent::tearDown();
     }
 
@@ -49,8 +53,26 @@ class ModelHistoryTableTest extends TestCase
      *
      * @return void
      */
-    public function testInitialize()
+    public function testCreate()
     {
+        $this->Articles->addBehavior('ModelHistory.Historizable');
+        $article = $this->Articles->newEntity([
+            'title' => 'foobar'
+        ]);
+        $this->Articles->save($article);
 
+        $modelHistoriesCount = $this->ModelHistory->find()
+            ->where([
+                'model' => 'Articles',
+                'foreign_key' => $article->id,
+                'action' => ModelHistory::ACTION_CREATE
+            ])->count();
+        $this->assertEquals($modelHistoriesCount, 1);
+
+        $entry = $this->ModelHistory->find()->first();
+
+        $this->assertTrue(is_array($entry->data));
+        $this->assertEquals($entry->data['id'], $article->id);
+        $this->assertEquals($entry->data['title'], $article->title);
     }
 }

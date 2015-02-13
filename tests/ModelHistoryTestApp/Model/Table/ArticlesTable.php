@@ -5,7 +5,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use ModelHistory\Model\Entity\Article;
+use ModelHistoryTestApp\Model\Entity\Article;
 
 /**
  * Articles Model
@@ -21,6 +21,7 @@ class ArticlesTable extends Table
      */
     public function initialize(array $config)
     {
+        $this->alias('Articles');
         $this->table('articles');
         $this->displayField('title');
         $this->primaryKey('id');

@@ -9,6 +9,8 @@ use Cake\ORM\Entity;
 class ModelHistory extends Entity
 {
 
+    const ACTION_CREATE = 'create';
+
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *

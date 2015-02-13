@@ -21,7 +21,8 @@
         "psr-4": {
             "ModelHistory\\": "src",
             "ModelHistory\\Test\\": "tests",
-            "ModelHistory\\Test\\Fixture\\": "tests/Fixture"
+            "ModelHistory\\Test\\Fixture\\": "tests/Fixture",
+            "ModelHistoryTestApp\\": "tests/ModelHistoryTestApp"
         }
     }
 }

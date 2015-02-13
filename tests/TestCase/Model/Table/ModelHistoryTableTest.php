@@ -1,6 +1,7 @@
 <?php
 namespace ModelHistory\Test\TestCase\Model\Table;
 
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use ModelHistoryTestApp\Table\ArticlesTable;
@@ -49,7 +50,7 @@ class ModelHistoryTableTest extends TestCase
     }
 
     /**
-     * Test initialize method
+     * Test create, update, delete
      *
      * @return void
      */
@@ -98,5 +99,54 @@ class ModelHistoryTableTest extends TestCase
             ])
             ->first();
         $this->assertTrue(empty($entry->data));
+    }
+
+    /**
+     * Test passing a callable for ModelHistory to fetch the user id
+     *
+     * @return void
+     */
+    public function testPassUserIdCallbackWithBehaviorConfig()
+    {
+        $userId = '481fc6d0-b920-43e0-a40d-6d1740cf8562';
+        $callback = function () use ($userId) {
+            return $userId;
+        };
+        
+        $this->Articles->addBehavior('ModelHistory.Historizable', [
+            'userIdCallback' => $callback
+        ]);
+
+        $article = $this->Articles->newEntity([
+            'title' => 'foobar'
+        ]);
+        $this->Articles->save($article);
+
+        $entry = $this->ModelHistory->find()->first();
+        $this->assertEquals($entry->user_id, $userId);
+    }
+
+    /**
+     * Test passing a callable for ModelHistory to fetch the user id
+     *
+     * @return void
+     */
+    public function testPassUserIdCallbackWithMethod()
+    {
+        $userId = '481fc6d0-b920-43e0-a40d-6d1740cf8562';
+        $callback = function () use ($userId) {
+            return $userId;
+        };
+        
+        $this->Articles->addBehavior('ModelHistory.Historizable');
+        $this->Articles->setModelHistoryUserIdCallback($callback);
+
+        $article = $this->Articles->newEntity([
+            'title' => 'foobar'
+        ]);
+        $this->Articles->save($article);
+
+        $entry = $this->ModelHistory->find()->first();
+        $this->assertEquals($entry->user_id, $userId);
     }
 }

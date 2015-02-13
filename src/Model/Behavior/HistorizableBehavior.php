@@ -19,7 +19,9 @@ class HistorizableBehavior extends Behavior
      *
      * @var array
      */
-    protected $_defaultConfig = [];
+    protected $_defaultConfig = [
+        'userIdCallback' => null
+    ];
 
     /**
      * Instance of the ModelHistoryTable model
@@ -50,7 +52,7 @@ class HistorizableBehavior extends Behavior
     public function afterSave(Event $event, EntityInterface $entity)
     {
         $action = $entity->isNew() ? ModelHistory::ACTION_CREATE : ModelHistory::ACTION_UPDATE;
-        $this->ModelHistory->add($this->_table, $entity, $action);
+        $this->ModelHistory->add($this->_table, $entity, $action, $this->_getUserId());
     }
 
     /**
@@ -63,6 +65,32 @@ class HistorizableBehavior extends Behavior
      */
     public function afterDelete(Event $event, EntityInterface $entity, \ArrayObject $options)
     {
-        $this->ModelHistory->add($this->_table, $entity, ModelHistory::ACTION_DELETE);
+        $this->ModelHistory->add($this->_table, $entity, ModelHistory::ACTION_DELETE, $this->_getUserId());
+    }
+
+    /**
+     * Tries to the a userId to use in the history from the given configuration
+     *
+     * @return string|null
+     */
+    protected function _getUserId()
+    {
+        $userId = null;
+        $callback = $this->config('userIdCallback');
+        if (is_callable($callback)) {
+            $userId = $callback();
+        }
+        return $userId;
+    }
+
+    /**
+     * Set a callback to get the user id
+     *
+     * @param callable $callback Callback which must return the user id
+     * @return void
+     */
+    public function setModelHistoryUserIdCallback(callable $callback)
+    {
+        $this->config('userIdCallback', $callback);
     }
 }

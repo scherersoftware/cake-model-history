@@ -35,9 +35,10 @@ class ModelHistoryTable extends Table
      * @param Table $table Table Object
      * @param EntityInterface $entity Entity
      * @param string $action One of ModelHistory::ACTION_*
+     * @param string $userId User ID to assign this history entry to
      * @return ModelHistory
      */
-    public function add(Table $table, EntityInterface $entity, $action)
+    public function add(Table $table, EntityInterface $entity, $action, $userId = null)
     {
         $data = $entity->toArray();
         if ($action === ModelHistory::ACTION_DELETE) {
@@ -48,7 +49,8 @@ class ModelHistoryTable extends Table
             'model' => $entity->source(),
             'foreign_key' => $entity->id,
             'action' => $action,
-            'data' => $data
+            'data' => $data,
+            'user_id' => $userId
         ]);
         return $this->save($entry);
     }

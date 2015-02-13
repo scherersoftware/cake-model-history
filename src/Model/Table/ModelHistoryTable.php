@@ -43,30 +43,51 @@ class ModelHistoryTable extends Table
     {
         $options = Hash::merge([
             'dirtyFields' => null,
+            'data' => null
         ], $options);
-        
-        $data = $entity->toArray();
+
+        if (!$options['data']) {
+            $options['data'] = $entity->toArray();
+        }
+
         if ($action === ModelHistory::ACTION_DELETE) {
-            $data = null;
+            $options['data'] = null;
         }
 
         if ($action === ModelHistory::ACTION_UPDATE && $options['dirtyFields']) {
             $newData = [];
             foreach ($options['dirtyFields'] as $field) {
-                $newData[$field] = $data[$field];
+                $newData[$field] = $options['data'][$field];
             }
-            $data = $newData;
+            $options['data'] = $newData;
         }
 
         $entry = $this->newEntity([
-            'model' => $entity->source(),
+            'model' => $this->getEntityModel($entity),
             'foreign_key' => $entity->id,
             'action' => $action,
-            'data' => $data,
+            'data' => $options['data'],
             'user_id' => $userId,
             'revision' => $this->getNextRevisionNumberForEntity($entity)
         ]);
         return $this->save($entry);
+    }
+
+    /**
+     * Add comment
+     *
+     * @param EntityInterface $entity Entity to add the comment to
+     * @param string $comment Comment
+     * @param string $userId User which wrote the note
+     * @return ModelHistory
+     */
+    public function addComment(EntityInterface $entity, $comment, $userId = null)
+    {
+        return $this->add($entity, ModelHistory::ACTION_COMMENT, $userId, [
+            'data' => [
+                'comment' => $comment
+            ]
+        ]);
     }
 
     /**
@@ -81,7 +102,7 @@ class ModelHistoryTable extends Table
         $last = $this->find()
             ->select('revision')
             ->where([
-                'model' => $entity->source(),
+                'model' => $this->getEntityModel($entity),
                 'foreign_key' => $entity->id
             ])
             ->order(['revision DESC'])
@@ -92,5 +113,20 @@ class ModelHistoryTable extends Table
             $revision = $last['revision'] + 1;
         }
         return $revision;
+    }
+
+    /**
+     * Extracts the string to be saved to the model field from an entity
+     *
+     * @param EntityInterface $entity Entity
+     * @return string
+     */
+    public function getEntityModel(EntityInterface $entity)
+    {
+        $source = $entity->source();
+        if (substr($source, -5) == 'Table') {
+            $source = substr($source, 0, -5);
+        }
+        return $source;
     }
 }

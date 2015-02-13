@@ -21,7 +21,6 @@ class ArticlesTable extends Table
      */
     public function initialize(array $config)
     {
-        $this->alias('Articles');
         $this->table('articles');
         $this->displayField('title');
         $this->primaryKey('id');

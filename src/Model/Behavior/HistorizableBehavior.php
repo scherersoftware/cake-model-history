@@ -103,6 +103,22 @@ class HistorizableBehavior extends Behavior
     }
 
     /**
+     * Adds a comment to the model's history
+     *
+     * @param EntityInterface $entity Entity to add the comment to
+     * @param string $comment Comment
+     * @param string $userId Commenting User
+     * @return ModelHistory
+     */
+    public function addCommentToHistory(EntityInterface $entity, $comment, $userId = null)
+    {
+        if (!$userId) {
+            $userId = $this->_getUserId();
+        }
+        return $this->ModelHistory->addComment($entity, $comment, $userId);
+    }
+
+    /**
      * Tries to the a userId to use in the history from the given configuration
      *
      * @return string|null

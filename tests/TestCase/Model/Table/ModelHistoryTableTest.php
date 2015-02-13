@@ -221,4 +221,35 @@ class ModelHistoryTableTest extends TestCase
             'title' => 'changed'
         ]);
     }
+
+    /**
+     * Test adding and fetching model history comments
+     *
+     * @return void
+     */
+    public function testCommenting()
+    {
+        $userId = '481fc6d0-b920-43e0-a40d-6d1740cf8562';
+        $comment = 'foo bar baz';
+
+        $this->Articles->addBehavior('ModelHistory.Historizable');
+        $article = $this->Articles->newEntity([
+            'title' => 'foobar',
+            'content' => 'lorem'
+        ]);
+        $this->Articles->save($article);
+
+        $h = $this->Articles->addCommentToHistory($article, $comment, $userId);
+
+        $entry = $this->ModelHistory->find()
+            ->where([
+                'model' => 'Articles',
+                'foreign_key' => $article->id,
+                'action' => ModelHistory::ACTION_COMMENT
+            ])
+            ->first();
+
+        $this->assertEquals($entry->user_id, $userId);
+        $this->assertEquals($entry->data['comment'], $comment);
+    }
 }

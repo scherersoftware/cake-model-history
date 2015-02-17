@@ -20,7 +20,8 @@ class ModelHistoryTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'ModelHistory' => 'plugin.model_history.model_history'
+        'ModelHistory' => 'plugin.model_history.model_history',
+        'Articles' => 'plugin.model_history.articles',
     ];
 
     /**

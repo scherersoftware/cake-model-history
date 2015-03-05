@@ -47,6 +47,14 @@ class HistorizableBehavior extends Behavior
     public function initialize(array $config)
     {
         $this->ModelHistory = TableRegistry::get('ModelHistory.ModelHistory');
+        // Dynamically attach the hasMany relationship
+        $this->_table->hasMany('ModelHistory.ModelHistory', [
+            'conditions' => [
+                'ModelHistory.model' => $this->_table->alias()
+            ],
+            'foreignKey' => 'foreign_key',
+            'dependent' => true
+        ]);
         parent::initialize($config);
     }
 

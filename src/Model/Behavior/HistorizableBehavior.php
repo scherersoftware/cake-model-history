@@ -52,6 +52,7 @@ class HistorizableBehavior extends Behavior
             'conditions' => [
                 'ModelHistory.model' => $this->_table->alias()
             ],
+            'order' => ['ModelHistory.revision DESC'],
             'foreignKey' => 'foreign_key',
             'dependent' => true
         ]);

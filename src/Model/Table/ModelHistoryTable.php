@@ -5,6 +5,7 @@ use Cake\Datasource\EntityInterface;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
 use ModelHistory\Model\Entity\ModelHistory;
@@ -131,5 +132,29 @@ class ModelHistoryTable extends Table
             $source = substr($source, 0, -5);
         }
         return $source;
+    }
+
+    public function getEntityWithHistory($model, $foreignKey, array $options = [])
+    {
+        $options = Hash::merge([
+            'contain' => [
+                'ModelHistory' => [
+                    'fields' => [
+                        'id',
+                        'user_id',
+                        'action',
+                        'revision',
+                        'created',
+                        'model',
+                        'foreign_key'
+                    ],
+                    'Users'
+                ]
+            ]
+        ], $options);
+        $Table = TableRegistry::get($model);
+        $entity = $Table->get($foreignKey, $options);
+        
+        return $entity;
     }
 }

@@ -1,0 +1,27 @@
+App.Components.ModelHistoryComponent = Frontend.Component.extend({
+    startup: function() {
+        if(this.Controller.$('.model-history-list').length > 0) {
+            this.loadModelHistoryList();
+        }
+    },
+    loadModelHistoryList: function() {
+        var url = {
+            plugin: 'model_history',
+            controller: 'model_history',
+            action: 'show_model_history',
+            pass: [
+                this.Controller.$('.model-history-list').data('repository'),
+                this.Controller.$('.model-history-list').data('id')
+            ]
+        };
+        var $listContainer = this.Controller.$('.model-history-list');
+        App.Main.UIBlocker.blockElement($listContainer);
+        App.Main.loadJsonAction(url, {
+            target: $listContainer,
+            onComplete: function(controller, response) {
+                App.Main.UIBlocker.unblockElement($listContainer);
+            }.bind(this),
+            initController: false
+        });
+    }
+});

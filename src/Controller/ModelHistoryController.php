@@ -41,10 +41,9 @@ class ModelHistoryController extends AppController
     /**
      * index function
      *
-     * @param string $model 
-     * @param string $foreignKey 
+     * @param string $model name of the model
+     * @param string $foreignKey id of the entity
      * @return void
-     * @author Michael Hoffmann
      */
     public function index($model = null, $foreignKey = null)
     {

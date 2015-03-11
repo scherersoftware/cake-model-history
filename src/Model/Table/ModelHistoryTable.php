@@ -134,6 +134,14 @@ class ModelHistoryTable extends Table
         return $source;
     }
 
+    /**
+     * getEntityWithHistory function
+     *
+     * @param string $model Model
+     * @param string $foreignKey ForeignKey
+     * @param array $options Options
+     * @return void
+     */
     public function getEntityWithHistory($model, $foreignKey, array $options = [])
     {
         $options = Hash::merge([

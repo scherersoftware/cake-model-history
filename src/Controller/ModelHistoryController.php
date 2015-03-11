@@ -54,5 +54,3 @@ class ModelHistoryController extends AppController
         $this->set(compact('entity'));
     }
 }
-
-

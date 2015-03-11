@@ -54,6 +54,12 @@ class ModelHistoryHelper extends Helper
                 $action = __d('model_history', 'commented');
                 break;
         }
-        return ucfirst($action) . ' ' . __d('model_history', 'by') . ' ' . $history->user->full_name;
+        if (empty($history->user)) {
+            //debug('in');exit;
+            $username = 'Anonymous';
+        } else {
+            $username = $history->user->full_name;
+        }
+        return ucfirst($action) . ' ' . __d('model_history', 'by') . ' ' . $username;
     }
 }

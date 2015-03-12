@@ -19,11 +19,12 @@ class ModelHistoryHelper extends Helper
      * Render an Contact Perosns area for the given entity
      * @return contact_persons_area View
      */
-    public function modelHistoryArea($entity, $panel = null)
+    public function modelHistoryArea($entity, $panel = null, $commentBox = null)
     {
         $entity = [
             'id' => $entity->id,
-            'repository' => $entity->source()
+            'repository' => $entity->source(),
+            'comment-box' => $commentBox
         ];
         if ($panel) {
             return $this->_View->element('ModelHistory.model_history_area_panel', array('data' => $entity));
@@ -60,6 +61,6 @@ class ModelHistoryHelper extends Helper
         } else {
             $username = $history->user->full_name;
         }
-        return ucfirst($action) . ' ' . __d('model_history', 'by') . ' ' . $username;
+        return ucfirst($action) . ' ' . __d('model_history', 'by') . ' ' . $username . '<p>' . $history->data['comment'] . '</p>';
     }
 }

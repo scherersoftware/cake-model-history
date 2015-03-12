@@ -11,6 +11,15 @@ class ModelHistoryController extends AppController
 {
 
     /**
+     * Paginator settings
+     *
+     * @var string limit
+     */
+    public $paginate = [
+            'limit' => 5
+    ];
+
+    /**
      * Initializer
      *
      * @return void
@@ -52,5 +61,24 @@ class ModelHistoryController extends AppController
         ]);
         $entity = $this->ModelHistory->getEntityWithHistory($model, $foreignKey);
         $this->set(compact('entity'));
+    }
+
+    /**
+     * saves a comment to the model history of the given entity function
+     *
+     * @return void
+     */
+    public function saveComment($repository, $entityId)
+    {
+        $this->request->allowMethod('post');
+        $this->loadModel($repository);
+        $entity = $this->$repository->get($entityId);
+        $data = $this->request->data['comment'];
+        if ($this->$repository->addCommentToHistory($entity, $data)) {
+            $this->FrontendBridge->setJson('success', true);
+        } else {
+            $this->Flash->error(__('forms.data_not_saved'));
+        }
+        $this->render(false);
     }
 }

@@ -177,6 +177,7 @@ class ModelHistoryTable extends Table
                         'foreign_key',
                         'data'
                     ],
+                    'sort' => ['ModelHistory.revision DESC'],
                     'Users' => [
                         'fields' => [
                             'id',

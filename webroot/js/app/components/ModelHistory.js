@@ -2,10 +2,6 @@ App.Components.ModelHistoryComponent = Frontend.Component.extend({
     startup: function() {
         if(this.Controller.$('.model-history-list').length > 0) {
             this.loadModelHistoryList();
-            this.Controller.$('.model-history form').on('submit', function(e) {
-                alert(e);
-                //e.preventDefaults;
-            });
         }
     },
     loadModelHistoryList: function() {
@@ -24,8 +20,7 @@ App.Components.ModelHistoryComponent = Frontend.Component.extend({
             target: $listContainer,
             onComplete: function(controller, response) {
                 App.Main.UIBlocker.unblockElement($listContainer);
-            }.bind(this),
-            initController: false
+            }.bind(this)
         });
     }
 });

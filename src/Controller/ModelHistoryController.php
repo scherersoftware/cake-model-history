@@ -3,6 +3,7 @@ namespace ModelHistory\Controller;
 
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
+use Cake\ORM\TableRegistry;
 use Cake\Utility\Text;
 use FrontendBridge\Lib\ServiceResponse;
 use ModelHistory\Controller\AppController;
@@ -16,7 +17,7 @@ class ModelHistoryController extends AppController
      * @var string limit
      */
     public $paginate = [
-            'limit' => 5
+        'limit' => 5
     ];
 
     /**
@@ -44,9 +45,9 @@ class ModelHistoryController extends AppController
         ]);
         $entity = $this->ModelHistory->getEntityWithHistory($model, $foreignKey);
         if ($this->request->is('post')) {
-            $this->loadModel($model);
-            $return = $this->$model->addCommentToHistory($entity, $this->request->data['data']);
+            $return = TableRegistry::get($model)->addCommentToHistory($entity, $this->request->data['data']);
             if (empty($return->errors())) {
+                $entity = $this->ModelHistory->getEntityWithHistory($model, $foreignKey);
                 $this->Flash->success(__('forms.data_saved'));
                 $this->FrontendBridge->setJson('success', true);
             }   else {
@@ -54,5 +55,7 @@ class ModelHistoryController extends AppController
             }
         }
         $this->set(compact('entity'));
+        $this->FrontendBridge->setJson('model', $model);
+        $this->FrontendBridge->setJson('foreignKey', $foreignKey);
     }
 }

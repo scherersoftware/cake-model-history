@@ -35,6 +35,26 @@ class ModelHistoryTable extends Table
     }
 
     /**
+     * Default validation rules.
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return \Cake\Validation\Validator
+     */
+    public function validationDefault(Validator $validator)
+    {
+        $validator->add('data', 'comment_not_empty', [
+            'rule' => function ($value, $context) {
+                if ($context['data']['action'] != ModelHistory::ACTION_COMMENT) {
+                    return true;
+                }
+                return !empty($value['comment']);
+            },
+            'message' => __d('model_history', 'comment_empty')
+        ]);
+        return $validator;
+    }
+    
+    /**
      * Add a record to the ModelHistory
      *
      * @param EntityInterface $entity Entity
@@ -65,7 +85,6 @@ class ModelHistoryTable extends Table
             }
             $options['data'] = $newData;
         }
-
         $entry = $this->newEntity([
             'model' => $this->getEntityModel($entity),
             'foreign_key' => $entity->id,
@@ -74,7 +93,8 @@ class ModelHistoryTable extends Table
             'user_id' => $userId,
             'revision' => $this->getNextRevisionNumberForEntity($entity)
         ]);
-        return $this->save($entry);
+        $this->save($entry);
+        return $entry;
     }
 
     /**
@@ -154,9 +174,16 @@ class ModelHistoryTable extends Table
                         'revision',
                         'created',
                         'model',
-                        'foreign_key'
+                        'foreign_key',
+                        'data'
                     ],
-                    'Users'
+                    'Users' => [
+                        'fields' => [
+                            'id',
+                            'firstname',
+                            'lastname'
+                        ]
+                    ]
                 ]
             ]
         ], $options);

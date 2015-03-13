@@ -1,25 +1,32 @@
-<table class="table">
-    <thead>
-        <tr>
-            <th>Revision</th>
-            <th>Date</th>
-            <th>User</th>
-            <th>Action</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach($entity->model_history as $entry): ?>
-            <tr>
-                <td><?= $entry->revision ?></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-        <?php endforeach; ?>
-    </tbody>
-</table>
-
-
-<?php debug($entity->model_history) ?>
+<div class="model-history form">
+    <?= $this->Form->create(null, ['horizontal' => true, 'novalidate']); ?>
+        <div class="input-group">
+            <input type="text" class="form-control" name="data" placeholder="Enter comment...">
+            <span class="input-group-btn">
+                <button class="btn btn-success" type="submit">Save</button>
+            </span>
+        </div>
+    <?= $this->Form->end() ?>
+</div>
+<br>
+<hr>
+<?php foreach($entity->model_history as $entry): ?>
+    <div class="media">
+        <a class="pull-left" href="#">
+            <img class="media-object img-circle" src="//placehold.it/28x28" alt="">
+        </a>
+        <div class="media-body">
+            <?= $this->ModelHistory->historyText($entry) ?><br>
+            <?php if (isset($entry->data['comment'])) : ?>
+                <?php foreach ($entry->data as $data) : ?>
+                   <p><?= $data ?></p>
+                 <?php endforeach; ?>
+             <?php endif; ?>
+            <small class="text-muted"><?= h($entry->created) ?></small>
+        </div>
+    </div>
+<?php endforeach; ?>
+<ul class="pager">
+    <?= $this->Paginator->prev('<<') ?>
+    <?= $this->Paginator->next('>>') ?>
+<ul>

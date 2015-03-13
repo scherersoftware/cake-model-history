@@ -31,23 +31,6 @@ class ModelHistoryController extends AppController
     }
 
     /**
-     * showModelHistory method shows the modelhistory for one entity ind model
-     *
-     * @return void
-     */
-    public function showModelHistory($repository, $foreignKey)
-    {
-        $modelHistory = $this->ModelHistory->find()
-            ->where([
-                'model' => $repository,
-                'foreign_key' => $foreignKey
-            ])
-            ->contain(['Users']);
-        $this->set('modelHistory', $this->paginate($modelHistory));
-        $this->FrontendBridge->setJson('success', true);
-    }
-
-    /**
      * index function
      *
      * @param string $model name of the model
@@ -60,25 +43,16 @@ class ModelHistoryController extends AppController
             'foreignKey' => 'user_id'
         ]);
         $entity = $this->ModelHistory->getEntityWithHistory($model, $foreignKey);
-        $this->set(compact('entity'));
-    }
-
-    /**
-     * saves a comment to the model history of the given entity function
-     *
-     * @return void
-     */
-    public function saveComment($repository, $entityId)
-    {
-        $this->request->allowMethod('post');
-        $this->loadModel($repository);
-        $entity = $this->$repository->get($entityId);
-        $data = $this->request->data['comment'];
-        if ($this->$repository->addCommentToHistory($entity, $data)) {
-            $this->FrontendBridge->setJson('success', true);
-        } else {
-            $this->Flash->error(__('forms.data_not_saved'));
+        if ($this->request->is('post')) {
+            $this->loadModel($model);
+            $return = $this->$model->addCommentToHistory($entity, $this->request->data['data']);
+            if (empty($return->errors())) {
+                $this->Flash->success(__('forms.data_saved'));
+                $this->FrontendBridge->setJson('success', true);
+            }   else {
+                $this->Flash->error(__('forms.data_not_saved'));
+            }
         }
-        $this->render(false);
+        $this->set(compact('entity'));
     }
 }

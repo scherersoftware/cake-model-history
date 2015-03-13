@@ -7,6 +7,7 @@ use Cake\View\Helper;
 use Cake\View\View;
 use ModelHistory\Model\Entity\ModelHistory;
 
+
 /**
  * ContactPersons helper
  */
@@ -41,7 +42,7 @@ class ModelHistoryHelper extends Helper
     public function historyText($history)
     {
         $action = '';
-        switch ($history['action']) {
+        switch ($history->action) {
             case ModelHistory::ACTION_CREATE:
                 $action = __d('model_history', 'model_history');
                 break;
@@ -55,12 +56,11 @@ class ModelHistoryHelper extends Helper
                 $action = __d('model_history', 'commented');
                 break;
         }
-        if (empty($history->user)) {
-            //debug('in');exit;
+        if (empty($history->user_id)) {
             $username = 'Anonymous';
         } else {
             $username = $history->user->full_name;
         }
-        return ucfirst($action) . ' ' . __d('model_history', 'by') . ' ' . $username . '<p>' . $history->data['comment'] . '</p>';
+        return ucfirst($action) . ' ' . __d('model_history', 'by') . ' ' . $username;
     }
 }

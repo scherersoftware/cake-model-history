@@ -26,7 +26,7 @@
         </div>
     </div>
 <?php endforeach; ?>
-<ul class="pager">
+<ul class="pager" data-page="<?= $this->Paginator->current('ModelHisotry') ?>">
     <?= $this->Paginator->prev('<<') ?>
     <?= $this->Paginator->next('>>') ?>
 <ul>

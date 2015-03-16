@@ -42,7 +42,7 @@ class ModelHistoryTable extends Table
      */
     public function validationDefault(Validator $validator)
     {
-        $validator->add('data', 'comment_not_empty', [
+        $validator->add('data', 'custom', [
             'rule' => function ($value, $context) {
                 if ($context['data']['action'] != ModelHistory::ACTION_COMMENT) {
                     return true;

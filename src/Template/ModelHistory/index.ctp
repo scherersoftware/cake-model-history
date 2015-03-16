@@ -1,16 +1,16 @@
+<?= $this->Flash->render() ?>
 <div class="model-history form">
     <?= $this->Form->create(null, ['horizontal' => true, 'novalidate']); ?>
         <div class="input-group">
-            <input type="text" class="form-control" name="data" placeholder="Enter comment...">
+            <input type="text" class="form-control" name="data" id="data "placeholder="Enter comment...">
             <span class="input-group-btn">
                 <button class="btn btn-success" type="submit">Save</button>
             </span>
         </div>
     <?= $this->Form->end() ?>
 </div>
-<br>
 <hr>
-<?php foreach($entity->model_history as $entry): ?>
+<?php foreach($modelHistory as $entry): ?>
     <div class="media">
         <a class="pull-left" href="#">
             <img class="media-object img-circle" src="//placehold.it/28x28" alt="">

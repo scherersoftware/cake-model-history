@@ -7,7 +7,6 @@ use Cake\View\Helper;
 use Cake\View\View;
 use ModelHistory\Model\Entity\ModelHistory;
 
-
 /**
  * ContactPersons helper
  */

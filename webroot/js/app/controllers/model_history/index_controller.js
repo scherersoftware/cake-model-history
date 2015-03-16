@@ -13,10 +13,13 @@ App.Controllers.ModelHistoryIndexController = Frontend.AppController.extend({
                 this.getVar('model'), this.getVar('foreignKey')
             ]
         };
-        
+        App.Main.UIBlocker.blockElement(this.$('.model-history form'));
         App.Main.loadJsonAction(url, {
             data: this.$('.model-history form').serialize(),
-            target: this._dom.parent()
+            target: this._dom.parent(),
+            onComplete: function(controller, response) {
+                App.Main.UIBlocker.unblockElement(this.$('.model-history form'));
+            }.bind(this)
         });
     }
 });

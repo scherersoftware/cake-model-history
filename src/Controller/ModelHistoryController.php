@@ -47,14 +47,19 @@ class ModelHistoryController extends AppController
         if ($this->request->is('post')) {
             $return = TableRegistry::get($model)->addCommentToHistory($entity, $this->request->data['data']);
             if (empty($return->errors())) {
-                $entity = $this->ModelHistory->getEntityWithHistory($model, $foreignKey);
                 $this->Flash->success(__('forms.data_saved'));
-                $this->FrontendBridge->setJson('success', true);
-            }   else {
+            } else {
                 $this->Flash->error(__('forms.data_not_saved'));
             }
         }
-        $this->set(compact('entity'));
+        $modelHistory = $this->ModelHistory->find()
+            ->where([
+                'model' => $model,
+                'foreign_key' => $foreignKey
+            ])
+            ->order(['revision' => 'DESC'])
+            ->contain(['Users']);
+        $this->set('modelHistory', $this->paginate($modelHistory));
         $this->FrontendBridge->setJson('model', $model);
         $this->FrontendBridge->setJson('foreignKey', $foreignKey);
     }

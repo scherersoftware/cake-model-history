@@ -1,8 +1,8 @@
 App.Controllers.ModelHistoryIndexController = Frontend.AppController.extend({
     startup: function() {
         this.$('.model-history form').on('submit', this._onAddComment.bind(this));
-        this.$('.pager .prev a').click(this._onPaginatorClick.bind(this));
-        this.$('.pager .next a').click(this._onPaginatorClick.bind(this));
+        this.$('.pager .prev:not(.disabled) a').click(this._onPaginatorClick.bind(this));
+        this.$('.pager .next:not(.disabled) a').click(this._onPaginatorClick.bind(this));
     },
     _onAddComment: function(e) {
         e.preventDefault();

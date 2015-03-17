@@ -59,7 +59,7 @@ class ModelHistoryHelper extends Helper
             default:
                 foreach ($customActions as $customAction) {
                     if ($customAction['action'] == $history->action) {
-                        $action = __d('model_history', $customAction['action']);
+                        $action = $customAction['translation'];
                     }
                 }
         }

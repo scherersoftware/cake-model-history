@@ -136,7 +136,7 @@ class HistorizableBehavior extends Behavior
     }
 
     /**
-     * Tries to the a userId to use in the history from the given configuration
+     * Tries to get a userId to use in the history from the given configuration
      *
      * @return string|null
      */

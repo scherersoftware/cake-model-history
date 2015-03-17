@@ -295,7 +295,7 @@ class ModelHistoryTableTest extends TestCase
         $article = $this->Articles->patchEntity($article, $data);
         $this->Articles->save($article);
         $entry = $this->ModelHistory->find()
-            ->order(['created' => 'DESC'])
+            ->order(['revision' => 'DESC'])
             ->first();
         $this->assertEquals($entry->action, 'in_progress');
     }

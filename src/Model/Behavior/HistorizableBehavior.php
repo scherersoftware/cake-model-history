@@ -20,7 +20,8 @@ class HistorizableBehavior extends Behavior
      * @var array
      */
     protected $_defaultConfig = [
-        'userIdCallback' => null
+        'userIdCallback' => null,
+        'customActions' => []
     ];
 
     /**
@@ -93,9 +94,16 @@ class HistorizableBehavior extends Behavior
             $dirtyFields = $this->_dirtyFields[$entity->id];
             unset($this->_dirtyFields[$entity->id]);
         }
+        
         $this->ModelHistory->add($entity, $action, $this->_getUserId(), [
             'dirtyFields' => $dirtyFields
         ]);
+        foreach ($this->config('customActions') as $customAction) {
+            if ($customAction['status'] == $entity['status']) {
+                $action = $customAction['action'];
+                $this->ModelHistory->add($entity, $action, $this->_getUserId(), []);
+            }
+        }
     }
 
     /**
@@ -151,5 +159,15 @@ class HistorizableBehavior extends Behavior
     public function setModelHistoryUserIdCallback(callable $callback)
     {
         $this->config('userIdCallback', $callback);
+    }
+
+    /**
+     * Get all custom action for current Table
+     *
+     * @return array
+     */
+    public function getCustomActions()
+    {
+        return $this->config('customActions');
     }
 }

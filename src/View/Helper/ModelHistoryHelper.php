@@ -2,6 +2,7 @@
 namespace ModelHistory\View\Helper;
 
 use Cake\Datasource\EntityInterface;
+use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\View\Helper;
 use Cake\View\View;
@@ -40,6 +41,7 @@ class ModelHistoryHelper extends Helper
      */
     public function historyText($history)
     {
+        $customActions = TableRegistry::get($history->model)->getCustomActions();
         $action = '';
         switch ($history->action) {
             case ModelHistory::ACTION_CREATE:
@@ -54,6 +56,12 @@ class ModelHistoryHelper extends Helper
             case ModelHistory::ACTION_COMMENT:
                 $action = __d('model_history', 'commented');
                 break;
+            default:
+                foreach ($customActions as $customAction) {
+                    if ($customAction['action'] == $history->action) {
+                        $action = __d('model_history', $customAction['action']);
+                    }
+                }
         }
         if (empty($history->user_id)) {
             $username = 'Anonymous';

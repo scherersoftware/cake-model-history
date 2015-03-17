@@ -1,6 +1,8 @@
 <?php
 namespace ModelHistory\Test\TestCase\Model\Table;
 
+use App\Lib\Status;
+use Cake\Database\Driver;
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
@@ -252,5 +254,49 @@ class ModelHistoryTableTest extends TestCase
 
         $this->assertEquals($entry->user_id, $userId);
         $this->assertEquals($entry->data['comment'], $comment);
+    }
+
+    /**
+     * undocumented function
+     *
+     * @return void
+     */
+    public function testCustomActions()
+    {
+        $this->Articles->addBehavior('ModelHistory.Historizable', [
+            'customActions' => [
+                'finished' => [
+                    'status' => STATUS::COMPLETED,
+                    'action' => 'finished',
+                    'translation' => __('reviews.finished')
+                ],
+                'in_progress' => [
+                    'status' => STATUS::IN_PROGRESS,
+                    'action' => 'in_progress',
+                    'translation' => __('reviews.in_progress')
+                ],
+                'decline' => [
+                    'status' => STATUS::DECLINED,
+                    'action' => 'decline',
+                    'translation' => __('reviews.declined')
+                ]
+            ]
+        ]);
+        $article = $this->Articles->newEntity([
+            'title' => 'foobar',
+            'status' => 'new'
+        ]);
+        $this->Articles->save($article);
+        $entry = $this->ModelHistory->find()->first();
+        $this->assertEquals($entry->action, 'create');
+        $data = [
+            'status' => STATUS::IN_PROGRESS
+        ];
+        $article = $this->Articles->patchEntity($article, $data);
+        $this->Articles->save($article);
+        $entry = $this->ModelHistory->find()
+            ->order(['created' => 'DESC'])
+            ->first();
+        $this->assertEquals($entry->action, 'in_progress');
     }
 }

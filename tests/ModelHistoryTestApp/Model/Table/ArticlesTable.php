@@ -39,6 +39,7 @@ class ArticlesTable extends Table
             ->add('id', 'valid', ['rule' => 'uuid'])
             ->allowEmpty('id', 'create')
             ->allowEmpty('title')
+            ->allowEmpty('status')
             ->allowEmpty('content')
             ->allowEmpty('json_field')
             ->add('int_field', 'valid', ['rule' => 'numeric'])

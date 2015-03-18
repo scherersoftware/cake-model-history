@@ -55,7 +55,7 @@ class HistorizableBehavior extends Behavior
             ],
             'order' => ['ModelHistory.revision DESC'],
             'foreignKey' => 'foreign_key',
-            'dependent' => true
+            'dependent' => false
         ]);
         parent::initialize($config);
     }

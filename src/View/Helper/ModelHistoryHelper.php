@@ -70,4 +70,37 @@ class ModelHistoryHelper extends Helper
         }
         return ucfirst($action) . ' ' . __d('model_history', 'by') . ' ' . $username;
     }
+
+    /**
+     * Returns the badge displayed in the widget
+     *
+     * @return string
+     */
+    public function historyBadge($history)
+    {
+        $customActions = TableRegistry::get($history->model)->getCustomActions();
+        $action = '';
+        switch ($history->action) {
+            case ModelHistory::ACTION_CREATE:
+                $color = 'success';
+                $icon = 'fa-plus-circle';
+                break;
+            case ModelHistory::ACTION_UPDATE:
+                $color = 'info';
+                $icon = 'fa-refresh';
+                break;
+            case ModelHistory::ACTION_DELETE:
+                $color = 'danger';
+                $icon = 'fa-minus-circle';
+                break;
+            case ModelHistory::ACTION_COMMENT:
+                $color = 'primary';
+                $icon = 'fa-comments';
+                break;
+            default:
+                $color = 'success';
+                $icon = 'fa-diamond';
+        }
+        return '<div class="timeline-badge ' . $color . '"><i class="fa ' . $icon . '"></i></div>';
+    }
 }

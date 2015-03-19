@@ -10,22 +10,28 @@
     <?= $this->Form->end() ?>
 </div>
 <hr>
-<?php foreach($modelHistory as $entry): ?>
-    <div class="media">
-        <a class="pull-left" href="#">
-            <img class="media-object img-circle" src="//placehold.it/28x28" alt="">
-        </a>
-        <div class="media-body">
-            <?= $this->ModelHistory->historyText($entry) ?><br>
-            <?php if (isset($entry->data['comment'])) : ?>
-                <?php foreach ($entry->data as $data) : ?>
-                   <p><?= $data ?></p>
-                 <?php endforeach; ?>
-             <?php endif; ?>
-            <small class="text-muted"><?= h($entry->created) ?></small>
-        </div>
-    </div>
-<?php endforeach; ?>
+<ul class="timeline">
+    <?php foreach($modelHistory as $entry): ?>
+        <li>
+            <?= $this->ModelHistory->historyBadge($entry) ?>
+            <div class="timeline-panel">
+                <div class="timeline-heading">
+                    <h4 class="timeline-title"><?= $this->ModelHistory->historyText($entry) ?><br></h4>
+                    <small class="text-muted"><i class="fa fa-clock-o"></i> <?= h($entry->created) ?></small>
+                </div>
+                <div class="timeline-body">
+                    <p>
+                        <?php if (isset($entry->data['comment'])) : ?>
+                            <?php foreach ($entry->data as $data) : ?>
+                                <p><?= $data ?></p>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </p>
+                </div>
+            </div>
+        </li>
+    <?php endforeach; ?>
+</ul>
 <ul class="pager" data-page="<?= $this->Paginator->current('ModelHisotry') ?>">
     <?= $this->Paginator->prev('<<') ?>
     <?= $this->Paginator->next('>>') ?>

@@ -22,6 +22,11 @@ class ModelHistoryHelper extends Helper
      */
     public function modelHistoryArea($entity, $panel = null, $commentBox = null)
     {
+        if ($commentBox) {
+             $commentBox = 'on';
+        } else {
+            $commentBox = 'off';
+        }
         $entity = [
             'id' => $entity->id,
             'repository' => $entity->source(),
@@ -82,25 +87,34 @@ class ModelHistoryHelper extends Helper
         $action = '';
         switch ($history->action) {
             case ModelHistory::ACTION_CREATE:
-                $color = 'success';
+                $style = 'success';
                 $icon = 'fa-plus-circle';
+                $color = '';
                 break;
             case ModelHistory::ACTION_UPDATE:
-                $color = 'info';
+                $style = 'info';
                 $icon = 'fa-refresh';
+                $color = '';
                 break;
             case ModelHistory::ACTION_DELETE:
-                $color = 'danger';
+                $style = 'danger';
                 $icon = 'fa-minus-circle';
+                $color = '';
                 break;
             case ModelHistory::ACTION_COMMENT:
-                $color = 'primary';
+                $style = 'primary';
                 $icon = 'fa-comments';
+                $color = '';
                 break;
             default:
-                $color = 'success';
-                $icon = 'fa-diamond';
+                $style = '';
+                foreach ($customActions as $customAction) {
+                    if ($customAction['action'] == $history->action) {
+                        $color = $customAction['color'];
+                        $icon = 'fa fa-' . $customAction['icon'];
+                    }
+                }
         }
-        return '<div class="timeline-badge ' . $color . '"><i class="fa ' . $icon . '"></i></div>';
+        return '<div class="timeline-badge ' . $style . '" style="background-color:' . $color . '"><i class="fa ' . $icon . '"></i></div>';
     }
 }

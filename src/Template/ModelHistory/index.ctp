@@ -8,8 +8,8 @@
             </span>
         </div>
     <?= $this->Form->end() ?>
+    <hr>
 </div>
-<hr>
 <ul class="timeline">
     <?php foreach($modelHistory as $entry): ?>
         <li>

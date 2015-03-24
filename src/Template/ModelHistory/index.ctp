@@ -1,4 +1,4 @@
-<?php if (empty($modelHistory->items)): ?>
+<?php if ($modelHistory->count() == 0) : ?>
     <div class="alert alert-info"><?=  __d('model_history', 'no_history'); ?></div>
 <?php else: ?>
     <?= $this->Flash->render() ?>

@@ -1,5 +1,5 @@
-<?php if (empty($modelHistory)): ?>
-    <div class="alert alert-info"><?= __d('model_history', 'no_history'); ?></div>
+<?php if (empty($modelHistory->items)): ?>
+    <div class="alert alert-info"><?=  __d('model_history', 'no_history'); ?></div>
 <?php else: ?>
     <?= $this->Flash->render() ?>
     <div class="model-history form">

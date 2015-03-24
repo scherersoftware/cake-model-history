@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2015-03-11 12:13+0000\n"
-"PO-Revision-Date: 2015-03-11 14:48+0100\n"
+"POT-Creation-Date: 2015-03-24 08:46+0000\n"
+"PO-Revision-Date: 2015-03-24 09:47+0100\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team:  <EMAIL@ADDRESS>\n"
 "Language: en_US\n"
@@ -15,27 +15,34 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 1.7.4\n"
 
-#: /Template/ModelHistory/show_model_history.ctp:2
-#: /View/Helper/ModelHistoryHelper.php:41
+#: /Users/cleptric/Sites/curveup_backend/Model/Table/ModelHistoryTable.php:52
+msgid "comment_empty"
+msgstr "Please enter a comment."
+
+#: /Users/cleptric/Sites/curveup_backend/Template/Element/model_history_area_panel.ctp:3
+#: /Users/cleptric/Sites/curveup_backend/View/Helper/ModelHistoryHelper.php:53
 msgid "model_history"
 msgstr "Activities"
 
-#: /View/Helper/ModelHistoryHelper.php:44
+#: /Users/cleptric/Sites/curveup_backend/Template/ModelHistory/index.ctp:2
+msgid "no_history"
+msgstr "No activities found yet."
+
+#: /Users/cleptric/Sites/curveup_backend/View/Helper/ModelHistoryHelper.php:56
 msgid "updated"
 msgstr "updated"
 
-#: /View/Helper/ModelHistoryHelper.php:47
+#: /Users/cleptric/Sites/curveup_backend/View/Helper/ModelHistoryHelper.php:59
 msgid "deleted"
 msgstr "deleted"
 
-#: /View/Helper/ModelHistoryHelper.php:50
+#: /Users/cleptric/Sites/curveup_backend/View/Helper/ModelHistoryHelper.php:62
 msgid "commented"
 msgstr "commented"
 
-#: /View/Helper/ModelHistoryHelper.php:53
+#: /Users/cleptric/Sites/curveup_backend/View/Helper/ModelHistoryHelper.php:76
 msgid "by"
 msgstr "by"
 
-#: /View/Helper/ModelHistoryHelper.php:53
-msgid "on"
-msgstr "on"
+#~ msgid "on"
+#~ msgstr "on"

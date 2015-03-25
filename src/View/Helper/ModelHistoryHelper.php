@@ -50,7 +50,7 @@ class ModelHistoryHelper extends Helper
         $action = '';
         switch ($history->action) {
             case ModelHistory::ACTION_CREATE:
-                $action = __d('model_history', 'model_history');
+                $action = __d('model_history', 'created');
                 break;
             case ModelHistory::ACTION_UPDATE:
                 $action = __d('model_history', 'updated');

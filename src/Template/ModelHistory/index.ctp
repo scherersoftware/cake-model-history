@@ -26,7 +26,7 @@
                         <p>
                             <?php if (isset($entry->data['comment'])) : ?>
                                 <?php foreach ($entry->data as $data) : ?>
-                                    <p><?= $data ?></p>
+                                    <p><?= h($data) ?></p>
                                 <?php endforeach; ?>
                             <?php endif; ?>
                         </p>

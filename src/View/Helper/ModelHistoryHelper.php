@@ -87,22 +87,22 @@ class ModelHistoryHelper extends Helper
         switch ($history->action) {
             case ModelHistory::ACTION_CREATE:
                 $style = 'success';
-                $icon = 'fa-plus-circle';
+                $icon = 'plus-circle';
                 $color = '';
                 break;
             case ModelHistory::ACTION_UPDATE:
                 $style = 'info';
-                $icon = 'fa-refresh';
+                $icon = 'refresh';
                 $color = '';
                 break;
             case ModelHistory::ACTION_DELETE:
                 $style = 'danger';
-                $icon = 'fa-minus-circle';
+                $icon = 'minus-circle';
                 $color = '';
                 break;
             case ModelHistory::ACTION_COMMENT:
                 $style = 'primary';
-                $icon = 'fa-comments';
+                $icon = 'comments';
                 $color = '';
                 break;
             default:
@@ -114,6 +114,6 @@ class ModelHistoryHelper extends Helper
                     }
                 }
         }
-        return '<div class="timeline-badge ' . $style . '" style="background-color:' . $color . '"><i class="fa ' . $icon . '"></i></div>';
+        return '<div class="timeline-badge ' . $style . '" style="background-color:' . $color . '"><i class="fa fa-' . $icon . '"></i></div>';
     }
 }

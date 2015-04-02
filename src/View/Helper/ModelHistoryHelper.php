@@ -20,19 +20,18 @@ class ModelHistoryHelper extends Helper
      * Render an Contact Perosns area for the given entity
      * @return contact_persons_area View
      */
-    public function modelHistoryArea($entity, $panel = null, $commentBox = null)
+    public function modelHistoryArea($entity, array $options = [])
     {
-        if ($commentBox) {
-             $commentBox = 'on';
-        } else {
-            $commentBox = 'off';
-        }
+        $options = Hash::merge([
+            'commentBox' => false,
+            'panel' => false
+        ], $options);
         $entity = [
             'id' => $entity->id,
             'repository' => $entity->source(),
-            'comment-box' => $commentBox
+            'comment-box' => $options['commentBox']
         ];
-        if ($panel) {
+        if ($options['panel']) {
             return $this->_View->element('ModelHistory.model_history_area_panel', array('data' => $entity));
         } else {
             return $this->_View->element('ModelHistory.model_history_area', array('data' => $entity));

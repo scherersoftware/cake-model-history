@@ -20,7 +20,7 @@ App.Components.ModelHistoryComponent = Frontend.Component.extend({
             target: $listContainer,
             onComplete: function(controller, response) {
                 App.Main.UIBlocker.unblockElement($listContainer);
-                if (this.Controller.$('.model-history-list').attr("data-comment-box") == 'on') {
+                if (this.Controller.$('.model-history-list').attr("data-comment-box") == 1) {
                     this.Controller.$('.model-history').show();
                 } else {
                     this.Controller.$('.model-history').hide();

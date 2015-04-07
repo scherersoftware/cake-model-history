@@ -21,7 +21,12 @@ class HistorizableBehavior extends Behavior
      */
     protected $_defaultConfig = [
         'userIdCallback' => null,
-        'customActions' => []
+        'customActions' => [],
+        'userNameFields' => [
+            'firstname',
+            'lastname',
+            'id'
+        ]
     ];
 
     /**
@@ -169,5 +174,15 @@ class HistorizableBehavior extends Behavior
     public function getCustomActions()
     {
         return $this->config('customActions');
+    }
+
+    /**
+     * Get the user fields
+     *
+     * @return array
+     */
+    public function getUserNameFields()
+    {
+        return $this->config('userNameFields');
     }
 }

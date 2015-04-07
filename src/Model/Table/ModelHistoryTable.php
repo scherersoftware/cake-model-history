@@ -164,6 +164,8 @@ class ModelHistoryTable extends Table
      */
     public function getEntityWithHistory($model, $foreignKey, array $options = [])
     {
+        $Table = TableRegistry::get($model);
+        $userFields = $Table->getUserNameFields();
         $options = Hash::merge([
             'contain' => [
                 'ModelHistory' => [
@@ -179,16 +181,12 @@ class ModelHistoryTable extends Table
                     ],
                     'sort' => ['ModelHistory.revision DESC'],
                     'Users' => [
-                        'fields' => [
-                            'id',
-                            'firstname',
-                            'lastname'
-                        ]
+                        'fields' => $userFields
                     ]
                 ]
             ]
         ], $options);
-        $Table = TableRegistry::get($model);
+        
         $entity = $Table->get($foreignKey, $options);
         
         return $entity;

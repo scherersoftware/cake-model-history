@@ -1,9 +1,10 @@
 {
     "name": "codekanzlei/cake-model-history",
-    "description": "ModelHistory plugin for CakePHP",
+    "description": "ModelHistory plugin for CakePHP3",
+    "license": "MIT",
     "type": "cakephp-plugin",
     "extra": {
-        "installer-name": "Notifications"
+        "installer-name": "ModelHistory"
     },
     "require": {
         "php": ">=5.4"

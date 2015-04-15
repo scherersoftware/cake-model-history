@@ -12,7 +12,7 @@ App.Controllers.ModelHistoryIndexController = Frontend.AppController.extend({
             controller: 'model_history',
             action: 'index',
             pass: [
-                this.getVar('model'), 
+                this.getVar('model'),
                 this.getVar('foreignKey')
             ]
         };

@@ -3,7 +3,7 @@
 <?php else: ?>
     <?= $this->Flash->render() ?>
     <div class="model-history form">
-        <?= $this->Form->create(null, ['horizontal' => true, 'novalidate']); ?>
+			<?= $this->Form->create(null); ?>
             <div class="input-group">
                 <input type="text" class="form-control" name="data" id="data "placeholder="Enter comment...">
                 <span class="input-group-btn">

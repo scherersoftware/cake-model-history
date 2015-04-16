@@ -70,7 +70,10 @@ class ModelHistoryHelper extends Helper
         if (empty($history->user_id)) {
             $username = 'Anonymous';
         } else {
-            $username = $history->user->full_name;
+            $userNameFields = TableRegistry::get($history->model)->getUserNameFields();
+			$firstname = $history->user->$userNameFields['firstname'];
+			$lastname = $history->user->$userNameFields['lastname'];
+            $username = $firstname . ' ' . $lastname;
         }
         return ucfirst($action) . ' ' . __d('model_history', 'by') . ' ' . $username;
     }

@@ -186,7 +186,6 @@ class ModelHistoryTable extends Table
                 ]
             ]
         ], $options);
-        
         $entity = $Table->get($foreignKey, $options);
         
         return $entity;

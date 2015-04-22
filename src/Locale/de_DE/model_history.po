@@ -1,0 +1,45 @@
+# LANGUAGE translation of CakePHP Application
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2015-03-24 08:46+0000\n"
+"PO-Revision-Date: 2015-04-22 17:27+0100\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team:  <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.7.6\n"
+"Language: de\n"
+
+#: /Users/cleptric/Sites/curveup_backend/Model/Table/ModelHistoryTable.php:52
+msgid "comment_empty"
+msgstr "kein Kommentar vorhanden"
+
+#: /Users/cleptric/Sites/curveup_backend/Template/Element/model_history_area_panel.ctp:3
+#: /Users/cleptric/Sites/curveup_backend/View/Helper/ModelHistoryHelper.php:53
+msgid "model_history"
+msgstr "Model Historie"
+
+#: /Users/cleptric/Sites/curveup_backend/Template/ModelHistory/index.ctp:2
+msgid "no_history"
+msgstr "Keine Historie vorhanden"
+
+#: /Users/cleptric/Sites/curveup_backend/View/Helper/ModelHistoryHelper.php:56
+msgid "updated"
+msgstr "aktualisiert"
+
+#: /Users/cleptric/Sites/curveup_backend/View/Helper/ModelHistoryHelper.php:59
+msgid "deleted"
+msgstr "gelöscht"
+
+#: /Users/cleptric/Sites/curveup_backend/View/Helper/ModelHistoryHelper.php:62
+msgid "commented"
+msgstr "kommentiert"
+
+#: /Users/cleptric/Sites/curveup_backend/View/Helper/ModelHistoryHelper.php:76
+msgid "by"
+msgstr "von"

@@ -32,9 +32,9 @@ class ModelHistoryHelper extends Helper
             'comment-box' => $options['commentBox']
         ];
         if ($options['panel']) {
-            return $this->_View->element('ModelHistory.model_history_area_panel', array('data' => $entity));
+            return $this->_View->element('ModelHistory.model_history_area_panel', ['data' => $entity]);
         } else {
-            return $this->_View->element('ModelHistory.model_history_area', array('data' => $entity));
+            return $this->_View->element('ModelHistory.model_history_area', ['data' => $entity]);
         }
     }
 
@@ -71,8 +71,8 @@ class ModelHistoryHelper extends Helper
             $username = 'Anonymous';
         } else {
             $userNameFields = TableRegistry::get($history->model)->getUserNameFields();
-			$firstname = $history->user->$userNameFields['firstname'];
-			$lastname = $history->user->$userNameFields['lastname'];
+            $firstname = $history->user->$userNameFields['firstname'];
+            $lastname = $history->user->$userNameFields['lastname'];
             $username = $firstname . ' ' . $lastname;
         }
         return ucfirst($action) . ' ' . __d('model_history', 'by') . ' ' . $username;

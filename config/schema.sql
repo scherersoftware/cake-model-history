@@ -7,5 +7,6 @@ CREATE TABLE `model_history` (
   `data` mediumblob COMMENT 'JSON blob, schema per action',
   `revision` int(8) NOT NULL,
   `created` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  INDEX `data_search` (`model` ASC, `foreign_key` ASC)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -81,7 +81,9 @@ class ModelHistoryTable extends Table
         if ($action === ModelHistory::ACTION_UPDATE && $options['dirtyFields']) {
             $newData = [];
             foreach ($options['dirtyFields'] as $field) {
-                $newData[$field] = $options['data'][$field];
+                if (isset($options['data'][$field])) {
+                    $newData[$field] = $options['data'][$field];
+                }
             }
             $options['data'] = $newData;
         }

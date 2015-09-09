@@ -32,5 +32,4 @@ parent::initialize();
 ```
 
 4. add a new table in your database
-add a new table to the database you're using. The new tables structure can be found in **schema.sql** which is located in src/vendor/codekanzlei/cake-model_history/config/
-If you are using [SequelPro] (http://www.sequelpro.com/), you can use its *Query* function. Just paste the contents of **schema.sql** and run the query.
+add a new table to the database you're using. The new tables structure can be found in **schema.sql**

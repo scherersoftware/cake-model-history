@@ -75,7 +75,7 @@ class ModelHistoryTable extends Table
         }
 
         if ($action === ModelHistory::ACTION_DELETE) {
-            $options['data'] = null;
+            $options['data'] = $entity->toArray();
         }
 
         if ($action === ModelHistory::ACTION_UPDATE && $options['dirtyFields']) {

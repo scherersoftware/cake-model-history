@@ -2,7 +2,14 @@ App.Controllers.ModelHistoryIndexController = Frontend.AppController.extend({
     startup: function() {
         this.$('.model-history form').on('submit', this._onAddComment.bind(this));
         this.$('.pager .prev:not(.disabled) a').click(this._onPaginatorClick.bind(this));
-        this.$('.pager .next:not(.disabled) a').click(this._onPaginatorClick.bind(this));
+        this.$('.pager .next:not(.disabled) a').click(this._onPaginatorClick.bind(this));        
+        
+        // Toggle view
+        $('.model-history-list').toggle();
+        $('.model-history-toggle-btn').click(function(e) {
+            e.preventDefault();
+            $('.model-history-list').toggle();
+        }.bind(this));
     },
     _onAddComment: function(e) {
         e.preventDefault();
@@ -21,6 +28,7 @@ App.Controllers.ModelHistoryIndexController = Frontend.AppController.extend({
             data: this.$('.model-history form').serialize(),
             target: this._dom.parent(),
             onComplete: function(controller, response) {
+                $('.model-history-list').toggle();
                 App.Main.UIBlocker.unblockElement(this.$('.model-history form'));
             }.bind(this)
         });
@@ -31,6 +39,7 @@ App.Controllers.ModelHistoryIndexController = Frontend.AppController.extend({
         App.Main.loadJsonAction($(e.currentTarget).attr('href'), {
             target: $(e.currentTarget).parents('.controller.model_history-index'),
             onComplete: function(controller, response) {
+                $('.model-history-list').toggle();
                 App.Main.UIBlocker.unblockElement($(e.currentTarget).parent());
             }.bind(this)
         });

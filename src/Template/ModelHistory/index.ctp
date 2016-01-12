@@ -24,19 +24,17 @@
                     </div>
                     <div class="timeline-body">
                         <p>
-                            <?php if (isset($entry->data['comment'])) : ?>
-                                <?php foreach ($entry->data as $data) : ?>
-                                    <p><?= h($data) ?></p>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
+                        <?php foreach ($entry->data as $field => $data) : ?>
+                            <p><?= h($field) ?>: <?= h($data) ?></p>
+                        <?php endforeach; ?>
                         </p>
                     </div>
                 </div>
             </li>
         <?php endforeach; ?>
     </ul>
-    <ul class="pager" data-page="<?= $this->Paginator->current('ModelHisotry') ?>">
+    <ul class="pager timeline-pager" data-page="<?= $this->Paginator->current('ModelHistory') ?>">
         <?= $this->Paginator->prev('<<') ?>
         <?= $this->Paginator->next('>>') ?>
-    <ul>
+    </ul>
 <?php endif; ?>

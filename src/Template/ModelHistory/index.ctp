@@ -25,7 +25,14 @@
                     <div class="timeline-body">
                         <p>
                         <?php foreach ($entry->data as $field => $data) : ?>
-                            <p><?= h($field) ?>: <?= h($data) ?></p>
+                            <p>
+                                <?= h($field) ?>: 
+                                <?php if (is_array($data)): ?>
+                                    <?= print_r($data, true) ?>
+                                <?php else: ?>
+                                    <?= h($data) ?>
+                                <?php endif; ?>
+                            </p>
                         <?php endforeach; ?>
                         </p>
                     </div>

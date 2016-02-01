@@ -1,22 +1,25 @@
 App.Controllers.ModelHistoryIndexController = Frontend.AppController.extend({
     startup: function() {
+        console.log($('.model-history form'));
         this.$('.model-history form').on('submit', this._onAddComment.bind(this));
         this.$('.pager .prev:not(.disabled) a').click(this._onPaginatorClick.bind(this));
-        this.$('.pager .next:not(.disabled) a').click(this._onPaginatorClick.bind(this));        
+        this.$('.pager .next:not(.disabled) a').click(this._onPaginatorClick.bind(this));
         
         // Toggle view
-        $('.model-history-list').toggle();
-        $('.model-history-toggle-btn').click(function(e) {
-            e.preventDefault();
+        if ($('.model-history-toggle-btn').length) {
             $('.model-history-list').toggle();
-        }.bind(this));
+            $('.model-history-toggle-btn').click(function(e) {
+                e.preventDefault();
+                $('.model-history-list').toggle();
+            }.bind(this));
+        }
     },
     _onAddComment: function(e) {
         e.preventDefault();
 
         var url = {
             plugin: 'model_history',
-            controller: 'model_history',
+            controller: 'ModelHistory',
             action: 'index',
             pass: [
                 this.getVar('model'),

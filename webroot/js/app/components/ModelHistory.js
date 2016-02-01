@@ -7,7 +7,7 @@ App.Components.ModelHistoryComponent = Frontend.Component.extend({
     loadModelHistoryList: function() {
         var url = {
             plugin: 'model_history',
-            controller: 'model_history',
+            controller: 'ModelHistory',
             action: 'index',
             pass: [
                 this.Controller.$('.model-history-list').data('repository'),

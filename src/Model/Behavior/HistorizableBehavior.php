@@ -56,7 +56,7 @@ class HistorizableBehavior extends Behavior
         // Dynamically attach the hasMany relationship
         $this->_table->hasMany('ModelHistory.ModelHistory', [
             'conditions' => [
-                'ModelHistory.model' => $this->_table->alias()
+                'ModelHistory.model' => $this->_table->registryAlias()
             ],
             'order' => ['ModelHistory.revision DESC'],
             'foreignKey' => 'foreign_key',

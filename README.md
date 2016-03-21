@@ -1,4 +1,4 @@
-# cake-model-history
+# CakePHP 3 cake-model-history
 ====================
 
 CakePHP 3 Historization for database records. Keeps track of changes performed by users and provides a customizable view element for displaying them.

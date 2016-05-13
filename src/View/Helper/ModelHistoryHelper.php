@@ -71,8 +71,8 @@ class ModelHistoryHelper extends Helper
             $username = 'Anonymous';
         } else {
             $userNameFields = TableRegistry::get($history->model)->getUserNameFields();
-            $firstname = $history->user->$userNameFields['firstname'];
-            $lastname = $history->user->$userNameFields['lastname'];
+            $firstname = $history->user->{$userNameFields['firstname']};
+            $lastname = $history->user->{$userNameFields['lastname']};
             $username = $firstname . ' ' . $lastname;
         }
         return ucfirst($action) . ' ' . __d('model_history', 'by') . ' ' . $username;

@@ -18,11 +18,11 @@ CakePHP 3 Historization for database records. Keeps track of changes performed b
 	"codekanzlei/cake-model-history": "dev-master",
 }
 ```
-			
+
 Open a terminal in your project-folder and run these commands:
 
 	$ composer update
-	
+
 #### 2. Configure `config/bootstrap.php`
 
 **Load** the Plugin:
@@ -61,16 +61,16 @@ CREATE TABLE `model_history` (
 
 ```
 $this->loadComponent('RequestHandler');
-    TableRegistry::get('Users')->setModelHistoryUserIdCallback(function () {
-        return $this->Auth->user('id');
-    });
+TableRegistry::get('TableWithHistorizableBehavior')->setModelHistoryUserIdCallback(function () {
+    return $this->Auth->user('id');
+});
 ```
 **$helpers**
 
 ```
 public $helpers =  [
 	'ModelHistory.ModelHistory'
-	]
+]
 ```
 
 
@@ -105,7 +105,7 @@ Use `ModelHistoryHelper.php` to create neat view elements containg a record's ch
 `modelHistoryArea` has the following **Options:**
 
 - `commentBox` (false)
-	
+
 	Additionally renders an comment field (input type text). User input will be saved to the model_history table
 
 - `panel` (false)

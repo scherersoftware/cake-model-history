@@ -22,20 +22,22 @@
                         <h4 class="timeline-title"><?= $this->ModelHistory->historyText($entry) ?><br></h4>
                         <small class="text-muted"><i class="fa fa-clock-o"></i> <?= h($entry->created) ?></small>
                     </div>
-                    <div class="timeline-body">
-                        <p>
-                        <?php foreach ($entry->data as $field => $data) : ?>
+                    <?php if (is_array($entry->data)): ?>
+                        <div class="timeline-body">
                             <p>
-                                <?= h($field) ?>: 
-                                <?php if (is_array($data)): ?>
-                                    <?= print_r($data, true) ?>
-                                <?php else: ?>
-                                    <?= h($data) ?>
-                                <?php endif; ?>
+                            <?php foreach ($entry->data as $field => $data) : ?>
+                                <p>
+                                    <?= h($field) ?>: 
+                                    <?php if (is_array($data)): ?>
+                                        <?= print_r($data, true) ?>
+                                    <?php else: ?>
+                                        <?= h($data) ?>
+                                    <?php endif; ?>
+                                </p>
+                            <?php endforeach; ?>
                             </p>
-                        <?php endforeach; ?>
-                        </p>
-                    </div>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </li>
         <?php endforeach; ?>

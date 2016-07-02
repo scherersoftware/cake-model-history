@@ -1,18 +1,19 @@
+<div class="model-history form">
+    <?= $this->Form->create(null); ?>
+        <div class="input-group">
+            <input type="text" class="form-control" name="data" id="data "placeholder="Enter comment...">
+            <span class="input-group-btn">
+                <button class="btn btn-success" type="submit">Save</button>
+            </span>
+        </div>
+    <?= $this->Form->end() ?>
+    <hr>
+</div>
+
 <?php if ($modelHistory->count() == 0) : ?>
     <div class="alert alert-info"><?=  __d('model_history', 'no_history'); ?></div>
 <?php else: ?>
     <?= $this->Flash->render() ?>
-    <div class="model-history form">
-			<?= $this->Form->create(null); ?>
-            <div class="input-group">
-                <input type="text" class="form-control" name="data" id="data "placeholder="Enter comment...">
-                <span class="input-group-btn">
-                    <button class="btn btn-success" type="submit">Save</button>
-                </span>
-            </div>
-        <?= $this->Form->end() ?>
-        <hr>
-    </div>
     <ul class="timeline">
         <?php foreach($modelHistory as $entry): ?>
             <li>

@@ -99,7 +99,7 @@ class HistorizableBehavior extends Behavior
             $dirtyFields = $this->_dirtyFields[$entity->id];
             unset($this->_dirtyFields[$entity->id]);
         }
-        
+
         $this->ModelHistory->add($entity, $action, $this->_getUserId(), [
             'dirtyFields' => $dirtyFields
         ]);
@@ -119,7 +119,7 @@ class HistorizableBehavior extends Behavior
      * @param ArrayObject $options Additional options
      * @return void
      */
-    public function afterDelete(Event $event, EntityInterface $entity, \ArrayObject $options)
+    public function afterDelete(Event $event, EntityInterface $entity, $options)
     {
         $this->ModelHistory->add($entity, ModelHistory::ACTION_DELETE, $this->_getUserId());
     }

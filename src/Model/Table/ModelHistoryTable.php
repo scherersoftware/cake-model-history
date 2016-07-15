@@ -53,7 +53,7 @@ class ModelHistoryTable extends Table
         ]);
         return $validator;
     }
-    
+
     /**
      * Add a record to the ModelHistory
      *
@@ -87,6 +87,16 @@ class ModelHistoryTable extends Table
             }
             $options['data'] = $newData;
         }
+
+        // Obfuscate password fields
+        if (!empty($options['data'])) {
+            foreach ($options['data'] as $fieldName => $data) {
+                if (stripos($fieldName, 'password') !== false) {
+                    $options['data'][$fieldName] = '********';
+                }
+            }
+        }
+
         $entry = $this->newEntity([
             'model' => $this->getEntityModel($entity),
             'foreign_key' => $entity->id,
@@ -189,7 +199,7 @@ class ModelHistoryTable extends Table
             ]
         ], $options);
         $entity = $Table->get($foreignKey, $options);
-        
+
         return $entity;
     }
 }

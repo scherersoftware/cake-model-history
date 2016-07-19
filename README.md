@@ -91,6 +91,9 @@ $this->addBehavior('ModelHistory.Historizable', [
         'firstname' => 'yourFirstName',
         'lastname' => 'yourLastName',
         'id' => 'Users.id'
+    ],
+    'obfuscatedFields' => [
+        'passwort'
     ]
 ]);
 ```

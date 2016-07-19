@@ -2,6 +2,7 @@
 namespace ModelHistory\Model\Entity;
 
 use Cake\ORM\Entity;
+use Cake\ORM\TableRegistry;
 
 /**
  * ModelHistory Entity.

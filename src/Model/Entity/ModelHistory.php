@@ -28,4 +28,24 @@ class ModelHistory extends Entity
         'user' => true,
         'revision' => true,
     ];
+    
+    /**
+     * getter for data
+     *
+     * @param string $data data
+     * @return array
+     */
+    protected function _getData($data) 
+    {
+        // Obfuscate password fields
+        $obfuscatedFields = TableRegistry::get($this->model)->getObfuscatedFields();
+        if (!empty($data) && !empty($obfuscatedFields)) {
+            foreach ($data as $fieldName => $value) {
+                if (in_array($fieldName, $obfuscatedFields)) {
+                    $data[$fieldName] = '********';
+                }
+            }
+        }
+        return $data;
+    }
 }

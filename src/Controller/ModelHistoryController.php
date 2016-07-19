@@ -52,13 +52,8 @@ class ModelHistoryController extends AppController
                 $this->Flash->error(__('forms.data_not_saved'));
             }
         }
-        $modelHistory = $this->ModelHistory->find()
-            ->where([
-                'model' => $model,
-                'foreign_key' => $foreignKey
-            ])
-            ->order(['revision' => 'DESC'])
-            ->contain(['Users']);
+        $modelHistory = $this->ModelHistory->getModelHistory($model, $foreignKey);
+
         $this->set('modelHistory', $this->paginate($modelHistory));
         $this->FrontendBridge->setJson('model', $model);
         $this->FrontendBridge->setJson('foreignKey', $foreignKey);

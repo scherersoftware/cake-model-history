@@ -89,9 +89,10 @@ class ModelHistoryTable extends Table
         }
 
         // Obfuscate password fields
-        if (!empty($options['data'])) {
+        $obfuscatedFields = TableRegistry::get($entity->source())->getObfuscatedFields();
+        if (!empty($options['data']) && !empty($obfuscatedFields)) {
             foreach ($options['data'] as $fieldName => $data) {
-                if (stripos($fieldName, 'password') !== false) {
+                if (in_array($fieldName, $obfuscatedFields)) {
                     $options['data'][$fieldName] = '********';
                 }
             }
@@ -201,5 +202,23 @@ class ModelHistoryTable extends Table
         $entity = $Table->get($foreignKey, $options);
 
         return $entity;
+    }
+    
+    /**
+     * get Model History
+     *
+     * @param string $model model name
+     * @param string $foreignKey foreign key
+     * @return array
+     */
+    public function getModelHistory($model, $foreignKey)
+    {
+        return $this->find()
+            ->where([
+                'model' => $model,
+                'foreign_key' => $foreignKey
+            ])
+            ->order(['revision' => 'DESC'])
+            ->contain(['Users']);
     }
 }

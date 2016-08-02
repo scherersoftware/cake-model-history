@@ -29,14 +29,14 @@ class ModelHistory extends Entity
         'user' => true,
         'revision' => true,
     ];
-    
+
     /**
      * getter for data
      *
      * @param string $data data
      * @return array
      */
-    protected function _getData($data) 
+    protected function _getData($data)
     {
         // Obfuscate password fields
         $obfuscatedFields = TableRegistry::get($this->model)->getObfuscatedFields();
@@ -47,6 +47,33 @@ class ModelHistory extends Entity
                 }
             }
         }
+        // Stringify empty values
+        if (!empty($data)) {
+            foreach ($data as $fieldName => $value) {
+                $data[$fieldName] = $this->_stringifyEmptyValue($value);
+            }
+        }
         return $data;
+    }
+
+    /**
+     * Transform NULL and boolean values to their string representation.
+     *
+     * @param  mixed  $value  The Value to be checked
+     * @return mixed
+     */
+    protected function _stringifyEmptyValue($value)
+    {
+        if ($value === true) {
+            return 'true';
+        } elseif ($value === false) {
+            return 'false';
+        } elseif ($value === NULL) {
+            return 'NULL';
+        } elseif ($value === '') {
+            return '""';
+        } else {
+            return $value;
+        }
     }
 }

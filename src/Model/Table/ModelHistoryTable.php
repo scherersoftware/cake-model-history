@@ -78,6 +78,15 @@ class ModelHistoryTable extends Table
             $options['data'] = $entity->toArray();
         }
 
+        $skipFields = TableRegistry::get($entity->source())->getSkipFields();
+        if (!empty($options['data']) && !empty($skipFields)) {
+            foreach ($skipFields as $fieldName) {
+                if (isset($options['data'][$fieldName])) {
+                    unset($options['data'][$fieldName]);
+                }
+            }
+        }
+
         if ($action === ModelHistory::ACTION_UPDATE && $options['dirtyFields']) {
             $newData = [];
             foreach ($options['dirtyFields'] as $field) {
@@ -203,7 +212,7 @@ class ModelHistoryTable extends Table
 
         return $entity;
     }
-    
+
     /**
      * get Model History
      *

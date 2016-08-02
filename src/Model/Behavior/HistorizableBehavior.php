@@ -34,6 +34,10 @@ class HistorizableBehavior extends Behavior
             'new_password',
             'change_password',
             'password_change',
+        ],
+        'skipFields' => [
+            'failed_login_count',
+            'failed_login_timestamp'
         ]
     ];
 
@@ -193,7 +197,7 @@ class HistorizableBehavior extends Behavior
     {
         return $this->config('userNameFields');
     }
-    
+
     /**
      * Get the obfuscated fields fields
      *
@@ -203,4 +207,16 @@ class HistorizableBehavior extends Behavior
     {
         return $this->config('obfuscatedFields');
     }
+
+    /**
+     * Get fields to skip and not save
+     *
+     * @return array
+     */
+    public function getSkipFields()
+    {
+        return $this->config('skipFields');
+    }
+
+
 }

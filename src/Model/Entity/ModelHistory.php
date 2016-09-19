@@ -57,7 +57,7 @@ class ModelHistory extends Entity
     }
 
     /**
-     * Transform NULL and boolean values to their string representation.
+     * Transform null and boolean values to their string representation.
      *
      * @param  mixed  $value  The Value to be checked
      * @return mixed
@@ -68,7 +68,7 @@ class ModelHistory extends Entity
             return 'true';
         } elseif ($value === false) {
             return 'false';
-        } elseif ($value === NULL) {
+        } elseif ($value === null) {
             return 'NULL';
         } elseif ($value === '') {
             return '""';

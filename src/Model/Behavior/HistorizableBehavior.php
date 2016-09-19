@@ -217,6 +217,4 @@ class HistorizableBehavior extends Behavior
     {
         return $this->config('skipFields');
     }
-
-
 }

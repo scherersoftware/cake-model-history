@@ -93,13 +93,13 @@ $this->addBehavior('ModelHistory.Historizable', [
         'id' => 'Users.id'
     ],
     'obfuscatedFields' => [
-        'passwort'
+        'password'
     ]
 ]);
 ```
 
 #### View setup
-Use `ModelHistoryHelper.php` to create neat view elements containg a record's change history with one call in your view:
+Use `ModelHistoryHelper.php` to create neat view elements containing a record's change history with one call in your view:
 
 ```
 <?= $this->ModelHistory->modelHistoryArea($user); ?>
@@ -113,4 +113,10 @@ Use `ModelHistoryHelper.php` to create neat view elements containg a record's ch
 
 - `panel` (false)
 
-	Renders the model history as a view element with additional type 'panel', includig a handy show/hide button
+	Renders the model history as a view element with additional type 'panel', including a handy show/hide button
+
+For the modelHistoryArea to fetch its data, add the 'ModelHistory' component to the baseComponents property in your Frontend.AppController under `/webroot/js/app/app_controller.js`.
+If you haven't set up the FrontendBridge yet, follow [these steps](https://github.com/scherersoftware/cake-frontend-bridge). There you will also find a template for this file.
+
+Make sure `app_controller.js` is loaded on the page where you want to show the modelHistoryArea.
+Then the ModelHistory JS-Component will make AJAX requests to /model_history/ModelHistory/index/$modelName/$primaryKey according to the $entity you gave the helper method and populate the modelHistoryArea by itself.

@@ -184,3 +184,14 @@
             right: auto;
         }
 }
+
+
+
+.model-history-area .fields .fields-table {
+    margin-top: 30px;
+    background-color: transparent;
+}
+
+.model-history-area .fields .fields-table td {
+    width: 50%;
+}

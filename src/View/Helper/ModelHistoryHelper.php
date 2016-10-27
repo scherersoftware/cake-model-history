@@ -26,16 +26,36 @@ class ModelHistoryHelper extends Helper
             'commentBox' => false,
             'panel' => false
         ], $options);
-        $entity = [
-            'id' => $entity->id,
-            'repository' => $entity->source(),
-            'comment-box' => $options['commentBox']
-        ];
-        if ($options['panel']) {
-            return $this->_View->element('ModelHistory.model_history_area_panel', ['data' => $entity]);
-        } else {
-            return $this->_View->element('ModelHistory.model_history_area', ['data' => $entity]);
+
+        $modelHistory = TableRegistry::get('ModelHistory.ModelHistory')->getModelHistory($entity->source(), $entity->id);
+
+        return $this->_View->element('ModelHistory.model_history_area', ['data' => $entity, 'modelHistory' => $modelHistory]);
+    }
+
+    /**
+     * Build recursive Table layout for data displaying
+     *
+     * @param  array  $data  Data
+     * @return string
+     */
+    public function recursiveFieldsTable(array $data)
+    {
+        $table = '<table class="fields-table table table-condensed">';
+        foreach ($data as $field => $value) {
+            $table .= '<tr>';
+                $table .= '<td>' . $field . '</td>';
+                if (is_array($value)) {
+                    $table .= '<td>' . $this->recursiveFieldsTable($value) . '</td>';
+                } else {
+                    if ($value === null) {
+                        $value = 'NULL';
+                    }
+                    $table .= '<td>' . $value . '</td>';
+                }
+            $table .= '</tr>';
         }
+        $table .= '</table>';
+        return $table;
     }
 
     /**

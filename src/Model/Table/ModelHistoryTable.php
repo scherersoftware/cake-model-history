@@ -222,12 +222,71 @@ class ModelHistoryTable extends Table
      */
     public function getModelHistory($model, $foreignKey)
     {
-        return $this->find()
+        $history = $this->find()
             ->where([
                 'model' => $model,
                 'foreign_key' => $foreignKey
             ])
             ->order(['revision' => 'DESC'])
-            ->contain(['Users']);
+            ->contain(['Users'])
+            ->toArray();
+
+        return $this->_transformDataFields($history);
+    }
+
+    /**
+     * Transforms data fields to human readable form
+     *
+     * @param  array  $history  Data
+     * @return array
+     */
+    protected function _transformDataFields(array $history)
+    {
+        foreach ($history as $index => $entity) {
+            foreach ($entity->data as $field => $value) {
+                $entity->data[$field] = $this->_determineFieldValue($value);
+            }
+            $history[$index]->data = $entity->data;
+        }
+
+        return $history;
+    }
+
+    /**
+     * Determine human readable value
+     *
+     * @param  mixed  $value  The value
+     * @return mixed  Human readable value
+     */
+    protected function _determineFieldValue($value) {
+        $type = gettype($value);
+        switch ($type) {
+            case 'object':
+                if ($value instanceof \Date) {
+                    $value = $value->nice();
+                } else {
+                    $value = 'object';
+                }
+                break;
+            case 'boolean':
+                $value = $value === false ? 'false' : 'true';
+                break;
+            case 'NULL':
+            case 'null':
+                $value = 'NULL';
+                break;
+            case 'array':
+                $readableArr = [];
+                foreach ($value as $arrIndex => $arrValue) {
+                    $readableArr[$arrIndex] = $this->_determineFieldValue($arrValue);
+                }
+                $value = $readableArr;
+            default:
+                if ($value == 'NULL') {
+                    $value = 'NULL';
+                }
+                break;
+        }
+        return $value;
     }
 }

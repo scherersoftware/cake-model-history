@@ -38,7 +38,11 @@ class HistorizableBehavior extends Behavior
         'skipFields' => [
             'failed_login_count',
             'failed_login_timestamp'
-        ]
+        ],
+        'translations' => [
+            'id' => 'ID'
+        ],
+        'relations' => []
     ];
 
     /**
@@ -111,7 +115,7 @@ class HistorizableBehavior extends Behavior
             $dirtyFields = $this->_dirtyFields[$entity->id];
             unset($this->_dirtyFields[$entity->id]);
         }
-
+        
         $this->ModelHistory->add($entity, $action, $this->_getUserId(), [
             'dirtyFields' => $dirtyFields
         ]);

@@ -6,6 +6,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
+use Cake\I18n\Time;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
 use ModelHistory\Model\Entity\ModelHistory;
@@ -32,6 +33,7 @@ class ModelHistoryTable extends Table
             'foreignKey' => 'user_id'
         ]);
         $this->schema()->columnType('data', 'json');
+        $this->schema()->columnType('context', 'json');
     }
 
     /**
@@ -107,11 +109,17 @@ class ModelHistoryTable extends Table
             }
         }
 
+        $context = null;
+        if (method_exists($entity, 'getHistoryContext')) {
+            $context = $entity->getHistoryContext();
+        }
+
         $entry = $this->newEntity([
             'model' => $this->getEntityModel($entity),
             'foreign_key' => $entity->id,
             'action' => $action,
             'data' => $options['data'],
+            'context' => $context,
             'user_id' => $userId,
             'revision' => $this->getNextRevisionNumberForEntity($entity)
         ]);
@@ -243,12 +251,12 @@ class ModelHistoryTable extends Table
     protected function _transformDataFields(array $history)
     {
         foreach ($history as $index => $entity) {
-            foreach ($entity->data as $field => $value) {
-                $entity->data[$field] = $this->_determineFieldValue($value);
+            $entityData = $entity->data;
+            foreach ($entityData as $field => $value) {
+                $entityData[$field] = $this->_determineFieldValue($value);
             }
-            $history[$index]->data = $entity->data;
+            $history[$index]->data = $entityData;
         }
-
         return $history;
     }
 
@@ -262,11 +270,7 @@ class ModelHistoryTable extends Table
         $type = gettype($value);
         switch ($type) {
             case 'object':
-                if ($value instanceof \Date) {
-                    $value = $value->nice();
-                } else {
-                    $value = 'object';
-                }
+                $value = 'object';
                 break;
             case 'boolean':
                 $value = $value === false ? 'false' : 'true';
@@ -281,6 +285,12 @@ class ModelHistoryTable extends Table
                     $readableArr[$arrIndex] = $this->_determineFieldValue($arrValue);
                 }
                 $value = $readableArr;
+            case 'string':
+                if (is_string($value) && preg_match('#^\d{4}\-\d{2}\-\d{2}T\d{2}\:\d{2}\:\d{2}\+\d{4}$#', $value) != false) {
+                    $time = new Time($value);
+                    $value = $time->nice();
+                }
+                break;
             default:
                 if ($value == 'NULL') {
                     $value = 'NULL';

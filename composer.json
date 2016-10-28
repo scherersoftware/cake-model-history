@@ -7,7 +7,8 @@
         "installer-name": "ModelHistory"
     },
     "require": {
-        "php": ">=5.4"
+        "php": ">=5.4",
+        "codekanzlei/cake-cktools": "~1.2.8"
     },
     "require-dev": {
         "phpunit/phpunit": "*",

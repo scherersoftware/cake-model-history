@@ -17,45 +17,14 @@ class ModelHistoryHelper extends Helper
     public $helpers = ['Html'];
 
     /**
-     * Render an Contact Perosns area for the given entity
-     * @return contact_persons_area View
+     * Render the model history area where needed
+     *
+     * @return string History area
      */
     public function modelHistoryArea($entity, array $options = [])
     {
-        $options = Hash::merge([
-            'commentBox' => false,
-            'panel' => false
-        ], $options);
-
         $modelHistory = TableRegistry::get('ModelHistory.ModelHistory')->getModelHistory($entity->source(), $entity->id);
-
-        return $this->_View->element('ModelHistory.model_history_area', ['data' => $entity, 'modelHistory' => $modelHistory]);
-    }
-
-    /**
-     * Build recursive Table layout for data displaying
-     *
-     * @param  array  $data  Data
-     * @return string
-     */
-    public function recursiveFieldsTable(array $data)
-    {
-        $table = '<table class="fields-table table table-condensed">';
-        foreach ($data as $field => $value) {
-            $table .= '<tr>';
-                $table .= '<td>' . $field . '</td>';
-                if (is_array($value)) {
-                    $table .= '<td>' . $this->recursiveFieldsTable($value) . '</td>';
-                } else {
-                    if ($value === null) {
-                        $value = 'NULL';
-                    }
-                    $table .= '<td>' . $value . '</td>';
-                }
-            $table .= '</tr>';
-        }
-        $table .= '</table>';
-        return $table;
+        return $this->_View->element('ModelHistory.model_history_area', ['modelHistory' => $modelHistory]);
     }
 
     /**

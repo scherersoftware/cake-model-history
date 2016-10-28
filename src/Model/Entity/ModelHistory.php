@@ -9,11 +9,13 @@ use Cake\ORM\TableRegistry;
  */
 class ModelHistory extends Entity
 {
-
     const ACTION_CREATE = 'create';
     const ACTION_UPDATE = 'update';
     const ACTION_DELETE = 'delete';
     const ACTION_COMMENT = 'comment';
+
+    const CONTEXT_TYPE_CONTROLLER = 'controller';
+    const CONTEXT_TYPE_SHELL = 'shell';
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -26,6 +28,7 @@ class ModelHistory extends Entity
         'user_id' => true,
         'action' => true,
         'data' => true,
+        'context' => true,
         'user' => true,
         'revision' => true,
     ];

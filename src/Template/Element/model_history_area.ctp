@@ -14,29 +14,14 @@ use Cake\Routing\Router;
                 </thead>
 
                 <tbody>
-
-                    <?php foreach($modelHistory as $historyEntry): ?>
+                    <?= $this->element('ModelHistory.model_history_rows', compact('modelHistory')) ?>
+                    <?php if ($showMoreEntriesButton): ?>
                         <tr>
-                            <td class="action-label success" data-toggle="popover" data-content="Hinzugefügt">
-                                <?= $this->ModelHistory->historyBadge($historyEntry) ?>
-                                <?= $historyEntry->created->format('d.m.Y, H:i') ?><br />
-                                <?= isset($historyEntry->user) ? $historyEntry->user->full_name : 'Anonymous' ?><br />
-                                <!-- <?php if (!empty($historyEntry->context)): ?>
-                                <?php endif; ?> -->
-                                <!-- <a href="#">Passwort vergessen</a> -->
-                            </td>
-                            <td class="fields">
-                                Geänderte Felder:<br /> <?= join(', ', array_keys($historyEntry->data)) ?><br /><br />
-                                <?= $this->CkTools->displayStructuredData($historyEntry->data, [
-                                    'type' => 'table',
-                                    'class' => 'fields-table',
-                                    'expanded' => false
-                                ]) ?>
-                            </td>
-                            <td><a href="#" class="btn btn-primary">Diff</a></td>
+                            <td colspan="3">
+                                <a href="#" class="load-more-history" data-page="<?= $page ?>" data-model="<?= $model ?>" data-id="<?= $id ?>" data-limit="<?= $limit ?>">Mehr Einträge laden...</a>
+                            </tr>
                         </tr>
-                    <?php endforeach; ?>
-
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>

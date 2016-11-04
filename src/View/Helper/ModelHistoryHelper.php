@@ -23,8 +23,48 @@ class ModelHistoryHelper extends Helper
      */
     public function modelHistoryArea($entity, array $options = [])
     {
-        $modelHistory = TableRegistry::get('ModelHistory.ModelHistory')->getModelHistory($entity->source(), $entity->id);
-        return $this->_View->element('ModelHistory.model_history_area', ['modelHistory' => $modelHistory]);
+        $page = 1;
+        $limit = TableRegistry::get($entity->source())->getEntriesLimit();
+
+        $modelHistory = TableRegistry::get('ModelHistory.ModelHistory')->getModelHistory($entity->source(), $entity->id, $limit, $page);
+
+        $entries = TableRegistry::get('ModelHistory.ModelHistory')->getModelHistoryCount($entity->source(), $entity->id);
+        $showMoreEntriesButton = $entries > 0 && $limit * $page < $entries;
+
+        return $this->_View->element('ModelHistory.model_history_area', [
+            'modelHistory' => $modelHistory,
+            'showMoreEntriesButton' => $showMoreEntriesButton,
+            'page' => $page,
+            'model' => $entity->source(),
+            'id' => $entity->id,
+            'limit' => $limit
+        ]);
+    }
+
+    /**
+     * Convert action to bootstrap class
+     *
+     * @param  string  $action  History Action
+     * @return string
+     */
+    public function actionClass($action)
+    {
+        switch ($action) {
+            case ModelHistory::ACTION_CREATE:
+                $class = 'success';
+                break;
+            case ModelHistory::ACTION_DELETE:
+                $class = 'danger';
+                break;
+            case ModelHistory::ACTION_COMMENT:
+                $class = 'active';
+                break;
+            case ModelHistory::ACTION_UPDATE:
+            default:
+                $class = 'info';
+                break;
+        }
+        return $class;
     }
 
     /**
@@ -77,35 +117,20 @@ class ModelHistoryHelper extends Helper
         $customActions = TableRegistry::get($history->model)->getCustomActions();
         $action = '';
         switch ($history->action) {
-            case ModelHistory::ACTION_CREATE:
-                $style = 'success';
-                $icon = 'plus-circle';
-                $color = '';
-                break;
             case ModelHistory::ACTION_UPDATE:
-                $style = 'info';
                 $icon = 'refresh';
-                $color = '';
                 break;
             case ModelHistory::ACTION_DELETE:
-                $style = 'danger';
                 $icon = 'minus-circle';
-                $color = '';
                 break;
             case ModelHistory::ACTION_COMMENT:
-                $style = 'primary';
                 $icon = 'comments';
-                $color = '';
                 break;
             default:
-                $style = '';
-                foreach ($customActions as $customAction) {
-                    if ($customAction['action'] == $history->action) {
-                        $color = $customAction['color'];
-                        $icon = 'fa fa-' . $customAction['icon'];
-                    }
-                }
+            case ModelHistory::ACTION_CREATE:
+                $icon = 'plus-circle';
+                break;
         }
-        return '<div class="timeline-badge ' . $style . '" style="background-color:' . $color . '"><i class="fa fa-' . $icon . '"></i></div>';
+        return '<i class="fa fa-' . $icon . '"></i>';
     }
 }

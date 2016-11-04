@@ -21,10 +21,11 @@ class HistorizableBehavior extends Behavior
      */
     protected $_defaultConfig = [
         'userIdCallback' => null,
+        'entriesToShow' => 10,
         'customActions' => [],
         'userNameFields' => [
-            'firstname' => 'firstname',
-            'lastname' => 'lastname',
+            'firstname' => 'Users.firstname',
+            'lastname' => 'Users.lastname',
             'id' => 'Users.id'
         ],
         'obfuscatedFields' => [
@@ -115,7 +116,7 @@ class HistorizableBehavior extends Behavior
             $dirtyFields = $this->_dirtyFields[$entity->id];
             unset($this->_dirtyFields[$entity->id]);
         }
-        
+
         $this->ModelHistory->add($entity, $action, $this->_getUserId(), [
             'dirtyFields' => $dirtyFields
         ]);
@@ -220,5 +221,15 @@ class HistorizableBehavior extends Behavior
     public function getSkipFields()
     {
         return $this->config('skipFields');
+    }
+
+    /**
+     * Get count of entries to show.
+     *
+     * @return int
+     */
+    public function getEntriesLimit()
+    {
+        return $this->config('entriesToShow');
     }
 }

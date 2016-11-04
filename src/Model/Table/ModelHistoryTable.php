@@ -224,11 +224,13 @@ class ModelHistoryTable extends Table
     /**
      * get Model History
      *
-     * @param string $model model name
-     * @param string $foreignKey foreign key
+     * @param string $model         model name
+     * @param string $foreignKey    foreign key
+     * @param int    $itemsToShow   Amount of items to be shown
+     * @param int    $page          Current position
      * @return array
      */
-    public function getModelHistory($model, $foreignKey)
+    public function getModelHistory($model, $foreignKey, $itemsToShow, $page)
     {
         $history = $this->find()
             ->where([
@@ -237,9 +239,28 @@ class ModelHistoryTable extends Table
             ])
             ->order(['revision' => 'DESC'])
             ->contain(['Users'])
+            ->limit($itemsToShow)
+            ->page($page)
             ->toArray();
 
         return $this->_transformDataFields($history);
+    }
+
+    /**
+     * get Model History entries count
+     *
+     * @param string $model         model name
+     * @param string $foreignKey    foreign key
+     * @return int
+     */
+    public function getModelHistoryCount($model, $foreignKey)
+    {
+        return $this->find()
+            ->where([
+                'model' => $model,
+                'foreign_key' => $foreignKey
+            ])
+            ->count();
     }
 
     /**

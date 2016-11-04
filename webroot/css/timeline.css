@@ -185,10 +185,8 @@
         }
 }
 
-
-
 .model-history-area .fields .fields-table {
-    margin-top: 30px;
+    margin: 10px 0 0 0;
     background-color: transparent;
 }
 

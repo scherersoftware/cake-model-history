@@ -58,4 +58,26 @@ class ModelHistoryController extends AppController
         $this->FrontendBridge->setJson('model', $model);
         $this->FrontendBridge->setJson('foreignKey', $foreignKey);
     }
+
+    /**
+     * AJAX method to load more entries
+     *
+     * @param  string $model       Model name
+     * @param  string $foreignKey  Foreign key
+     * @param  int    $limit       Limit of entries to show
+     * @param  int    $page        Page to get
+     * @return string
+     */
+    public function loadMore($model, $foreignKey, $limit, $page)
+    {
+        $modelHistory = $this->ModelHistory->getModelHistory($model, $foreignKey, $limit, $page);
+
+        $entries = TableRegistry::get('ModelHistory.ModelHistory')->getModelHistoryCount($model, $foreignKey);
+        $showMoreEntriesButton = $entries > 0 && $limit * $page < $entries;
+
+        $this->FrontendBridge->setJson('showMoreEntriesButton', $showMoreEntriesButton);
+        $this->FrontendBridge->setBoth('modelHistory', $modelHistory);
+
+        return $this->render('/Element/model_history_rows', false);
+    }
 }

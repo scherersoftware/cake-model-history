@@ -9,7 +9,7 @@ use Cake\Network\Request;
  */
 trait HistoryContextTrait
 {
-    public $_context = null;
+    protected $_context = null;
 
     /**
      * Sets a context given through a request to identify the creation
@@ -20,6 +20,7 @@ trait HistoryContextTrait
     public function setHistoryContext(Request $request, $type)
     {
         $this->_context = [
+            'type' => $type,
             'params' => $request->params,
             'method' => $request->method()
         ];

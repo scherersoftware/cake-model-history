@@ -14,6 +14,18 @@ use Cake\Routing\Router;
                 </thead>
 
                 <tbody>
+                    <tr>
+                        <td colspan="3" class="comment-row">
+                            <?= $this->Form->create(); ?>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="data" id="data "placeholder="Enter comment...">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-success" type="submit">Save</button>
+                                    </span>
+                                </div>
+                            <?= $this->Form->end(); ?>
+                        </td>
+                    </tr>
                     <?= $this->element('ModelHistory.model_history_rows', compact('modelHistory')) ?>
                     <?php if ($showMoreEntriesButton): ?>
                         <tr>

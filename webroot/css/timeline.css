@@ -185,6 +185,10 @@
         }
 }
 
+.model-history-area .comment-row .input-group  {
+    width: 100%;
+    margin: 5px,
+}
 .model-history-area .fields .fields-table {
     margin: 10px 0 0 0;
     background-color: transparent;

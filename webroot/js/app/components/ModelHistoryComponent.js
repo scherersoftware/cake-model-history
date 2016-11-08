@@ -32,7 +32,7 @@ App.Components.ModelHistoryComponent = Frontend.Component.extend({
                 App.Main.UIBlocker.unblockElement($parentWrapper);
 
                 if (!response.data.frontendData.jsonData.showMoreEntriesButton) {
-                    $element.remove();
+                    $element.parents('tr').remove();
                 }
             }.bind(this),
         });

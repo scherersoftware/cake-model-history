@@ -34,11 +34,13 @@ class ModelHistoryController extends AppController
     /**
      * index function
      *
-     * @param string $model name of the model
-     * @param string $foreignKey id of the entity
+     * @param string $model       name of the model
+     * @param string $foreignKey  id of the entity
+     * @param int    $limit       Items to show
+     * @param int    $page        Current page
      * @return void
      */
-    public function index($model = null, $foreignKey = null)
+    public function index($model = null, $foreignKey = null, $limit = null, $page = null)
     {
         $this->ModelHistory->belongsTo('Users', [
             'foreignKey' => 'user_id'
@@ -52,11 +54,18 @@ class ModelHistoryController extends AppController
                 $this->Flash->error(__('forms.data_not_saved'));
             }
         }
-        $modelHistory = $this->ModelHistory->getModelHistory($model, $foreignKey);
+        $modelHistory = $this->ModelHistory->getModelHistory($model, $foreignKey, $limit, $page);
 
-        $this->set('modelHistory', $this->paginate($modelHistory));
-        $this->FrontendBridge->setJson('model', $model);
-        $this->FrontendBridge->setJson('foreignKey', $foreignKey);
+        $entries = TableRegistry::get('ModelHistory.ModelHistory')->getModelHistoryCount($model, $foreignKey);
+        $showMoreEntriesButton = $entries > 0 && $limit * $page < $entries;
+
+        $this->FrontendBridge->setBoth('modelHistory', $modelHistory);
+        $this->FrontendBridge->setBoth('showMoreEntriesButton', $showMoreEntriesButton);
+        $this->FrontendBridge->setBoth('id', $foreignKey);
+        $this->FrontendBridge->setBoth('model', $model);
+        $this->FrontendBridge->setBoth('foreignKey', $foreignKey);
+        $this->FrontendBridge->setBoth('limit', $limit);
+        $this->FrontendBridge->setBoth('page', $page);
     }
 
     /**

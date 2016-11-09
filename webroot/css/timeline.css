@@ -185,9 +185,9 @@
         }
 }
 
-.model-history-area .comment-row .input-group  {
+.model-history-area .model-history.form .input-group  {
     width: 100%;
-    margin: 5px,
+    margin: 15px 0;
 }
 .model-history-area .fields .fields-table {
     margin: 10px 0 0 0;

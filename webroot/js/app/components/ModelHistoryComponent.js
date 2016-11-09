@@ -1,6 +1,7 @@
 App.Components.ModelHistoryComponent = Frontend.Component.extend({
     startup: function() {
         this._addHandlers();
+        console.log('ADDED HANDLERS');
     },
     _addHandlers: function() {
         $('[data-toggle=popover]').popover({
@@ -13,6 +14,7 @@ App.Components.ModelHistoryComponent = Frontend.Component.extend({
             this.loadMoreEntries($target.data('model'), $target.data('id'), $target.data('limit'), $target.data('page'), $target);
             return e.preventDefault();
         }.bind(this));
+        $('.model-history form').off('submit').on('submit', this._onAddComment.bind(this));
     },
     loadMoreEntries: function(model, foreignKey, limit, page, $element) {
         var url = {
@@ -35,6 +37,39 @@ App.Components.ModelHistoryComponent = Frontend.Component.extend({
                     $element.parents('tr').remove();
                 }
             }.bind(this),
+        });
+    },
+    _onAddComment: function(e) {
+        e.preventDefault();
+
+        var model = $('input[name=data]', e.currentTarget).data('model'),
+            foreignKey = $('input[name=data]', e.currentTarget).data('foreignkey'),
+            loadMoreButton = $(e.currentTarget).parents('.form').next('table').find('.load-more-history'),
+            limit = 10,
+            page = 1;
+
+        if (loadMoreButton.length == 1) {
+            limit = loadMoreButton.data('limit');
+        }
+
+        var url = {
+            plugin: 'model_history',
+            controller: 'ModelHistory',
+            action: 'index',
+            pass: [
+                model,
+                foreignKey,
+                limit,
+                page
+            ]
+        };
+        App.Main.UIBlocker.blockElement($(e.currentTarget));
+        App.Main.loadJsonAction(url, {
+            data: $(e.currentTarget).serialize(),
+            target: $(e.currentTarget).parents('.model-history-area'),
+            onComplete: function(controller, response) {
+                App.Main.UIBlocker.unblockElement($(e.currentTarget));
+            }.bind(this)
         });
     }
 });

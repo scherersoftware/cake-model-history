@@ -1,7 +1,6 @@
 App.Components.ModelHistoryComponent = Frontend.Component.extend({
     startup: function() {
         this._addHandlers();
-        console.log('ADDED HANDLERS');
     },
     _addHandlers: function() {
         $('[data-toggle=popover]').popover({

@@ -41,7 +41,8 @@ class HistorizableBehavior extends Behavior
             'failed_login_timestamp'
         ],
         'translations' => [
-            'id' => 'ID'
+            'id' => 'ID',
+            'comment' => 'Kommentar'
         ],
         'relations' => []
     ];
@@ -231,5 +232,15 @@ class HistorizableBehavior extends Behavior
     public function getEntriesLimit()
     {
         return $this->config('entriesToShow');
+    }
+
+    /**
+     * Retrieve translated strings
+     *
+     * @return array
+     */
+    public function getTranslations()
+    {
+        return $this->config('translations');
     }
 }

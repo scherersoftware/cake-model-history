@@ -4,6 +4,7 @@ namespace ModelHistory\View\Helper;
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Cake\Utility\Inflector;
 use Cake\View\Helper;
 use Cake\View\View;
 use ModelHistory\Model\Entity\ModelHistory;
@@ -132,5 +133,39 @@ class ModelHistoryHelper extends Helper
                 break;
         }
         return '<i class="fa fa-' . $icon . '"></i>';
+    }
+
+    /**
+     * Retrieve fields as localized, comma seperated string.
+     *
+     * @param  ModelHistory  $historyEntry  A History entry
+     * @return string
+     */
+    public function getLocalizedFields(ModelHistory $historyEntry)
+    {
+        $fields = join(', ', array_map(function($value) use ($historyEntry) {
+            if (!is_string($value)) {
+                return $value;
+            }
+
+            // Get pre configured translations and return it if found
+            $translations = TableRegistry::get($historyEntry->model)->getTranslations();
+            if (isset($translations[$value])) {
+                return $translations[$value];
+            }
+
+            // Try to get the generic model.field translation string
+            $localeSlug = strtolower(Inflector::singularize(Inflector::delimit($historyEntry->model))) . '.' . strtolower($value);
+            $translatedString = __($localeSlug);
+
+            // Return original value when no translation was made
+            if ($localeSlug == $translatedString) {
+                return $value;
+            }
+
+            return $translatedString;
+        }, array_keys($historyEntry->data)));
+
+        return $fields;
     }
 }

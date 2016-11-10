@@ -25,16 +25,7 @@ use Cake\Routing\Router;
                             <th>Aktionen</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <?= $this->element('ModelHistory.model_history_rows', compact('modelHistory')) ?>
-                        <?php if ($showMoreEntriesButton): ?>
-                            <tr>
-                                <td colspan="3">
-                                    <a href="#" class="load-more-history" data-page="<?= $page ?>" data-model="<?= $model ?>" data-id="<?= $id ?>" data-limit="<?= $limit ?>">Mehr Einträge laden...</a>
-                                </tr>
-                            </tr>
-                        <?php endif; ?>
-                    </tbody>
+                    <?= $this->element('ModelHistory.model_history_rows', compact('modelHistory', 'showPrevEntriesButton', 'showNextEntriesButton', 'page', 'model', 'id', 'limit')) ?>
                 </table>
             <?php endif; ?>
         </div>

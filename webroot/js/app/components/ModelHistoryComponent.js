@@ -8,33 +8,44 @@ App.Components.ModelHistoryComponent = Frontend.Component.extend({
             placement: 'top',
             container: 'body'
         });
-        $('.model-history-area .load-more-history').off('click').on('click', function(e) {
+        $('.model-history-area .load-next-history').off('click').on('click', function(e) {
             $target = $(e.currentTarget);
-            this.loadMoreEntries($target.data('model'), $target.data('id'), $target.data('limit'), $target.data('page'), $target);
+            this.loadNextEntries($target.data('model'), $target.data('id'), $target.data('limit'), $target.data('page'), $target);
             return e.preventDefault();
         }.bind(this));
+        $('.model-history-area .load-prev-history').off('click').on('click', function(e) {
+            $target = $(e.currentTarget);
+            this.loadPrevEntries($target.data('model'), $target.data('id'), $target.data('limit'), $target.data('page'), $target);
+            return e.preventDefault();
+        }.bind(this));
+
         $('.model-history form').off('submit').on('submit', this._onAddComment.bind(this));
     },
-    loadMoreEntries: function(model, foreignKey, limit, page, $element) {
+    loadNextEntries: function(model, foreignKey, limit, page, $element) {
+        var page = page + 1;
+        this._loadEntries(model, foreignKey, limit, page, $element);
+    },
+    loadPrevEntries: function(model, foreignKey, limit, page, $element) {
+        var page = page - 1;
+        if (page <= 0) {
+            page = 1;
+        }
+        this._loadEntries(model, foreignKey, limit, page, $element);
+    },
+    _loadEntries: function(model, foreignKey, limit, page, $element) {
         var url = {
                 plugin: 'model_history',
-                action: 'loadMore',
+                action: 'loadEntries',
                 controller: 'ModelHistory',
-                pass: [model, foreignKey, limit, page + 1]
+                pass: [model, foreignKey, limit, page]
             },
             $parentWrapper = $element.parents('.model-history-area');
-
         App.Main.UIBlocker.blockElement($parentWrapper);
         App.Main.loadJsonAction(url, {
-            replaceTarget: false,
+            replaceTarget: true,
+            target: $('tbody', $parentWrapper),
             onComplete: function(controller, response) {
-                $(response.data.html).insertBefore($element.parents('tr'));
-                $element.data('page', page + 1);
                 App.Main.UIBlocker.unblockElement($parentWrapper);
-
-                if (!response.data.frontendData.jsonData.showMoreEntriesButton) {
-                    $element.parents('tr').remove();
-                }
             }.bind(this),
         });
     },
@@ -43,7 +54,7 @@ App.Components.ModelHistoryComponent = Frontend.Component.extend({
 
         var model = $('input[name=data]', e.currentTarget).data('model'),
             foreignKey = $('input[name=data]', e.currentTarget).data('foreignkey'),
-            loadMoreButton = $(e.currentTarget).parents('.form').next('table').find('.load-more-history'),
+            loadMoreButton = $(e.currentTarget).parents('.form').next('table').find('.load-next-history'),
             limit = 10,
             page = 1;
 

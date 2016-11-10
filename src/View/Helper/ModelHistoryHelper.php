@@ -30,11 +30,13 @@ class ModelHistoryHelper extends Helper
         $modelHistory = TableRegistry::get('ModelHistory.ModelHistory')->getModelHistory($entity->source(), $entity->id, $limit, $page);
 
         $entries = TableRegistry::get('ModelHistory.ModelHistory')->getModelHistoryCount($entity->source(), $entity->id);
-        $showMoreEntriesButton = $entries > 0 && $limit * $page < $entries;
+        $showNextEntriesButton = $entries > 0 && $limit * $page < $entries;
+        $showPrevEntriesButton = $page > 1;
 
         return $this->_View->element('ModelHistory.model_history_area', [
             'modelHistory' => $modelHistory,
-            'showMoreEntriesButton' => $showMoreEntriesButton,
+            'showNextEntriesButton' => $showNextEntriesButton,
+            'showPrevEntriesButton' => $showPrevEntriesButton,
             'page' => $page,
             'model' => $entity->source(),
             'id' => $entity->id,

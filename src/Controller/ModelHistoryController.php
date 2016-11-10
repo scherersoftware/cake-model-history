@@ -57,10 +57,12 @@ class ModelHistoryController extends AppController
         $modelHistory = $this->ModelHistory->getModelHistory($model, $foreignKey, $limit, $page);
 
         $entries = TableRegistry::get('ModelHistory.ModelHistory')->getModelHistoryCount($model, $foreignKey);
-        $showMoreEntriesButton = $entries > 0 && $limit * $page < $entries;
+        $showNextEntriesButton = $entries > 0 && $limit * $page < $entries;
+        $showPrevEntriesButton = $page > 1;
 
         $this->FrontendBridge->setBoth('modelHistory', $modelHistory);
-        $this->FrontendBridge->setBoth('showMoreEntriesButton', $showMoreEntriesButton);
+        $this->FrontendBridge->setBoth('showNextEntriesButton', $showNextEntriesButton);
+        $this->FrontendBridge->setBoth('showPrevEntriesButton', $showPrevEntriesButton);
         $this->FrontendBridge->setBoth('id', $foreignKey);
         $this->FrontendBridge->setBoth('model', $model);
         $this->FrontendBridge->setBoth('foreignKey', $foreignKey);
@@ -77,15 +79,22 @@ class ModelHistoryController extends AppController
      * @param  int    $page        Page to get
      * @return string
      */
-    public function loadMore($model, $foreignKey, $limit, $page)
+    public function loadEntries($model, $foreignKey, $limit, $page)
     {
         $modelHistory = $this->ModelHistory->getModelHistory($model, $foreignKey, $limit, $page);
 
         $entries = TableRegistry::get('ModelHistory.ModelHistory')->getModelHistoryCount($model, $foreignKey);
-        $showMoreEntriesButton = $entries > 0 && $limit * $page < $entries;
+        $showNextEntriesButton = $entries > 0 && $limit * $page < $entries;
+        $showPrevEntriesButton = $page > 1;
 
-        $this->FrontendBridge->setJson('showMoreEntriesButton', $showMoreEntriesButton);
+        $this->FrontendBridge->setBoth('showPrevEntriesButton', $showPrevEntriesButton);
+        $this->FrontendBridge->setBoth('showNextEntriesButton', $showNextEntriesButton);
         $this->FrontendBridge->setBoth('modelHistory', $modelHistory);
+
+        $this->FrontendBridge->setBoth('limit', $limit);
+        $this->FrontendBridge->setBoth('model', $model);
+        $this->FrontendBridge->setBoth('page', $page);
+        $this->FrontendBridge->setBoth('id', $foreignKey);
 
         return $this->render('/Element/model_history_rows', false);
     }

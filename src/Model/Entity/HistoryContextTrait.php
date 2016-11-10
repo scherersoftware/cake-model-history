@@ -24,8 +24,8 @@ trait HistoryContextTrait
      */
     public function setHistoryContext($dataObject, $type)
     {
-        if (!in_array($type, array_keys($this->_getTypes()))) {
-            throw new InvalidArgumentException("$type is not allowed as context type. Allowed types are: " . implode(', ', $this->_getTypes()));
+        if (!in_array($type, array_keys(ModelHistory::getContextTypes()))) {
+            throw new InvalidArgumentException("$type is not allowed as context type. Allowed types are: " . implode(', ', ModelHistory::getContextTypes()));
         }
 
         switch ($type) {
@@ -87,18 +87,5 @@ trait HistoryContextTrait
     public function getHistoryContextSlug()
     {
         return $this->_contextSlug;
-    }
-
-    /**
-     * Retrieve available context types
-     *
-     * @return array
-     */
-    protected function _getTypes()
-    {
-        return [
-            ModelHistory::CONTEXT_TYPE_CONTROLLER => __d('model_history', 'context.type.controller'),
-            ModelHistory::CONTEXT_TYPE_SHELL => __d('model_history', 'context.type.shell')
-        ];
     }
 }

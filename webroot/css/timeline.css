@@ -197,3 +197,11 @@
 .model-history-area .fields .fields-table td {
     width: 50%;
 }
+
+.model-history-area .table thead tr th:first-child {
+    width: 25%;
+}
+
+.model-history-area .bootstrap-datetimepicker-widget {
+    z-index: 9999;
+}

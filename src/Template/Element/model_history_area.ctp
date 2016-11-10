@@ -1,22 +1,64 @@
 <?php
 use Cake\Routing\Router;
+use ModelHistory\Model\Entity\ModelHistory;
 ?>
 <div class="row">
     <div class="col-md-12">
         <div class="model-history-area table-responsive">
             <div class="model-history-filter">
                 <?= $this->Form->create(); ?>
-                    <div class="row">
-                        <?php if (!empty($searchableFields)): ?>
-                            <div class="col-md-6">
-                                <?= $this->Form->input('filter_fields', [
-                                    'type' => 'select',
-                                    'label' => __d('model_history', 'filter.fields'),
-                                    'options' => $searchableFields
-                                ]) ?>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="row">
+                                <?php if (!empty($searchableFields)): ?>
+                                    <div class="col-md-6">
+                                        <?= $this->Form->input('filter.fields', [
+                                            'type' => 'select',
+                                            'label' => __d('model_history', 'filter.fields'),
+                                            'options' => $searchableFields
+                                        ]) ?>
+                                    </div>
+                                <?php endif; ?>
                             </div>
-                        <?php endif; ?>
-                        <div class="col-md-6"></div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <?= $this->Form->input('search.context_type', [
+                                        'type' => 'select',
+                                        'label' => __d('model_history', 'search.context_type'),
+                                        'options' => ModelHistory::getContextTypes()
+                                    ]) ?>
+                                </div>
+                                <div class="col-md-6">
+                                    <?= $this->Form->input('search.context_slug', [
+                                        'type' => 'text',
+                                        'label' => __d('model_history', 'search.context_slug')
+                                    ]) ?>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <?= $this->Form->input('search.date_from', [
+                                        'type' => 'date',
+                                        'label' => __d('model_history', 'search.date_from'),
+                                        'empty' => true
+                                    ]) ?>
+                                </div>
+                                <div class="col-md-6">
+                                    <?= $this->Form->input('search.date_to', [
+                                        'type' => 'date',
+                                        'label' => __d('model_history', 'search.date_to'),
+                                        'empty' => true
+                                    ]) ?>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <?= $this->Form->submit(__d('model_history', 'submit_filter'), [
+                                        'class' => 'btn btn-xs btn-primary'
+                                    ]); ?>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 <?= $this->Form->end(); ?>
             </div>

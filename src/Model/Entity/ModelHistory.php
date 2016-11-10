@@ -80,4 +80,17 @@ class ModelHistory extends Entity
             return $value;
         }
     }
+
+    /**
+     * Retrieve available context types
+     *
+     * @return array
+     */
+    public static function getContextTypes()
+    {
+        return [
+            self::CONTEXT_TYPE_CONTROLLER => __d('model_history', 'context.type.controller'),
+            self::CONTEXT_TYPE_SHELL => __d('model_history', 'context.type.shell')
+        ];
+    }
 }

@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2016-11-10 13:07+0100\n"
-"PO-Revision-Date: 2016-11-10 13:09+0100\n"
+"POT-Creation-Date: 2016-11-10 14:40+0100\n"
+"PO-Revision-Date: 2016-11-10 14:41+0100\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: EMAIL@ADDRESS\n"
 "Language: de\n"
@@ -50,6 +50,14 @@ msgstr "Keine Historie vorhanden"
 #: /Users/ksch/Sites/cake-model-history/src/Template/Element/model_history_area_panel.ctp:3
 msgid "model_history"
 msgstr "Model Historie"
+
+#: /Users/ksch/Sites/cake-model-history/src/Template/Element/model_history_rows.ctp:5
+msgid "load_previous"
+msgstr "Vorherige Einträge laden..."
+
+#: /Users/ksch/Sites/cake-model-history/src/Template/Element/model_history_rows.ctp:40
+msgid "load_next"
+msgstr "Nächste Einträge laden..."
 
 #: /Users/ksch/Sites/cake-model-history/src/View/Helper/ModelHistoryHelper.php:84
 msgid "created"

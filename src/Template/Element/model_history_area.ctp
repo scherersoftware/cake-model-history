@@ -4,6 +4,22 @@ use Cake\Routing\Router;
 <div class="row">
     <div class="col-md-12">
         <div class="model-history-area table-responsive">
+            <div class="model-history-filter">
+                <?= $this->Form->create(); ?>
+                    <div class="row">
+                        <?php if (!empty($searchableFields)): ?>
+                            <div class="col-md-6">
+                                <?= $this->Form->input('filter_fields', [
+                                    'type' => 'select',
+                                    'label' => __d('model_history', 'filter.fields'),
+                                    'options' => $searchableFields
+                                ]) ?>
+                            </div>
+                        <?php endif; ?>
+                        <div class="col-md-6"></div>
+                    </div>
+                <?= $this->Form->end(); ?>
+            </div>
             <div class="model-history form">
                 <?= $this->Form->create(); ?>
                     <div class="input-group">

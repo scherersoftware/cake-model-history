@@ -42,6 +42,9 @@ class HistorizableBehavior extends Behavior
             'failed_login_timestamp'
         ],
         'translations' => [],
+        'searchableFields' => [
+            'forename'
+        ],
         'relations' => []
     ];
 
@@ -75,7 +78,7 @@ class HistorizableBehavior extends Behavior
             'created' => __d('model_history', 'field.created'),
             'modified' => __d('model_history', 'field.modified')
         ]);
-        
+
         $this->ModelHistory = TableRegistry::get('ModelHistory.ModelHistory');
         // Dynamically attach the hasMany relationship
         $this->_table->hasMany('ModelHistory.ModelHistory', [
@@ -248,5 +251,15 @@ class HistorizableBehavior extends Behavior
     public function getTranslations()
     {
         return $this->config('translations');
+    }
+
+    /**
+     * Retrieve searchable fields
+     *
+     * @return array
+     */
+    public function getSearchableFields()
+    {
+        return $this->config('searchableFields');
     }
 }

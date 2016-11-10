@@ -8,6 +8,7 @@ use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\I18n\Time;
 use Cake\Utility\Hash;
+use Cake\Utility\Inflector;
 use Cake\Validation\Validator;
 use ModelHistory\Model\Entity\ModelHistory;
 
@@ -113,6 +114,10 @@ class ModelHistoryTable extends Table
         if (method_exists($entity, 'getHistoryContext')) {
             $context = $entity->getHistoryContext();
         }
+        $contextSlug = null;
+        if (method_exists($entity, 'getHistoryContextSlug')) {
+            $contextSlug = $entity->getHistoryContextSlug();
+        }
 
         $entry = $this->newEntity([
             'model' => $this->getEntityModel($entity),
@@ -120,6 +125,7 @@ class ModelHistoryTable extends Table
             'action' => $action,
             'data' => $options['data'],
             'context' => $context,
+            'context_slug' => $contextSlug,
             'user_id' => $userId,
             'revision' => $this->getNextRevisionNumberForEntity($entity)
         ]);
@@ -230,13 +236,15 @@ class ModelHistoryTable extends Table
      * @param int    $page          Current position
      * @return array
      */
-    public function getModelHistory($model, $foreignKey, $itemsToShow, $page)
+    public function getModelHistory($model, $foreignKey, $itemsToShow, $page, array $conditions = [])
     {
+        $conditions = Hash::merge([
+            'model' => $model,
+            'foreign_key' => $foreignKey
+        ], $conditions);
+
         $history = $this->find()
-            ->where([
-                'model' => $model,
-                'foreign_key' => $foreignKey
-            ])
+            ->where($conditions)
             ->order(['revision' => 'DESC'])
             ->contain(['Users'])
             ->limit($itemsToShow)
@@ -274,6 +282,16 @@ class ModelHistoryTable extends Table
         foreach ($history as $index => $entity) {
             $entityData = $entity->data;
             foreach ($entityData as $field => $value) {
+                if (stripos($field, '_id') !== false) {
+                    $tableString = str_replace('_id', '', $field);
+                    $tableName = Inflector::camelize(Inflector::pluralize($tableString));
+                    $table = TableRegistry::get($tableName);
+
+                    if (get_class($table) == 'App\\Model\\Table\\' . $tableName . 'Table' && $table->exists(['id' => $value])) {
+                        $entry = $table->get($value);
+                        // debug($entry);
+                    }
+                }
                 $entityData[$field] = $this->_determineFieldValue($value);
             }
             $history[$index]->data = $entityData;

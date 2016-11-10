@@ -5,6 +5,7 @@ namespace ModelHistory\Model\Entity;
 use Cake\Console\Shell;
 use Cake\Network\Request;
 use Cake\Utility\Hash;
+use Cake\Utility\Text;
 use InvalidArgumentException;
 
 /**
@@ -13,6 +14,7 @@ use InvalidArgumentException;
 trait HistoryContextTrait
 {
     protected $_context = null;
+    protected $_contextSlug = null;
 
     /**
      * Sets a context given through a request to identify the creation
@@ -42,6 +44,7 @@ trait HistoryContextTrait
                     'tasks' => $dataObject->tasks,
                     'taskNames' => $dataObject->taskNames
                 ];
+                $contextSlug = null;
                 break;
             case ModelHistory::CONTEXT_TYPE_CONTROLLER:
             default:
@@ -52,12 +55,18 @@ trait HistoryContextTrait
                     'params' => $dataObject->params,
                     'method' => $dataObject->method()
                 ];
+                $contextSlug = Text::insert(':plugin/:controller/:action',[
+                    'plugin' => $context['params']['plugin'],
+                    'controller' => $context['params']['controller'],
+                    'action' => $context['params']['action']
+                ]);
                 break;
         }
 
         $this->_context = Hash::merge([
             'type' => $type
         ], $context);
+        $this->_contextSlug = $contextSlug;
     }
 
     /**
@@ -68,6 +77,16 @@ trait HistoryContextTrait
     public function getHistoryContext()
     {
         return $this->_context;
+    }
+
+    /**
+     * Retrieve context slug
+     *
+     * @return string
+     */
+    public function getHistoryContextSlug()
+    {
+        return $this->_contextSlug;
     }
 
     /**

@@ -68,6 +68,7 @@ class ModelHistoryController extends AppController
         $this->FrontendBridge->setBoth('foreignKey', $foreignKey);
         $this->FrontendBridge->setBoth('limit', $limit);
         $this->FrontendBridge->setBoth('page', $page);
+        $this->FrontendBridge->setBoth('searchableFields', TableRegistry::get($entity->source())->getSearchableFields());
     }
 
     /**
@@ -90,7 +91,6 @@ class ModelHistoryController extends AppController
         $this->FrontendBridge->setBoth('showPrevEntriesButton', $showPrevEntriesButton);
         $this->FrontendBridge->setBoth('showNextEntriesButton', $showNextEntriesButton);
         $this->FrontendBridge->setBoth('modelHistory', $modelHistory);
-
         $this->FrontendBridge->setBoth('limit', $limit);
         $this->FrontendBridge->setBoth('model', $model);
         $this->FrontendBridge->setBoth('page', $page);

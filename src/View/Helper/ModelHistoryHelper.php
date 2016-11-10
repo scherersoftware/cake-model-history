@@ -40,7 +40,8 @@ class ModelHistoryHelper extends Helper
             'page' => $page,
             'model' => $entity->source(),
             'id' => $entity->id,
-            'limit' => $limit
+            'limit' => $limit,
+            'searchableFields' => TableRegistry::get($entity->source())->getSearchableFields()
         ]);
     }
 
@@ -138,12 +139,12 @@ class ModelHistoryHelper extends Helper
     }
 
     /**
-     * Retrieve fields as localized, comma seperated string.
+     * Retrieve field names as localized, comma seperated string.
      *
      * @param  ModelHistory  $historyEntry  A History entry
      * @return string
      */
-    public function getLocalizedFields(ModelHistory $historyEntry)
+    public function getLocalizedFieldnames(ModelHistory $historyEntry)
     {
         $fields = join(', ', array_map(function($value) use ($historyEntry) {
             if (!is_string($value)) {

@@ -2,7 +2,7 @@
     <?php if ($showPrevEntriesButton): ?>
         <tr>
             <td colspan="3">
-                <a href="#" class="load-prev-history" data-page="<?= $page ?>" data-model="<?= $model ?>" data-id="<?= $id ?>" data-limit="<?= $limit ?>">Vorherige Einträge laden...</a>
+                <a href="#" class="load-prev-history" data-page="<?= $page ?>" data-model="<?= $model ?>" data-id="<?= $id ?>" data-limit="<?= $limit ?>"><?=  __d('model_history', 'load_previous'); ?></a>
             </tr>
         </tr>
     <?php endif; ?>
@@ -17,17 +17,17 @@
                 <?php endif; ?>
             </td>
             <td class="fields">
-                <?= $this->ModelHistory->getLocalizedFields($historyEntry) ?> |
+                <?= $this->ModelHistory->getLocalizedFieldnames($historyEntry) ?> |
                 <?= $this->CkTools->displayStructuredData($historyEntry->data, [
                     'type' => 'table',
                     'class' => 'fields-table',
                     'expanded' => false,
-                    'callback' => function ($value) use ($historyEntry) {
+                    'fieldnameCallback' => function ($fieldname) use ($historyEntry) {
                         $ownHistoryEntry = clone $historyEntry;
                         $ownHistoryEntry->data = [
-                            $value => true
+                            $fieldname => true
                         ];
-                        return $this->ModelHistory->getLocalizedFields($ownHistoryEntry);
+                        return $this->ModelHistory->getLocalizedFieldnames($ownHistoryEntry);
                     }
                 ]) ?>
             </td>
@@ -37,7 +37,7 @@
     <?php if ($showNextEntriesButton): ?>
         <tr>
             <td colspan="3">
-                <a href="#" class="load-next-history" data-page="<?= $page ?>" data-model="<?= $model ?>" data-id="<?= $id ?>" data-limit="<?= $limit ?>">Nächste Einträge laden...</a>
+                <a href="#" class="load-next-history" data-page="<?= $page ?>" data-model="<?= $model ?>" data-id="<?= $id ?>" data-limit="<?= $limit ?>"><?=  __d('model_history', 'load_next'); ?></a>
             </tr>
         </tr>
     <?php endif; ?>

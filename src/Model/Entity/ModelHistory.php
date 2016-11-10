@@ -29,6 +29,7 @@ class ModelHistory extends Entity
         'action' => true,
         'data' => true,
         'context' => true,
+        'context_slug' => true,
         'user' => true,
         'revision' => true,
     ];

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2015-03-24 08:46+0000\n"
+"POT-Creation-Date: 2016-11-10 13:06+0100\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -14,32 +14,59 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: /Users/cleptric/Sites/curveup_backend/Model/Table/ModelHistoryTable.php:52
+#: /Users/ksch/Sites/cake-model-history/src/Model/Behavior/HistorizableBehavior.php:73
+msgid "field.id"
+msgstr ""
+
+#: /Users/ksch/Sites/cake-model-history/src/Model/Behavior/HistorizableBehavior.php:74
+msgid "field.comment"
+msgstr ""
+
+#: /Users/ksch/Sites/cake-model-history/src/Model/Behavior/HistorizableBehavior.php:75
+msgid "field.created"
+msgstr ""
+
+#: /Users/ksch/Sites/cake-model-history/src/Model/Behavior/HistorizableBehavior.php:76
+msgid "field.modified"
+msgstr ""
+
+#: /Users/ksch/Sites/cake-model-history/src/Model/Entity/HistoryContextTrait.php:81
+msgid "context.type.controller"
+msgstr ""
+
+#: /Users/ksch/Sites/cake-model-history/src/Model/Entity/HistoryContextTrait.php:82
+msgid "context.type.shell"
+msgstr ""
+
+#: /Users/ksch/Sites/cake-model-history/src/Model/Table/ModelHistoryTable.php:54
 msgid "comment_empty"
 msgstr ""
 
-#: /Users/cleptric/Sites/curveup_backend/Template/Element/model_history_area_panel.ctp:3
-#: /Users/cleptric/Sites/curveup_backend/View/Helper/ModelHistoryHelper.php:53
-msgid "model_history"
-msgstr ""
-
-#: /Users/cleptric/Sites/curveup_backend/Template/ModelHistory/index.ctp:2
+#: /Users/ksch/Sites/cake-model-history/src/Template/Element/model_history_area.ctp:18
 msgid "no_history"
 msgstr ""
 
-#: /Users/cleptric/Sites/curveup_backend/View/Helper/ModelHistoryHelper.php:56
+#: /Users/ksch/Sites/cake-model-history/src/Template/Element/model_history_area_panel.ctp:3
+msgid "model_history"
+msgstr ""
+
+#: /Users/ksch/Sites/cake-model-history/src/View/Helper/ModelHistoryHelper.php:84
+msgid "created"
+msgstr ""
+
+#: /Users/ksch/Sites/cake-model-history/src/View/Helper/ModelHistoryHelper.php:87
 msgid "updated"
 msgstr ""
 
-#: /Users/cleptric/Sites/curveup_backend/View/Helper/ModelHistoryHelper.php:59
+#: /Users/ksch/Sites/cake-model-history/src/View/Helper/ModelHistoryHelper.php:90
 msgid "deleted"
 msgstr ""
 
-#: /Users/cleptric/Sites/curveup_backend/View/Helper/ModelHistoryHelper.php:62
+#: /Users/ksch/Sites/cake-model-history/src/View/Helper/ModelHistoryHelper.php:93
 msgid "commented"
 msgstr ""
 
-#: /Users/cleptric/Sites/curveup_backend/View/Helper/ModelHistoryHelper.php:76
+#: /Users/ksch/Sites/cake-model-history/src/View/Helper/ModelHistoryHelper.php:110
 msgid "by"
 msgstr ""
 

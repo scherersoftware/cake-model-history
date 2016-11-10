@@ -6,6 +6,7 @@ use Cake\Event\Event;
 use Cake\ORM\Behavior;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 use ModelHistory\Model\Entity\ModelHistory;
 
 /**
@@ -40,10 +41,7 @@ class HistorizableBehavior extends Behavior
             'failed_login_count',
             'failed_login_timestamp'
         ],
-        'translations' => [
-            'id' => 'ID',
-            'comment' => 'Kommentar'
-        ],
+        'translations' => [],
         'relations' => []
     ];
 
@@ -70,6 +68,14 @@ class HistorizableBehavior extends Behavior
      */
     public function initialize(array $config)
     {
+        // Set default translations
+        $this->config('translations', [
+            'id' => __d('model_history', 'field.id'),
+            'comment' => __d('model_history', 'field.comment'),
+            'created' => __d('model_history', 'field.created'),
+            'modified' => __d('model_history', 'field.modified')
+        ]);
+        
         $this->ModelHistory = TableRegistry::get('ModelHistory.ModelHistory');
         // Dynamically attach the hasMany relationship
         $this->_table->hasMany('ModelHistory.ModelHistory', [

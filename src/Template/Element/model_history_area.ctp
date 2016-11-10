@@ -21,6 +21,7 @@ use Cake\Routing\Router;
                 <?= $this->Form->end(); ?>
             </div>
             <div class="model-history form">
+                <?= $this->Flash->render() ?>
                 <?= $this->Form->create(); ?>
                     <div class="input-group">
                         <input type="text" class="form-control" name="data" id="data "placeholder="Enter comment..." data-model="<?= $model ?>" data-foreignKey="<?= $id ?>">

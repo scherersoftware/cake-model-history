@@ -15,6 +15,7 @@ trait HistoryContextTrait
 {
     protected $_context = null;
     protected $_contextSlug = null;
+    protected $_contextType = null;
 
     /**
      * Sets a context given through a request to identify the creation
@@ -67,6 +68,7 @@ trait HistoryContextTrait
             'type' => $type
         ], $context);
         $this->_contextSlug = $contextSlug;
+        $this->_contextType = $type;
     }
 
     /**
@@ -87,5 +89,15 @@ trait HistoryContextTrait
     public function getHistoryContextSlug()
     {
         return $this->_contextSlug;
+    }
+
+    /**
+     * Retrieve context type
+     *
+     * @return string
+     */
+    public function getHistoryContextType()
+    {
+        return $this->_contextType;
     }
 }

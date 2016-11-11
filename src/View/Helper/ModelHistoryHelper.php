@@ -39,7 +39,7 @@ class ModelHistoryHelper extends Helper
             'showPrevEntriesButton' => $showPrevEntriesButton,
             'page' => $page,
             'model' => $entity->source(),
-            'id' => $entity->id,
+            'foreignKey' => $entity->id,
             'limit' => $limit,
             'searchableFields' => TableRegistry::get($entity->source())->getSearchableFields()
         ]);

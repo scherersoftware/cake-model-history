@@ -118,12 +118,17 @@ class ModelHistoryTable extends Table
         if (method_exists($entity, 'getHistoryContextSlug')) {
             $contextSlug = $entity->getHistoryContextSlug();
         }
+        $contextType = null;
+        if (method_exists($entity, 'getHistoryContextType')) {
+            $contextType = $entity->getHistoryContextType();
+        }
 
         $entry = $this->newEntity([
             'model' => $this->getEntityModel($entity),
             'foreign_key' => $entity->id,
             'action' => $action,
             'data' => $options['data'],
+            'context_type' => $contextType,
             'context' => $context,
             'context_slug' => $contextSlug,
             'user_id' => $userId,
@@ -261,13 +266,14 @@ class ModelHistoryTable extends Table
      * @param string $foreignKey    foreign key
      * @return int
      */
-    public function getModelHistoryCount($model, $foreignKey)
+    public function getModelHistoryCount($model, $foreignKey, array $conditions = [])
     {
+        $conditions = Hash::merge([
+            'model' => $model,
+            'foreign_key' => $foreignKey
+        ], $conditions);
         return $this->find()
-            ->where([
-                'model' => $model,
-                'foreign_key' => $foreignKey
-            ])
+            ->where($conditions)
             ->count();
     }
 

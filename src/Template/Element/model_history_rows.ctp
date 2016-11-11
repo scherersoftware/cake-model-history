@@ -2,7 +2,7 @@
     <?php if ($showPrevEntriesButton): ?>
         <tr>
             <td colspan="3">
-                <a href="#" class="load-prev-history" data-page="<?= $page ?>" data-model="<?= $model ?>" data-id="<?= $id ?>" data-limit="<?= $limit ?>"><?=  __d('model_history', 'load_previous'); ?></a>
+                <a href="#" class="load-prev-history" data-page="<?= $page ?>"><?=  __d('model_history', 'load_previous'); ?></a>
             </tr>
         </tr>
     <?php endif; ?>
@@ -37,7 +37,7 @@
     <?php if ($showNextEntriesButton): ?>
         <tr>
             <td colspan="3">
-                <a href="#" class="load-next-history" data-page="<?= $page ?>" data-model="<?= $model ?>" data-id="<?= $id ?>" data-limit="<?= $limit ?>"><?=  __d('model_history', 'load_next'); ?></a>
+                <a href="#" class="load-next-history" data-page="<?= $page ?>"><?=  __d('model_history', 'load_next'); ?></a>
             </tr>
         </tr>
     <?php endif; ?>

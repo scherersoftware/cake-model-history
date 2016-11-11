@@ -6,6 +6,7 @@ CREATE TABLE `model_history` (
   `action` varchar(45) DEFAULT NULL COMMENT 'e.g. "create", "update", "delete"',
   `data` mediumblob COMMENT 'JSON blob, schema per action',
   `context` mediumblob COMMENT 'JSON blob, schema per action',
+  `context_type` varchar(255) DEFAULT NULL,
   `context_slug` varchar(255) DEFAULT NULL,
   `revision` int(8) NOT NULL,
   `created` datetime DEFAULT NULL,

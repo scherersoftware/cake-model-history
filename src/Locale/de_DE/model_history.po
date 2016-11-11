@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2016-11-10 14:40+0100\n"
-"PO-Revision-Date: 2016-11-10 14:41+0100\n"
+"POT-Creation-Date: 2016-11-11 16:46+0100\n"
+"PO-Revision-Date: 2016-11-11 16:47+0100\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: EMAIL@ADDRESS\n"
 "Language: de\n"
@@ -15,35 +15,39 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 1.8.8\n"
 
-#: /Users/ksch/Sites/cake-model-history/src/Model/Behavior/HistorizableBehavior.php:73
+#: /Users/ksch/Sites/cake-model-history/src/Model/Behavior/HistorizableBehavior.php:74
 msgid "field.id"
 msgstr "ID"
 
-#: /Users/ksch/Sites/cake-model-history/src/Model/Behavior/HistorizableBehavior.php:74
+#: /Users/ksch/Sites/cake-model-history/src/Model/Behavior/HistorizableBehavior.php:75
 msgid "field.comment"
 msgstr "Kommentar"
 
-#: /Users/ksch/Sites/cake-model-history/src/Model/Behavior/HistorizableBehavior.php:75
+#: /Users/ksch/Sites/cake-model-history/src/Model/Behavior/HistorizableBehavior.php:76
 msgid "field.created"
 msgstr "Erstellungsdatum"
 
-#: /Users/ksch/Sites/cake-model-history/src/Model/Behavior/HistorizableBehavior.php:76
+#: /Users/ksch/Sites/cake-model-history/src/Model/Behavior/HistorizableBehavior.php:77
 msgid "field.modified"
 msgstr "Änderungsdatum"
 
-#: /Users/ksch/Sites/cake-model-history/src/Model/Entity/HistoryContextTrait.php:81
+#: /Users/ksch/Sites/cake-model-history/src/Model/Behavior/HistorizableBehavior.php:82
+msgid "field.forename"
+msgstr "Vorname"
+
+#: /Users/ksch/Sites/cake-model-history/src/Model/Entity/ModelHistory.php:93
 msgid "context.type.controller"
 msgstr "Controller"
 
-#: /Users/ksch/Sites/cake-model-history/src/Model/Entity/HistoryContextTrait.php:82
+#: /Users/ksch/Sites/cake-model-history/src/Model/Entity/ModelHistory.php:94
 msgid "context.type.shell"
 msgstr "Shell"
 
-#: /Users/ksch/Sites/cake-model-history/src/Model/Table/ModelHistoryTable.php:54
+#: /Users/ksch/Sites/cake-model-history/src/Model/Table/ModelHistoryTable.php:55
 msgid "comment_empty"
 msgstr "kein Kommentar vorhanden"
 
-#: /Users/ksch/Sites/cake-model-history/src/Template/Element/model_history_area.ctp:18
+#: /Users/ksch/Sites/cake-model-history/src/Template/Element/model_history_area.ctp:11
 msgid "no_history"
 msgstr "Keine Historie vorhanden"
 
@@ -59,22 +63,54 @@ msgstr "Vorherige Einträge laden..."
 msgid "load_next"
 msgstr "Nächste Einträge laden..."
 
-#: /Users/ksch/Sites/cake-model-history/src/View/Helper/ModelHistoryHelper.php:84
+#: /Users/ksch/Sites/cake-model-history/src/Template/Element/form/filter_box.ctp:13
+msgid "filter.fields"
+msgstr "Felder"
+
+#: /Users/ksch/Sites/cake-model-history/src/Template/Element/form/filter_box.ctp:15;26
+msgid "select.choose"
+msgstr "Bitte auswählen"
+
+#: /Users/ksch/Sites/cake-model-history/src/Template/Element/form/filter_box.ctp:24
+msgid "search.context_type"
+msgstr "Kontexttyp"
+
+#: /Users/ksch/Sites/cake-model-history/src/Template/Element/form/filter_box.ctp:32
+msgid "search.context_slug"
+msgstr "Kontextidentifikator"
+
+#: /Users/ksch/Sites/cake-model-history/src/Template/Element/form/filter_box.ctp:40
+msgid "search.date_from"
+msgstr "Änderungsdatum von"
+
+#: /Users/ksch/Sites/cake-model-history/src/Template/Element/form/filter_box.ctp:47
+msgid "search.date_to"
+msgstr "Änderungsdatum bis"
+
+#: /Users/ksch/Sites/cake-model-history/src/Template/Element/form/filter_box.ctp:54
+msgid "submit_filter"
+msgstr "Filtern"
+
+#: /Users/ksch/Sites/cake-model-history/src/Template/Element/form/filter_box.ctp:57
+msgid "reset_filter"
+msgstr "Zurücksetzen"
+
+#: /Users/ksch/Sites/cake-model-history/src/View/Helper/ModelHistoryHelper.php:85
 msgid "created"
 msgstr "erstellt"
 
-#: /Users/ksch/Sites/cake-model-history/src/View/Helper/ModelHistoryHelper.php:87
+#: /Users/ksch/Sites/cake-model-history/src/View/Helper/ModelHistoryHelper.php:88
 msgid "updated"
 msgstr "aktualisiert"
 
-#: /Users/ksch/Sites/cake-model-history/src/View/Helper/ModelHistoryHelper.php:90
+#: /Users/ksch/Sites/cake-model-history/src/View/Helper/ModelHistoryHelper.php:91
 msgid "deleted"
 msgstr "gelöscht"
 
-#: /Users/ksch/Sites/cake-model-history/src/View/Helper/ModelHistoryHelper.php:93
+#: /Users/ksch/Sites/cake-model-history/src/View/Helper/ModelHistoryHelper.php:94
 msgid "commented"
 msgstr "kommentiert"
 
-#: /Users/ksch/Sites/cake-model-history/src/View/Helper/ModelHistoryHelper.php:110
+#: /Users/ksch/Sites/cake-model-history/src/View/Helper/ModelHistoryHelper.php:111
 msgid "by"
 msgstr "von"

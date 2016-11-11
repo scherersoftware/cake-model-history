@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2016-11-10 14:40+0100\n"
+"POT-Creation-Date: 2016-11-11 16:46+0100\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -14,35 +14,39 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: /Users/ksch/Sites/cake-model-history/src/Model/Behavior/HistorizableBehavior.php:73
+#: /Users/ksch/Sites/cake-model-history/src/Model/Behavior/HistorizableBehavior.php:74
 msgid "field.id"
 msgstr ""
 
-#: /Users/ksch/Sites/cake-model-history/src/Model/Behavior/HistorizableBehavior.php:74
+#: /Users/ksch/Sites/cake-model-history/src/Model/Behavior/HistorizableBehavior.php:75
 msgid "field.comment"
 msgstr ""
 
-#: /Users/ksch/Sites/cake-model-history/src/Model/Behavior/HistorizableBehavior.php:75
+#: /Users/ksch/Sites/cake-model-history/src/Model/Behavior/HistorizableBehavior.php:76
 msgid "field.created"
 msgstr ""
 
-#: /Users/ksch/Sites/cake-model-history/src/Model/Behavior/HistorizableBehavior.php:76
+#: /Users/ksch/Sites/cake-model-history/src/Model/Behavior/HistorizableBehavior.php:77
 msgid "field.modified"
 msgstr ""
 
-#: /Users/ksch/Sites/cake-model-history/src/Model/Entity/HistoryContextTrait.php:81
+#: /Users/ksch/Sites/cake-model-history/src/Model/Behavior/HistorizableBehavior.php:82
+msgid "field.forename"
+msgstr ""
+
+#: /Users/ksch/Sites/cake-model-history/src/Model/Entity/ModelHistory.php:93
 msgid "context.type.controller"
 msgstr ""
 
-#: /Users/ksch/Sites/cake-model-history/src/Model/Entity/HistoryContextTrait.php:82
+#: /Users/ksch/Sites/cake-model-history/src/Model/Entity/ModelHistory.php:94
 msgid "context.type.shell"
 msgstr ""
 
-#: /Users/ksch/Sites/cake-model-history/src/Model/Table/ModelHistoryTable.php:54
+#: /Users/ksch/Sites/cake-model-history/src/Model/Table/ModelHistoryTable.php:55
 msgid "comment_empty"
 msgstr ""
 
-#: /Users/ksch/Sites/cake-model-history/src/Template/Element/model_history_area.ctp:18
+#: /Users/ksch/Sites/cake-model-history/src/Template/Element/model_history_area.ctp:11
 msgid "no_history"
 msgstr ""
 
@@ -58,23 +62,55 @@ msgstr ""
 msgid "load_next"
 msgstr ""
 
-#: /Users/ksch/Sites/cake-model-history/src/View/Helper/ModelHistoryHelper.php:84
+#: /Users/ksch/Sites/cake-model-history/src/Template/Element/form/filter_box.ctp:13
+msgid "filter.fields"
+msgstr ""
+
+#: /Users/ksch/Sites/cake-model-history/src/Template/Element/form/filter_box.ctp:15;26
+msgid "select.choose"
+msgstr ""
+
+#: /Users/ksch/Sites/cake-model-history/src/Template/Element/form/filter_box.ctp:24
+msgid "search.context_type"
+msgstr ""
+
+#: /Users/ksch/Sites/cake-model-history/src/Template/Element/form/filter_box.ctp:32
+msgid "search.context_slug"
+msgstr ""
+
+#: /Users/ksch/Sites/cake-model-history/src/Template/Element/form/filter_box.ctp:40
+msgid "search.date_from"
+msgstr ""
+
+#: /Users/ksch/Sites/cake-model-history/src/Template/Element/form/filter_box.ctp:47
+msgid "search.date_to"
+msgstr ""
+
+#: /Users/ksch/Sites/cake-model-history/src/Template/Element/form/filter_box.ctp:54
+msgid "submit_filter"
+msgstr ""
+
+#: /Users/ksch/Sites/cake-model-history/src/Template/Element/form/filter_box.ctp:57
+msgid "reset_filter"
+msgstr ""
+
+#: /Users/ksch/Sites/cake-model-history/src/View/Helper/ModelHistoryHelper.php:85
 msgid "created"
 msgstr ""
 
-#: /Users/ksch/Sites/cake-model-history/src/View/Helper/ModelHistoryHelper.php:87
+#: /Users/ksch/Sites/cake-model-history/src/View/Helper/ModelHistoryHelper.php:88
 msgid "updated"
 msgstr ""
 
-#: /Users/ksch/Sites/cake-model-history/src/View/Helper/ModelHistoryHelper.php:90
+#: /Users/ksch/Sites/cake-model-history/src/View/Helper/ModelHistoryHelper.php:91
 msgid "deleted"
 msgstr ""
 
-#: /Users/ksch/Sites/cake-model-history/src/View/Helper/ModelHistoryHelper.php:93
+#: /Users/ksch/Sites/cake-model-history/src/View/Helper/ModelHistoryHelper.php:94
 msgid "commented"
 msgstr ""
 
-#: /Users/ksch/Sites/cake-model-history/src/View/Helper/ModelHistoryHelper.php:110
+#: /Users/ksch/Sites/cake-model-history/src/View/Helper/ModelHistoryHelper.php:111
 msgid "by"
 msgstr ""
 

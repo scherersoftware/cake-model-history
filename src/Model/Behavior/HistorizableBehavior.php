@@ -42,9 +42,7 @@ class HistorizableBehavior extends Behavior
             'failed_login_timestamp'
         ],
         'translations' => [],
-        'searchableFields' => [
-            'forename'
-        ],
+        'searchableFields' => [],
         'relations' => []
     ];
 
@@ -77,6 +75,11 @@ class HistorizableBehavior extends Behavior
             'comment' => __d('model_history', 'field.comment'),
             'created' => __d('model_history', 'field.created'),
             'modified' => __d('model_history', 'field.modified')
+        ]);
+
+        // Set default searchable fields
+        $this->config('searchableFields', [
+            'forename' => __d('model_history', 'field.forename')
         ]);
 
         $this->ModelHistory = TableRegistry::get('ModelHistory.ModelHistory');

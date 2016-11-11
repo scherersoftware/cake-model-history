@@ -205,3 +205,11 @@
 .model-history-area .bootstrap-datetimepicker-widget {
     z-index: 9999;
 }
+
+.model-history-filter .submit,
+.model-history-filter .submit-btn,
+.model-history-filter .reset-btn {
+    display: inline-block;
+    color: #FFF;
+    text-transform: uppercase;
+}

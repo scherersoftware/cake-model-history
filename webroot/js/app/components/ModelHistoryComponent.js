@@ -8,38 +8,46 @@ App.Components.ModelHistoryComponent = Frontend.Component.extend({
             placement: 'top',
             container: 'body'
         });
+
         $('.model-history-area .load-next-history').off('click').on('click', function(e) {
-            $target = $(e.currentTarget);
-            this.loadNextEntries($target.data('model'), $target.data('id'), $target.data('limit'), $target.data('page'), $target);
-            return e.preventDefault();
-        }.bind(this));
-        $('.model-history-area .load-prev-history').off('click').on('click', function(e) {
-            $target = $(e.currentTarget);
-            this.loadPrevEntries($target.data('model'), $target.data('id'), $target.data('limit'), $target.data('page'), $target);
-            return e.preventDefault();
+            e.preventDefault();
+            var $target = $(e.currentTarget);
+            this.loadNextEntries($target.data('page'), $target);
         }.bind(this));
 
-        $('.model-history form').off('submit').on('submit', this._onAddComment.bind(this));
+        $('.model-history-area .load-prev-history').off('click').on('click', function(e) {
+            e.preventDefault();
+            var $target = $(e.currentTarget);
+            this.loadPrevEntries($target.data('page'), $target);
+        }.bind(this));
+
+        $('.model-history-comment form').off('submit').on('submit', this._onAddComment.bind(this));
+
+        $('.model-history-filter form').off('submit').on('submit', this._onFilter.bind(this));
+        $('.model-history-filter .reset-btn').off('click').on('click', this._onResetFilter.bind(this));
     },
-    loadNextEntries: function(model, foreignKey, limit, page, $element) {
+    loadNextEntries: function(page, $element) {
         var page = page + 1;
-        this._loadEntries(model, foreignKey, limit, page, $element);
+        this._loadEntries(page, $element);
     },
-    loadPrevEntries: function(model, foreignKey, limit, page, $element) {
+    loadPrevEntries: function(page, $element) {
         var page = page - 1;
         if (page <= 0) {
             page = 1;
         }
-        this._loadEntries(model, foreignKey, limit, page, $element);
+        this._loadEntries(page, $element);
     },
-    _loadEntries: function(model, foreignKey, limit, page, $element) {
-        var url = {
+    _loadEntries: function(page, $element) {
+        var $parentWrapper = $element.parents('.model-history-area'),
+            model = $parentWrapper.data('model'),
+            foreignKey = $parentWrapper.data('foreignkey'),
+            limit = $parentWrapper.data('limit'),
+            url = {
                 plugin: 'model_history',
                 action: 'loadEntries',
                 controller: 'ModelHistory',
                 pass: [model, foreignKey, limit, page]
-            },
-            $parentWrapper = $element.parents('.model-history-area');
+            };
         App.Main.UIBlocker.blockElement($parentWrapper);
         App.Main.loadJsonAction(url, {
             replaceTarget: true,
@@ -52,14 +60,14 @@ App.Components.ModelHistoryComponent = Frontend.Component.extend({
     _onAddComment: function(e) {
         e.preventDefault();
 
-        var model = $('input[name=data]', e.currentTarget).data('model'),
-            foreignKey = $('input[name=data]', e.currentTarget).data('foreignkey'),
-            loadMoreButton = $(e.currentTarget).parents('.form').next('table').find('.load-next-history'),
+        var $parentWrapper = $(e.currentTarget).parents('.model-history-area'),
+            model = $parentWrapper.data('model'),
+            foreignKey = $parentWrapper.data('foreignkey'),
             limit = 10,
             page = 1;
 
-        if (loadMoreButton.length == 1) {
-            limit = loadMoreButton.data('limit');
+        if ($parentWrapper.data('limit')) {
+            limit = $parentWrapper.data('limit');
         }
 
         var url = {
@@ -76,10 +84,34 @@ App.Components.ModelHistoryComponent = Frontend.Component.extend({
         App.Main.UIBlocker.blockElement($(e.currentTarget));
         App.Main.loadJsonAction(url, {
             data: $(e.currentTarget).serialize(),
-            target: $(e.currentTarget).parents('.model-history-area'),
+            target: $parentWrapper,
             onComplete: function(controller, response) {
                 App.Main.UIBlocker.unblockElement($(e.currentTarget));
             }.bind(this)
         });
+    },
+    _onResetFilter: function(e) {
+        console.log(e);
+    },
+    _onFilter: function(e) {
+        var $parentWrapper = $(e.currentTarget).parents('.model-history-area'),
+            model = $parentWrapper.data('model'),
+            foreignKey = $parentWrapper.data('foreignkey'),
+            url = {
+                plugin: 'model_history',
+                controller: 'ModelHistory',
+                action: 'filter',
+                pass: [model, foreignKey]
+            };
+
+        App.Main.UIBlocker.blockElement($(e.currentTarget));
+        App.Main.loadJsonAction(url, {
+            data: $(e.currentTarget).serialize(),
+            target: $parentWrapper.parents('.model-history-wrapper'),
+            onComplete: function(controller, response) {
+                App.Main.UIBlocker.unblockElement($(e.currentTarget));
+            }.bind(this)
+        });
+        e.preventDefault();
     }
 });

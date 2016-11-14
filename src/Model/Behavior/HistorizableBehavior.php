@@ -6,7 +6,9 @@ use Cake\Event\Event;
 use Cake\ORM\Behavior;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
+use Cake\Routing\Router;
 use Cake\Utility\Hash;
+use Cake\Utility\Inflector;
 use ModelHistory\Model\Entity\ModelHistory;
 
 /**
@@ -186,6 +188,42 @@ class HistorizableBehavior extends Behavior
     }
 
     /**
+     * Get <a /> element for given ID Field
+     *
+     * @param  string  $fieldName   Fieldname
+     * @param  string  $fieldValue  Value
+     * @return string
+     */
+    public function getRelationLink($fieldName, $fieldValue = null)
+    {
+        $relations = $this->getRelations();
+        $tableName = Inflector::camelize(Inflector::pluralize(str_replace('_id', '', $fieldName)));
+        if (isset($relations[$fieldName])) {
+            $relationConfig = $relations[$fieldName];
+        } else {
+            $relationConfig = [
+                'model' => $tableName,
+                'bindingKey' => 'id',
+                'url' => [
+                    'plugin' => 'Admin',
+                    'controller' => $tableName,
+                    'action' => 'view',
+                    'addFieldAsPass' => true
+                ]
+            ];
+        }
+
+        $pass = [];
+        if ($relationConfig['url']['addFieldAsPass']) {
+            $pass = [$fieldValue];
+        }
+        unset($relationConfig['url']['addFieldAsPass']);
+
+        $url = Router::url(Hash::merge($relationConfig['url'], $pass));
+        return '<a href="' . $url . '" target="_blank">' . __(strtolower($tableName)) . '</a>';
+    }
+
+    /**
      * Set a callback to get the user id
      *
      * @param callable $callback Callback which must return the user id
@@ -234,6 +272,16 @@ class HistorizableBehavior extends Behavior
     public function getSkipFields()
     {
         return $this->config('skipFields');
+    }
+
+    /**
+     * Retrieve relations
+     *
+     * @return array
+     */
+    public function getRelations()
+    {
+        return $this->config('relations');
     }
 
     /**

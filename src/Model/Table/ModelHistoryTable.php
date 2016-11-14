@@ -288,17 +288,7 @@ class ModelHistoryTable extends Table
         foreach ($history as $index => $entity) {
             $entityData = $entity->data;
             foreach ($entityData as $field => $value) {
-                if (stripos($field, '_id') !== false) {
-                    $tableString = str_replace('_id', '', $field);
-                    $tableName = Inflector::camelize(Inflector::pluralize($tableString));
-                    $table = TableRegistry::get($tableName);
-
-                    if (get_class($table) == 'App\\Model\\Table\\' . $tableName . 'Table' && $table->exists(['id' => $value])) {
-                        $entry = $table->get($value);
-                        // debug($entry);
-                    }
-                }
-                $entityData[$field] = $this->_determineFieldValue($value);
+                $entityData[$field] = $this->_determineFieldValue($field, $value);
             }
             $history[$index]->data = $entityData;
         }
@@ -311,7 +301,18 @@ class ModelHistoryTable extends Table
      * @param  mixed  $value  The value
      * @return mixed  Human readable value
      */
-    protected function _determineFieldValue($value) {
+    protected function _determineFieldValue($field, $value) {
+        if (stripos($field, '_id') !== false) {
+            $tableString = str_replace('_id', '', $field);
+            $tableName = Inflector::camelize(Inflector::pluralize($tableString));
+            $table = TableRegistry::get($tableName);
+
+            $historizableBehavior = $table->behaviors()->get('Historizable');
+            if (is_object($historizableBehavior) && method_exists($historizableBehavior, 'getRelationLink')) {
+                return $table->behaviors()->get('Historizable')->getRelationLink($field, $value);
+            }
+        }
+
         $type = gettype($value);
         switch ($type) {
             case 'object':
@@ -327,7 +328,7 @@ class ModelHistoryTable extends Table
             case 'array':
                 $readableArr = [];
                 foreach ($value as $arrIndex => $arrValue) {
-                    $readableArr[$arrIndex] = $this->_determineFieldValue($arrValue);
+                    $readableArr[$arrIndex] = $this->_determineFieldValue($arrIndex, $arrValue);
                 }
                 $value = $readableArr;
             case 'string':

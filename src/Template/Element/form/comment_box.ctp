@@ -1,5 +1,7 @@
 <div class="model-history-comment">
-    <?= $this->Flash->render() ?>
+    <div class="flash">
+        <?= $this->Flash->render() ?>
+    </div>
     <?= $this->Form->create(); ?>
         <div class="input-group">
             <input type="text" class="form-control" name="data" id="data "placeholder="Enter comment...">

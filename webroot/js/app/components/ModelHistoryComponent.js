@@ -91,22 +91,35 @@ App.Components.ModelHistoryComponent = Frontend.Component.extend({
         });
     },
     _onResetFilter: function(e) {
-        console.log(e);
+        e.preventDefault();
+
+        var $button = $(e.currentTarget),
+            $filterForm = $button.parents('form');
+
+        e.currentTarget = $filterForm[0];
+        this._onFilter(e, true);
     },
-    _onFilter: function(e) {
+    _onFilter: function(e, reset) {
         var $parentWrapper = $(e.currentTarget).parents('.model-history-area'),
             model = $parentWrapper.data('model'),
             foreignKey = $parentWrapper.data('foreignkey'),
+            limit = $parentWrapper.data('limit'),
+            page = $parentWrapper.data('page'),
             url = {
                 plugin: 'model_history',
                 controller: 'ModelHistory',
                 action: 'filter',
-                pass: [model, foreignKey]
+                pass: [model, foreignKey, limit, page]
             };
+
+        var formData = $(e.currentTarget).serialize();
+        if (reset === true) {
+            formData = {};
+        }
 
         App.Main.UIBlocker.blockElement($(e.currentTarget));
         App.Main.loadJsonAction(url, {
-            data: $(e.currentTarget).serialize(),
+            data: formData,
             target: $parentWrapper.parents('.model-history-wrapper'),
             onComplete: function(controller, response) {
                 App.Main.UIBlocker.unblockElement($(e.currentTarget));

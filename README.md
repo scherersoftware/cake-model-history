@@ -94,6 +94,18 @@ $this->addBehavior('ModelHistory.Historizable', [
     ],
     'obfuscatedFields' => [
         'password'
+    ],
+    'relations' => [
+        'user_id' => [
+            'model' => 'Users',
+            'bindingKey' => 'id',
+            'url' => [
+                'plugin' => 'Admin',
+                'controller' => 'Users',
+                'action' => 'view',
+                'addFieldAsPass' => true
+            ]
+        ]
     ]
 ]);
 ```

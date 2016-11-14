@@ -138,20 +138,25 @@ class ModelHistoryController extends AppController
                             $fromDate = Time::now()
                                 ->year($searchValue['from']['year'])
                                 ->month($searchValue['from']['month'])
-                                ->day($searchValue['from']['day']);
+                                ->day($searchValue['from']['day'])
+                                ->hour(0)
+                                ->minute(0)
+                                ->second(0);
 
                             $searchConditions = Hash::merge([
-                                'created >=' => $fromDate
+                                'ModelHistory.created >=' => $fromDate
                             ], $searchConditions);
                         }
                         if (!empty($searchValue['to']['year']) && !empty($searchValue['to']['month']) && !empty($searchValue['to']['day'])) {
                             $toDate = Time::now()
                                 ->year($searchValue['to']['year'])
                                 ->month($searchValue['to']['month'])
-                                ->day($searchValue['to']['day']);
-
+                                ->day($searchValue['to']['day'])
+                                ->hour(23)
+                                ->minute(59)
+                                ->second(59);
                             $searchConditions = Hash::merge([
-                                'created <=' => $toDate
+                                'ModelHistory.created <=' => $toDate
                             ], $searchConditions);
                         }
                         break;
@@ -169,7 +174,6 @@ class ModelHistoryController extends AppController
             }
         }
         $conditions = Hash::merge($filterConditions, $searchConditions);
-        // debug($conditions);
         $modelHistory = $this->ModelHistory->getModelHistory($model, $foreignKey, $limit, 1, $conditions);
 
         $entries = TableRegistry::get('ModelHistory.ModelHistory')->getModelHistoryCount($model, $foreignKey, $conditions);
@@ -184,7 +188,7 @@ class ModelHistoryController extends AppController
         $this->FrontendBridge->setBoth('page', $page);
         $this->FrontendBridge->setBoth('foreignKey', $foreignKey);
         $this->FrontendBridge->setBoth('searchableFields', TableRegistry::get($model)->getSearchableFields());
-        $this->FrontendBridge->set('filter', $this->request->data['filter']);
+        $this->FrontendBridge->set('filter', isset($this->request->data['filter']) ? $this->request->data['filter'] : []);
 
         return $this->render('index');
     }

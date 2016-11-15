@@ -97,13 +97,11 @@ class ModelHistoryController extends AppController
         return $this->render('/Element/model_history_rows', false);
     }
 
-    /**
-     * [filter description]
-     * @param  [type] $model      [description]
-     * @param  [type] $foreignKey [description]
-     * @param  [type] $limit      [description]
-     * @param  [type] $page       [description]
-     * @return [type]             [description]
+     * @param  string  $model       Model name
+     * @param  string  $foreignKey  Model's foreign key
+     * @param  int     $limit       Entries limit
+     * @param  int     $page        Current page to view
+     * @return string               Index View
      */
     public function filter($model = null, $foreignKey = null, $limit = null, $page = null)
     {
@@ -118,7 +116,7 @@ class ModelHistoryController extends AppController
                 switch ($filterName) {
                     case 'fields':
                         $filterConditions = Hash::merge([
-                            'data LIKE' => Text::insert('%:fieldName%', ['fieldName' => $filterValue])
+                            '`data` LIKE' => Text::insert('%:fieldName%', ['fieldName' => $filterValue])
                         ], $filterConditions);
                     break;
                 }

@@ -96,7 +96,7 @@ class ModelHistoryController extends AppController
                         $filterConditions = Hash::merge([
                             '`data` LIKE' => Text::insert('%:fieldName%', ['fieldName' => $filterValue])
                         ], $filterConditions);
-                    break;
+                        break;
                 }
             }
         }
@@ -170,14 +170,43 @@ class ModelHistoryController extends AppController
     }
 
     /**
-     * Diff for a 
-     * @param  [type] $currentId  [description]
-     * @param  [type] $model      [description]
-     * @param  [type] $foreignKey [description]
-     * @return [type]             [description]
+     * Build diff for a given modelHistory entry
+     *
+     * @param  string   $currentId   UUID of ModelHistory entry to get diff for
+     * @return array
      */
-    public function diff($currentId = null, $model = null, $foreignKey = null)
+    public function diff($currentId = null)
     {
+        $historyEntry = $this->ModelHistory->get($currentId);
+        $currentEntity = TableRegistry::get($historyEntry->model)->get($historyEntry->foreign_key);
 
+        $olderRevisions = $this->ModelHistory->find()
+            ->where([
+                'model' => $historyEntry->model,
+                'foreign_key' => $historyEntry->foreign_key,
+                'revision <' => $historyEntry->revision
+            ])
+            ->order(['revision' => 'DESC'])
+            ->toArray();
+
+        $diffOutput = [
+            'changed' => $historyEntry->data,
+            'unchanged' => []
+        ];
+
+        foreach (TableRegistry::get($historyEntry->model)->getSearchableFields() as $fieldName => $translation) {
+            if (isset($diffOutput['changed'][$fieldName])) {
+                continue;
+            }
+            $diffOutput['unchanged'][$fieldName] = $currentEntity->{$fieldName};
+        }
+
+        debug($diffOutput);
+
+        debug($historyEntry);
+        debug($currentEntity);
+        debug($changedFields);
+        debug($olderRevisions);
+        die;
     }
 }

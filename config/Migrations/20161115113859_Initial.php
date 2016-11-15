@@ -35,13 +35,13 @@ class Initial extends AbstractMigration
                 'limit' => 45,
                 'null' => true,
             ])
-            ->addColumn('data', 'binary', [
+            ->addColumn('data', 'blob', [
                 'comment' => 'JSON blob, schema per action',
                 'default' => null,
                 'limit' => 16777215,
                 'null' => true,
             ])
-            ->addColumn('context', 'binary', [
+            ->addColumn('context', 'blob', [
                 'comment' => 'JSON blob, schema per action',
                 'default' => null,
                 'limit' => 16777215,

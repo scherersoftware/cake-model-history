@@ -11,14 +11,12 @@ App.Components.ModelHistoryComponent = Frontend.Component.extend({
 
         $('.model-history-area .load-next-history').off('click').on('click', function(e) {
             e.preventDefault();
-            var $target = $(e.currentTarget);
-            this.loadNextEntries($target.data('page'), $target);
+            this.loadNextEntries(e);
         }.bind(this));
 
         $('.model-history-area .load-prev-history').off('click').on('click', function(e) {
             e.preventDefault();
-            var $target = $(e.currentTarget);
-            this.loadPrevEntries($target.data('page'), $target);
+            this.loadPrevEntries(e);
         }.bind(this));
 
         $('.model-history-comment form').off('submit').on('submit', this._onAddComment.bind(this));
@@ -26,36 +24,24 @@ App.Components.ModelHistoryComponent = Frontend.Component.extend({
         $('.model-history-filter form').off('submit').on('submit', this._onFilter.bind(this));
         $('.model-history-filter .reset-btn').off('click').on('click', this._onResetFilter.bind(this));
     },
-    loadNextEntries: function(page, $element) {
-        var page = page + 1;
-        this._loadEntries(page, $element);
+    loadNextEntries: function(e) {
+        var $parentWrapper = $(e.currentTarget).parents('.model-history-area'),
+            page = $parentWrapper.data('page') + 1;
+
+        $parentWrapper.data('page', page);
+        e.currentTarget = $('.model-history-filter form', $parentWrapper);
+        this._onFilter(e);
     },
-    loadPrevEntries: function(page, $element) {
-        var page = page - 1;
+    loadPrevEntries: function(e) {
+        var $parentWrapper = $(e.currentTarget).parents('.model-history-area'),
+            page = $parentWrapper.data('page') - 1;
         if (page <= 0) {
             page = 1;
         }
-        this._loadEntries(page, $element);
-    },
-    _loadEntries: function(page, $element) {
-        var $parentWrapper = $element.parents('.model-history-area'),
-            model = $parentWrapper.data('model'),
-            foreignKey = $parentWrapper.data('foreignkey'),
-            limit = $parentWrapper.data('limit'),
-            url = {
-                plugin: 'model_history',
-                action: 'loadEntries',
-                controller: 'ModelHistory',
-                pass: [model, foreignKey, limit, page]
-            };
-        App.Main.UIBlocker.blockElement($parentWrapper);
-        App.Main.loadJsonAction(url, {
-            replaceTarget: true,
-            target: $('tbody', $parentWrapper),
-            onComplete: function(controller, response) {
-                App.Main.UIBlocker.unblockElement($parentWrapper);
-            }.bind(this),
-        });
+
+        $parentWrapper.data('page', page);
+        e.currentTarget = $('.model-history-filter form', $parentWrapper);
+        this._onFilter(e);
     },
     _onAddComment: function(e) {
         e.preventDefault();
@@ -113,16 +99,18 @@ App.Components.ModelHistoryComponent = Frontend.Component.extend({
             };
 
         var formData = $(e.currentTarget).serialize();
+        $parentWrapper.parents('.model-history-wrapper').data('filterActive', false);
         if (reset === true) {
+            $parentWrapper.parents('.model-history-wrapper').data('filterActive', false);
             formData = {};
         }
 
-        App.Main.UIBlocker.blockElement($(e.currentTarget));
+        App.Main.UIBlocker.blockElement($parentWrapper);
         App.Main.loadJsonAction(url, {
             data: formData,
             target: $parentWrapper.parents('.model-history-wrapper'),
             onComplete: function(controller, response) {
-                App.Main.UIBlocker.unblockElement($(e.currentTarget));
+                App.Main.UIBlocker.unblockElement($parentWrapper);
             }.bind(this)
         });
         e.preventDefault();

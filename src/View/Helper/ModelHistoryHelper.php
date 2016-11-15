@@ -157,6 +157,12 @@ class ModelHistoryHelper extends Helper
                 return $translations[$value];
             }
 
+            // Get pre configured searchable fields and return it if found
+            $translations = TableRegistry::get($historyEntry->model)->getSearchableFields();
+            if (isset($translations[$value])) {
+                return $translations[$value];
+            }
+
             // Try to get the generic model.field translation string
             $localeSlug = strtolower(Inflector::singularize(Inflector::delimit($historyEntry->model))) . '.' . strtolower($value);
             $translatedString = __($localeSlug);

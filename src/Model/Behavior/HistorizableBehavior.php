@@ -79,11 +79,6 @@ class HistorizableBehavior extends Behavior
             'modified' => __d('model_history', 'field.modified')
         ]);
 
-        // Set default searchable fields
-        $this->config('searchableFields', [
-            'forename' => __d('model_history', 'field.forename')
-        ]);
-
         $this->ModelHistory = TableRegistry::get('ModelHistory.ModelHistory');
         // Dynamically attach the hasMany relationship
         $this->_table->hasMany('ModelHistory.ModelHistory', [
@@ -199,6 +194,9 @@ class HistorizableBehavior extends Behavior
         $relations = $this->getRelations();
         $tableName = Inflector::camelize(Inflector::pluralize(str_replace('_id', '', $fieldName)));
         if (isset($relations[$fieldName])) {
+            if (!isset($relations[$fieldName]['url']) || !isset($relations[$fieldName]['model']) || !isset($relations[$fieldName]['bindingKey'])) {
+                throw new \InvalidArgumentException('You have to specify url, model and bindingKey');
+            }
             $relationConfig = $relations[$fieldName];
         } else {
             $relationConfig = [
@@ -214,12 +212,19 @@ class HistorizableBehavior extends Behavior
         }
 
         $pass = [];
-        if ($relationConfig['url']['addFieldAsPass']) {
+        if (isset($relationConfig['url']['addFieldAsPass']) && $relationConfig['url']['addFieldAsPass'] === true) {
             $pass = [$fieldValue];
         }
         unset($relationConfig['url']['addFieldAsPass']);
 
-        $url = Router::url(Hash::merge($relationConfig['url'], $pass));
+        if (is_array($relationConfig['url'])) {
+            try {
+                $url = Router::url(Hash::merge($relationConfig['url'], $pass));
+            } catch (\Cake\Core\Exception\Exception $e) {
+                return $fieldValue;
+            }
+        }
+
         return '<a href="' . $url . '" target="_blank">' . __(strtolower($tableName)) . '</a>';
     }
 
@@ -311,6 +316,6 @@ class HistorizableBehavior extends Behavior
      */
     public function getSearchableFields()
     {
-        return $this->config('searchableFields');
+        return Hash::sort($this->config('searchableFields'), '{s}', 'asc');
     }
 }

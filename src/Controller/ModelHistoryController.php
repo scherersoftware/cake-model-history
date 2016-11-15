@@ -168,4 +168,16 @@ class ModelHistoryController extends AppController
 
         return $this->render('index');
     }
+
+    /**
+     * Diff for a 
+     * @param  [type] $currentId  [description]
+     * @param  [type] $model      [description]
+     * @param  [type] $foreignKey [description]
+     * @return [type]             [description]
+     */
+    public function diff($currentId = null, $model = null, $foreignKey = null)
+    {
+
+    }
 }

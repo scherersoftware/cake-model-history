@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2016-11-11 16:46+0100\n"
+"POT-Creation-Date: 2016-11-15 13:13+0100\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -14,11 +14,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: /Users/ksch/Sites/cake-model-history/src/Controller/ModelHistoryController.php:54
 msgid "forms.data_saved"
 msgstr ""
 
-#: /Users/ksch/Sites/cake-model-history/src/Controller/ModelHistoryController.php:56
 msgid "forms.data_not_saved"
 msgstr ""
 

@@ -6,6 +6,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
+use Cake\I18n\Date;
 use Cake\I18n\Time;
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
@@ -275,6 +276,99 @@ class ModelHistoryTable extends Table
         return $this->find()
             ->where($conditions)
             ->count();
+    }
+
+    /**
+     * Builds a diff for a given history entry
+     *
+     * @param  ModelHistory  $historyEntry  ModelHistory Entry to build diff for
+     * @return array
+     */
+    public function buildDiff(ModelHistory $historyEntry)
+    {
+        if ($historyEntry->revision == 1) {
+            return [];
+        }
+
+        $previousRevisions = $this->find()
+            ->where([
+                'model' => $historyEntry->model,
+                'foreign_key' => $historyEntry->foreign_key,
+                'revision <' => $historyEntry->revision
+            ])
+            ->order(['revision' => 'DESC'])
+            ->toArray();
+
+        $diffOutput = [
+            'changed' => [],
+            'changedBefore' => [],
+            'unchanged' => []
+        ];
+
+        // 1. Get old values for changed fields in passed entry, ignore arrays
+        foreach ($historyEntry->data as $fieldName => $newValue) {
+            foreach ($previousRevisions as $revision) {
+                if (isset($revision->data[$fieldName])) {
+                    if (is_array($revision->data[$fieldName])) {
+                        continue 2;
+                    }
+                    $diffOutput['changed'][$fieldName] = [
+                        'old' => $revision->data[$fieldName],
+                        'new' => $newValue
+                    ];
+                    continue 2;
+                }
+            }
+        }
+
+        $currentEntity = TableRegistry::get($historyEntry->model)->get($historyEntry->foreign_key);
+
+        // 2. Try to get old values for any other fields defined in searchableFields and
+
+        foreach (TableRegistry::get($historyEntry->model)->getSearchableFields() as $fieldName => $translation) {
+            foreach ($previousRevisions as $revisionIndex => $revision) {
+                if (!isset($revision->data[$fieldName])) {
+                    continue;
+                }
+                if (is_array($revision->data[$fieldName]) || isset($diffOutput['changed'][$fieldName])) {
+                    continue 2;
+                }
+                if ($currentEntity->{$fieldName} instanceof Time || $currentEntity->{$fieldName} instanceof Date) {
+                    $timeFormat = $currentEntity->{$fieldName}->format('Y-m-d') . 'T' . $currentEntity->{$fieldName}->format('H:i:s');
+                    if ($timeFormat != $revision->data[$fieldName]) {
+                        $diffOutput['changedBefore'][$fieldName] = [
+                            'old' => $revision->data[$fieldName],
+                            'new' => $timeFormat
+                        ];
+                        continue 2;
+                    }
+                }
+                if ($revision->data[$fieldName] != $currentEntity->{$fieldName}) {
+                    $diffOutput['changedBefore'][$fieldName] = [
+                        'old' => $revision->data[$fieldName],
+                        'new' => $currentEntity->{$fieldName}
+                    ];
+                    continue 2;
+                }
+            }
+        }
+
+        // 3. Get all unchanged fields
+
+        foreach (TableRegistry::get($historyEntry->model)->getSearchableFields() as $fieldName => $translation) {
+            foreach ($previousRevisions as $revision) {
+                if (!isset($revision->data[$fieldName])) {
+                    continue;
+                }
+                if (is_array($revision->data[$fieldName]) || isset($diffOutput['changed'][$fieldName]) || isset($diffOutput['changedBefore'][$fieldName])) {
+                    continue 2;
+                }
+                $diffOutput['unchanged'][$fieldName] = $currentEntity->{$fieldName};
+                continue 2;
+            }
+        }
+
+        return $diffOutput;
     }
 
     /**

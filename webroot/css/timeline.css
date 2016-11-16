@@ -217,3 +217,22 @@
 .model-history-comment {
     margin-bottom: 10px;
 }
+
+
+
+
+#diff-output .changed {
+    background-color: #77DD77;
+}
+
+#diff-output .changed-before {
+    background-color: #FFB347;
+}
+
+#diff-output .unchanged {
+    background-color: #CFCFC4;
+}
+
+#diff-output .italic {
+    font-style: italic;
+}

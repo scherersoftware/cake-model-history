@@ -44,8 +44,22 @@ class HistorizableBehavior extends Behavior
             'failed_login_timestamp'
         ],
         'translations' => [],
-        'searchableFields' => [],
-        'relations' => []
+        'searchableFields' => [
+        ],
+        'relations' => [],
+
+        // 'fields' => [
+        //     [
+        //         'name' => 'forename',
+        //         'translation' => __('users.forename'),
+        //         'type' => 'string', # string, bool, number, relation, date
+        //         'displayParser' => function ($value) {
+        //             return $value;
+        //         },
+        //         'saveParser' => function ($value) {
+        //         }
+        //     ]
+        // ]
     ];
 
     /**

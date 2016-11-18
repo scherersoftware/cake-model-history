@@ -218,9 +218,6 @@
     margin-bottom: 10px;
 }
 
-
-
-
 #diff-output .changed {
     background-color: #77DD77;
 }
@@ -235,4 +232,8 @@
 
 #diff-output .italic {
     font-style: italic;
+}
+
+#diff-output tr th {
+    border: medium none;
 }

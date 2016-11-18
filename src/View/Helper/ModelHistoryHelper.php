@@ -41,7 +41,7 @@ class ModelHistoryHelper extends Helper
             'model' => $entity->source(),
             'foreignKey' => $entity->id,
             'limit' => $limit,
-            'searchableFields' => TableRegistry::get($entity->source())->getSearchableFields()
+            'searchableFields' => TableRegistry::get($entity->source())->getTranslatedFields()
         ]);
     }
 
@@ -78,7 +78,6 @@ class ModelHistoryHelper extends Helper
      */
     public function historyText($history)
     {
-        $customActions = TableRegistry::get($history->model)->getCustomActions();
         $action = '';
         switch ($history->action) {
             case ModelHistory::ACTION_CREATE:
@@ -94,11 +93,6 @@ class ModelHistoryHelper extends Helper
                 $action = __d('model_history', 'commented');
                 break;
             default:
-                foreach ($customActions as $customAction) {
-                    if ($customAction['action'] == $history->action) {
-                        $action = $customAction['translation'];
-                    }
-                }
         }
         if (empty($history->user_id)) {
             $username = 'Anonymous';
@@ -118,7 +112,6 @@ class ModelHistoryHelper extends Helper
      */
     public function historyBadge($history)
     {
-        $customActions = TableRegistry::get($history->model)->getCustomActions();
         $action = '';
         switch ($history->action) {
             case ModelHistory::ACTION_UPDATE:
@@ -152,15 +145,9 @@ class ModelHistoryHelper extends Helper
             }
 
             // Get pre configured translations and return it if found
-            $translations = TableRegistry::get($historyEntry->model)->getTranslations();
-            if (isset($translations[$value])) {
-                return $translations[$value];
-            }
-
-            // Get pre configured searchable fields and return it if found
-            $translations = TableRegistry::get($historyEntry->model)->getSearchableFields();
-            if (isset($translations[$value])) {
-                return $translations[$value];
+            $fields = TableRegistry::get($historyEntry->model)->getFields();
+            if (isset($fields[$value]['translation'])) {
+                return $fields[$value]['translation'];
             }
 
             // Try to get the generic model.field translation string

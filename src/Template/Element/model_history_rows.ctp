@@ -31,7 +31,7 @@
                     }
                 ]) ?>
             </td>
-            <td><a href="#" class="btn btn-xs btn-primary">Diff</a></td>
+            <td><a href="#" data-history-id="<?= $historyEntry->id ?>" class="diff-btn btn btn-xs btn-primary">Diff</a></td>
         </tr>
     <?php endforeach; ?>
     <?php if ($showNextEntriesButton): ?>

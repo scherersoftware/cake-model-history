@@ -12,6 +12,7 @@ use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
 use Cake\Validation\Validator;
 use ModelHistory\Model\Entity\ModelHistory;
+use ModelHistory\Model\Filter\Filter;
 
 /**
  * ModelHistory Model
@@ -82,15 +83,6 @@ class ModelHistoryTable extends Table
             $options['data'] = $entity->toArray();
         }
 
-        $skipFields = TableRegistry::get($entity->source())->getSkipFields();
-        if (!empty($options['data']) && !empty($skipFields)) {
-            foreach ($skipFields as $fieldName) {
-                if (isset($options['data'][$fieldName])) {
-                    unset($options['data'][$fieldName]);
-                }
-            }
-        }
-
         if ($action === ModelHistory::ACTION_UPDATE && $options['dirtyFields']) {
             $newData = [];
             foreach ($options['dirtyFields'] as $field) {
@@ -139,6 +131,35 @@ class ModelHistoryTable extends Table
         return $entry;
     }
 
+    /**
+    * Transforms data fields to human readable form
+    *
+    * @param  array   $history  Data
+    * @param  string  $model    Model name
+    * @return array
+    */
+    protected function _transformDataFields(array $history, $model)
+    {
+        $fieldConfig = TableRegistry::get($model)->getFields();
+        foreach ($history as $index => $entity) {
+            $entityData = $entity->data;
+            foreach ($entityData as $field => $value) {
+                if (!isset($fieldConfig[$field]) || $fieldConfig[$field]['searchable'] !== true) {
+                    continue;
+                }
+                if (is_callable($fieldConfig[$field]['displayParser'])) {
+                    $callback = $fieldConfig[$field]['displayParser'];
+                    $entityData[$field] = $callback($field, $value);
+                    continue;
+                }
+                $filterClass = Filter::getFilter($fieldConfig[$field]['type']);
+                $entityData[$field] = $filterClass->display($field, $value);
+            }
+            $history[$index]->data = $entityData;
+        }
+        return $history;
+    }
+    
     /**
      * Add comment
      *
@@ -257,7 +278,7 @@ class ModelHistoryTable extends Table
             ->page($page)
             ->toArray();
 
-        return $this->_transformDataFields($history);
+        return $this->_transformDataFields($history, $model);
     }
 
     /**
@@ -325,7 +346,7 @@ class ModelHistoryTable extends Table
 
         // 2. Try to get old values for any other fields defined in searchableFields and
 
-        foreach (TableRegistry::get($historyEntry->model)->getSearchableFields() as $fieldName => $translation) {
+        foreach (TableRegistry::get($historyEntry->model)->getFields() as $fieldName => $data) {
             foreach ($previousRevisions as $revisionIndex => $revision) {
                 if (!isset($revision->data[$fieldName])) {
                     continue;
@@ -355,7 +376,7 @@ class ModelHistoryTable extends Table
 
         // 3. Get all unchanged fields
 
-        foreach (TableRegistry::get($historyEntry->model)->getSearchableFields() as $fieldName => $translation) {
+        foreach (TableRegistry::get($historyEntry->model)->getFields() as $fieldName => $data) {
             foreach ($previousRevisions as $revision) {
                 if (!isset($revision->data[$fieldName])) {
                     continue;
@@ -371,72 +392,4 @@ class ModelHistoryTable extends Table
         return $diffOutput;
     }
 
-    /**
-     * Transforms data fields to human readable form
-     *
-     * @param  array  $history  Data
-     * @return array
-     */
-    protected function _transformDataFields(array $history)
-    {
-        foreach ($history as $index => $entity) {
-            $entityData = $entity->data;
-            foreach ($entityData as $field => $value) {
-                $entityData[$field] = $this->_determineFieldValue($field, $value);
-            }
-            $history[$index]->data = $entityData;
-        }
-        return $history;
-    }
-
-    /**
-     * Determine human readable value
-     *
-     * @param  mixed  $value  The value
-     * @return mixed  Human readable value
-     */
-    protected function _determineFieldValue($field, $value) {
-        if (stripos($field, '_id') !== false) {
-            $tableString = str_replace('_id', '', $field);
-            $tableName = Inflector::camelize(Inflector::pluralize($tableString));
-            $table = TableRegistry::get($tableName);
-
-            $historizableBehavior = $table->behaviors()->get('Historizable');
-            if (is_object($historizableBehavior) && method_exists($historizableBehavior, 'getRelationLink')) {
-                return $table->behaviors()->get('Historizable')->getRelationLink($field, $value);
-            }
-        }
-
-        $type = gettype($value);
-        switch ($type) {
-            case 'object':
-                $value = 'object';
-                break;
-            case 'boolean':
-                $value = $value === false ? 'false' : 'true';
-                break;
-            case 'NULL':
-            case 'null':
-                $value = 'NULL';
-                break;
-            case 'array':
-                $readableArr = [];
-                foreach ($value as $arrIndex => $arrValue) {
-                    $readableArr[$arrIndex] = $this->_determineFieldValue($arrIndex, $arrValue);
-                }
-                $value = $readableArr;
-            case 'string':
-                if (is_string($value) && preg_match('#^\d{4}\-\d{2}\-\d{2}T\d{2}\:\d{2}\:\d{2}\+\d{4}$#', $value) != false) {
-                    $time = new Time($value);
-                    $value = $time->nice();
-                }
-                break;
-            default:
-                if ($value == 'NULL') {
-                    $value = 'NULL';
-                }
-                break;
-        }
-        return $value;
-    }
 }

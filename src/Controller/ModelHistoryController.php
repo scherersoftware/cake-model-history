@@ -69,7 +69,7 @@ class ModelHistoryController extends AppController
         $this->FrontendBridge->setBoth('foreignKey', $foreignKey);
         $this->FrontendBridge->setBoth('limit', $limit);
         $this->FrontendBridge->setBoth('page', $page);
-        $this->FrontendBridge->setBoth('searchableFields', TableRegistry::get($entity->source())->getSearchableFields());
+        $this->FrontendBridge->setBoth('searchableFields', TableRegistry::get($entity->source())->getTranslatedFields());
     }
 
     /**
@@ -150,7 +150,7 @@ class ModelHistoryController extends AppController
             }
         }
         $conditions = Hash::merge($filterConditions, $searchConditions);
-        $modelHistory = $this->ModelHistory->getModelHistory($model, $foreignKey, $limit, 1, $conditions);
+        $modelHistory = $this->ModelHistory->getModelHistory($model, $foreignKey, $limit, $page, $conditions);
 
         $entries = TableRegistry::get('ModelHistory.ModelHistory')->getModelHistoryCount($model, $foreignKey, $conditions);
         $showNextEntriesButton = $entries > 0 && $limit * $page < $entries;
@@ -163,7 +163,7 @@ class ModelHistoryController extends AppController
         $this->FrontendBridge->setBoth('model', $model);
         $this->FrontendBridge->setBoth('page', $page);
         $this->FrontendBridge->setBoth('foreignKey', $foreignKey);
-        $this->FrontendBridge->setBoth('searchableFields', TableRegistry::get($model)->getSearchableFields());
+        $this->FrontendBridge->setBoth('searchableFields', TableRegistry::get($model)->getTranslatedFields());
         $this->FrontendBridge->set('filter', isset($this->request->data['filter']) ? $this->request->data['filter'] : []);
 
         return $this->render('index');

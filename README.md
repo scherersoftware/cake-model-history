@@ -132,3 +132,172 @@ If you haven't set up the FrontendBridge yet, follow [these steps](https://githu
 
 Make sure `app_controller.js` is loaded on the page where you want to show the modelHistoryArea.
 Then the ModelHistory JS-Component will make AJAX requests to /model_history/ModelHistory/index/$modelName/$primaryKey according to the $entity you gave the helper method and populate the modelHistoryArea by itself.
+
+
+
+
+```
+'fields' => [
+    [
+        'name' => 'customer_number',
+        'translation' => __('user.customer_number'),
+        'searchable' => true,
+        'type' => 'string', # string, bool, number, relation, date
+        'displayParser' => null,
+        'saveParser' => null
+    ],
+    [
+        'name' => 'depot_number',
+        'translation' => __('user.depot_number'),
+        'searchable' => true,
+        'type' => 'string', # string, bool, number, relation, date
+        'displayParser' => null,
+        'saveParser' => null
+    ],
+    [
+        'name' => 'status',
+        'translation' => __('user.status'),
+        'searchable' => true,
+        'type' => 'string',
+        'displayParser' => null,
+        'saveParser' => null
+    ],
+    [
+        'name' => 'email',
+        'translation' => __('user.email'),
+        'searchable' => true,
+        'type' => 'string',
+        'displayParser' => null,
+        'saveParser' => null
+    ],
+    [
+        'name' => 'salutation',
+        'translation' => __('user.salutation'),
+        'searchable' => true,
+        'type' => 'string',
+        'displayParser' => null,
+        'saveParser' => null
+    ],
+    [
+        'name' => 'forename',
+        'translation' => __('user.forename'),
+        'searchable' => true,
+        'type' => 'string', # string, bool, number, relation, date
+        'displayParser' => function ($value) {
+            return $value;
+        },
+        'saveParser' => function ($value) {
+        }
+    ],
+    [
+        'name' => 'surname',
+        'translation' => __('user.surname'),
+        'searchable' => true,
+        'type' => 'string',
+        'displayParser' => null,
+        'saveParser' => null
+    ],
+    [
+        'name' => 'citizenship',
+        'translation' => __('user.citizenship'),
+        'searchable' => true,
+        'type' => 'string',
+        'displayParser' => null,
+        'saveParser' => null
+    ],
+    [
+        'name' => 'family_status',
+        'translation' => __('user.family_status'),
+        'searchable' => true,
+        'type' => 'string',
+        'displayParser' => null,
+        'saveParser' => null
+    ],
+    [
+        'name' => 'birth_place',
+        'translation' => __('user.birth_place'),
+        'searchable' => true,
+        'type' => 'string',
+        'displayParser' => null,
+        'saveParser' => null
+    ],
+    [
+        'name' => 'birth_country',
+        'translation' => __('user.birth_country'),
+        'searchable' => true,
+        'type' => 'string',
+        'displayParser' => null,
+        'saveParser' => null
+    ],
+    [
+        'name' => 'legitimation_type',
+        'translation' => __('user.legitimation_type'),
+        'searchable' => true,
+        'type' => 'string',
+        'displayParser' => null,
+        'saveParser' => null
+    ],
+    [
+        'name' => 'legitimation_date',
+        'translation' => __('user.legitimation_date'),
+        'searchable' => true,
+        'type' => 'date',
+        'displayParser' => null,
+        'saveParser' => function ($value) {
+            if (!is_object($value)) {
+                $value = new Time($value);
+            }
+            $value->setTimezone('Europe/Berlin');
+            return $value;
+        }
+    ],
+    [
+        'name' => 'legitimation_authority',
+        'translation' => __('user.legitimation_authority'),
+        'searchable' => true,
+        'type' => 'string',
+        'displayParser' => null,
+        'saveParser' => null
+    ],
+    [
+        'name' => 'legal_form',
+        'translation' => __('user.legal_form'),
+        'searchable' => true,
+        'type' => 'string',
+        'displayParser' => null,
+        'saveParser' => null
+    ],
+    [
+        'name' => 'academic_title',
+        'translation' => __('user.academic_title'),
+        'searchable' => true,
+        'type' => 'string',
+        'displayParser' => null,
+        'saveParser' => null
+    ],
+    [
+        'name' => 'academic_grade',
+        'translation' => __('user.academic_grade'),
+        'searchable' => true,
+        'type' => 'string',
+        'displayParser' => null,
+        'saveParser' => null
+    ],
+    [
+        'name' => 'branches_id',
+        'translation' => __('user.branches_id'),
+        'searchable' => true,
+        'type' => 'relation',
+        'displayParser' => null,
+        'saveParser' => null
+    ],
+    [
+        'name' => 'deny_newsletter',
+        'translation' => __('user.deny_newsletter'),
+        'searchable' => true,
+        'type' => 'string',
+        'displayParser' => null,
+        'saveParser' => null
+    ],
+]
+```

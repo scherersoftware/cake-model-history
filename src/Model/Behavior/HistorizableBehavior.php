@@ -25,7 +25,6 @@ class HistorizableBehavior extends Behavior
     protected $_defaultConfig = [
         'userIdCallback' => null,
         'entriesToShow' => 10,
-        'customActions' => [],
         'userNameFields' => [
             'firstname' => 'Users.firstname',
             'lastname' => 'Users.lastname',
@@ -39,27 +38,7 @@ class HistorizableBehavior extends Behavior
             'change_password',
             'password_change',
         ],
-        'skipFields' => [
-            'failed_login_count',
-            'failed_login_timestamp'
-        ],
-        'translations' => [],
-        'searchableFields' => [
-        ],
-        'relations' => [],
-
-        // 'fields' => [
-        //     [
-        //         'name' => 'forename',
-        //         'translation' => __('users.forename'),
-        //         'type' => 'string', # string, bool, number, relation, date
-        //         'displayParser' => function ($value) {
-        //             return $value;
-        //         },
-        //         'saveParser' => function ($value) {
-        //         }
-        //     ]
-        // ]
+        'fields' => []
     ];
 
     /**
@@ -144,12 +123,12 @@ class HistorizableBehavior extends Behavior
         $this->ModelHistory->add($entity, $action, $this->_getUserId(), [
             'dirtyFields' => $dirtyFields
         ]);
-        foreach ($this->config('customActions') as $customAction) {
-            if ($customAction['status'] == $entity['status']) {
-                $action = $customAction['action'];
-                $this->ModelHistory->add($entity, $action, $this->_getUserId(), []);
-            }
-        }
+        // foreach ($this->config('customActions') as $customAction) {
+        //     if ($customAction['status'] == $entity['status']) {
+        //         $action = $customAction['action'];
+        //         $this->ModelHistory->add($entity, $action, $this->_getUserId(), []);
+        //     }
+        // }
     }
 
     /**
@@ -254,16 +233,6 @@ class HistorizableBehavior extends Behavior
     }
 
     /**
-     * Get all custom action for current Table
-     *
-     * @return array
-     */
-    public function getCustomActions()
-    {
-        return $this->config('customActions');
-    }
-
-    /**
      * Get the user fields
      *
      * @return array
@@ -284,26 +253,6 @@ class HistorizableBehavior extends Behavior
     }
 
     /**
-     * Get fields to skip and not save
-     *
-     * @return array
-     */
-    public function getSkipFields()
-    {
-        return $this->config('skipFields');
-    }
-
-    /**
-     * Retrieve relations
-     *
-     * @return array
-     */
-    public function getRelations()
-    {
-        return $this->config('relations');
-    }
-
-    /**
      * Get count of entries to show.
      *
      * @return int
@@ -314,22 +263,28 @@ class HistorizableBehavior extends Behavior
     }
 
     /**
-     * Retrieve translated strings
+     * Get fields config
      *
      * @return array
      */
-    public function getTranslations()
+    public function getFields()
     {
-        return $this->config('translations');
+        return $this->config('fields');
     }
 
     /**
-     * Retrieve searchable fields
+     * Get translated fields
      *
      * @return array
      */
-    public function getSearchableFields()
+    public function getTranslatedFields()
     {
-        return Hash::sort($this->config('searchableFields'), '{s}', 'asc');
+        return Hash::apply($this->getFields(), '{n}[searchable=true]', function ($array) {
+            $formatted = [];
+            foreach ($array as $data) {
+                $formatted[$data['name']] = $data['translation'];
+            }
+            return Hash::sort($formatted, '{s}', 'asc');
+        });
     }
 }

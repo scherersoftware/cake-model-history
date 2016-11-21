@@ -79,6 +79,20 @@ class ModelHistoryTable extends Table
             $options['data'] = $entity->toArray();
         }
 
+        $saveFields = [];
+        $fieldConfig = TableRegistry::get($entity->source())->getFields();
+
+        foreach ($fieldConfig as $fieldName => $data) {
+            if ($data['searchable'] == true && isset($options['data'][$fieldName])) {
+                $saveFields[$fieldName] = $options['data'][$fieldName];
+            }
+        }
+
+        if (empty($saveFields)) {
+            return false;
+        }
+        $options['data'] = $saveFields;
+
         if ($action === ModelHistory::ACTION_DELETE) {
             $options['data'] = $entity->toArray();
         }
@@ -152,14 +166,14 @@ class ModelHistoryTable extends Table
                     $entityData[$field] = $callback($field, $value);
                     continue;
                 }
-                $filterClass = Filter::getFilter($fieldConfig[$field]['type']);
-                $entityData[$field] = $filterClass->display($field, $value);
+                $filterClass = Filter::get($fieldConfig[$field]['type']);
+                $entityData[$field] = $filterClass->display($field, $value, $model);
             }
             $history[$index]->data = $entityData;
         }
         return $history;
     }
-    
+
     /**
      * Add comment
      *

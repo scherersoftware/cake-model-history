@@ -184,25 +184,17 @@ class HistorizableBehavior extends Behavior
      */
     public function getRelationLink($fieldName, $fieldValue = null)
     {
-        $relations = $this->getRelations();
         $tableName = Inflector::camelize(Inflector::pluralize(str_replace('_id', '', $fieldName)));
-        if (isset($relations[$fieldName])) {
-            if (!isset($relations[$fieldName]['url']) || !isset($relations[$fieldName]['model']) || !isset($relations[$fieldName]['bindingKey'])) {
-                throw new \InvalidArgumentException('You have to specify url, model and bindingKey');
-            }
-            $relationConfig = $relations[$fieldName];
-        } else {
-            $relationConfig = [
-                'model' => $tableName,
-                'bindingKey' => 'id',
-                'url' => [
-                    'plugin' => 'Admin',
-                    'controller' => $tableName,
-                    'action' => 'view',
-                    'addFieldAsPass' => true
-                ]
-            ];
-        }
+        $relationConfig = [
+            'model' => $tableName,
+            'bindingKey' => 'id',
+            'url' => [
+                'plugin' => 'Admin',
+                'controller' => $tableName,
+                'action' => 'view',
+                'addFieldAsPass' => true
+            ]
+        ];
 
         $pass = [];
         if (isset($relationConfig['url']['addFieldAsPass']) && $relationConfig['url']['addFieldAsPass'] === true) {
@@ -269,7 +261,13 @@ class HistorizableBehavior extends Behavior
      */
     public function getFields()
     {
-        return $this->config('fields');
+        return Hash::apply($this->config('fields'), '{n}', function($array) {
+            $output = [];
+            foreach ($array as $data) {
+                $output[$data['name']] = $data;
+            }
+            return $output;
+        });
     }
 
     /**
@@ -279,7 +277,7 @@ class HistorizableBehavior extends Behavior
      */
     public function getTranslatedFields()
     {
-        return Hash::apply($this->getFields(), '{n}[searchable=true]', function ($array) {
+        return Hash::apply($this->config('fields'), '{n}[searchable=true]', function ($array) {
             $formatted = [];
             foreach ($array as $data) {
                 $formatted[$data['name']] = $data['translation'];

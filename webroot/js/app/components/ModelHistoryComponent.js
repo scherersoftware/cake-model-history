@@ -23,7 +23,9 @@ App.Components.ModelHistoryComponent = Frontend.Component.extend({
             page = $parentWrapper.data('page') + 1;
 
         $parentWrapper.data('page', page);
-        e.currentTarget = $('.model-history-filter form', $parentWrapper);
+        if ($('.model-history-filter form', $parentWrapper).length) {
+            e.currentTarget = $('.model-history-filter form', $parentWrapper);
+        }
         this._onFilter(e);
     },
     loadPrevEntries: function(e) {
@@ -34,7 +36,9 @@ App.Components.ModelHistoryComponent = Frontend.Component.extend({
         }
 
         $parentWrapper.data('page', page);
-        e.currentTarget = $('.model-history-filter form', $parentWrapper);
+        if ($('.model-history-filter form', $parentWrapper).length) {
+            e.currentTarget = $('.model-history-filter form', $parentWrapper);
+        }
         this._onFilter(e);
     },
     _onAddComment: function(e) {
@@ -44,7 +48,9 @@ App.Components.ModelHistoryComponent = Frontend.Component.extend({
             model = $parentWrapper.data('model'),
             foreignKey = $parentWrapper.data('foreignkey'),
             limit = 10,
-            page = 1;
+            page = 1
+            showFilter = $parentWrapper.data('showFilter'),
+            showComment = $parentWrapper.data('showComment');
 
         if ($parentWrapper.data('limit')) {
             limit = $parentWrapper.data('limit');
@@ -58,7 +64,9 @@ App.Components.ModelHistoryComponent = Frontend.Component.extend({
                 model,
                 foreignKey,
                 limit,
-                page
+                page,
+                showFilter,
+                showComment
             ]
         };
         App.Main.UIBlocker.blockElement($(e.currentTarget));
@@ -85,11 +93,13 @@ App.Components.ModelHistoryComponent = Frontend.Component.extend({
             foreignKey = $parentWrapper.data('foreignkey'),
             limit = $parentWrapper.data('limit'),
             page = $parentWrapper.data('page'),
+            showFilter = $parentWrapper.data('showFilter'),
+            showComment = $parentWrapper.data('showComment'),
             url = {
                 plugin: 'model_history',
                 controller: 'ModelHistory',
                 action: 'filter',
-                pass: [model, foreignKey, limit, page]
+                pass: [model, foreignKey, limit, page, showFilter, showComment]
             };
 
         var formData = $(e.currentTarget).serialize();

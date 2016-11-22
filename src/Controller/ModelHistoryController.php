@@ -36,13 +36,15 @@ class ModelHistoryController extends AppController
     /**
      * index function
      *
-     * @param string $model       name of the model
-     * @param string $foreignKey  id of the entity
-     * @param int    $limit       Items to show
-     * @param int    $page        Current page
+     * @param  string $model           name of the model
+     * @param  string $foreignKey      id of the entity
+     * @param  int    $limit           Items to show
+     * @param  int    $page            Current page
+     * @param  bool   $showFilterBox   Show Filter Box
+     * @param  bool   $showCommentBox  Show comment Box
      * @return void
      */
-    public function index($model = null, $foreignKey = null, $limit = null, $page = null)
+    public function index($model = null, $foreignKey = null, $limit = null, $page = null, $showFilterBox = null, $showCommentBox = null)
     {
         $this->ModelHistory->belongsTo('Users', [
             'foreignKey' => 'user_id'
@@ -65,6 +67,8 @@ class ModelHistoryController extends AppController
         $this->FrontendBridge->setBoth('modelHistory', $modelHistory);
         $this->FrontendBridge->setBoth('showNextEntriesButton', $showNextEntriesButton);
         $this->FrontendBridge->setBoth('showPrevEntriesButton', $showPrevEntriesButton);
+        $this->FrontendBridge->setBoth('showFilterBox', $showFilterBox);
+        $this->FrontendBridge->setBoth('showCommentBox', $showCommentBox);
         $this->FrontendBridge->setBoth('model', $model);
         $this->FrontendBridge->setBoth('foreignKey', $foreignKey);
         $this->FrontendBridge->setBoth('limit', $limit);
@@ -75,13 +79,15 @@ class ModelHistoryController extends AppController
     /**
      * Load entries and filter them if necessary.
      *
-     * @param  string  $model       Model name
-     * @param  string  $foreignKey  Model's foreign key
-     * @param  int     $limit       Entries limit
-     * @param  int     $page        Current page to view
-     * @return string               Index View
+     * @param  string  $model           Model name
+     * @param  string  $foreignKey      Model's foreign key
+     * @param  int     $limit           Entries limit
+     * @param  int     $page            Current page to view
+     * @param  bool    $showFilterBox   Show Filter Box
+     * @param  bool    $showCommentBox  Show comment Box
+     * @return string                   Index View
      */
-    public function filter($model = null, $foreignKey = null, $limit = null, $page = null)
+    public function filter($model = null, $foreignKey = null, $limit = null, $page = null, $showFilterBox = null, $showCommentBox = null)
     {
         $this->request->allowMethod(['post']);
 
@@ -158,6 +164,8 @@ class ModelHistoryController extends AppController
 
         $this->FrontendBridge->setBoth('showPrevEntriesButton', $showPrevEntriesButton);
         $this->FrontendBridge->setBoth('showNextEntriesButton', $showNextEntriesButton);
+        $this->FrontendBridge->setBoth('showFilterBox', $showFilterBox);
+        $this->FrontendBridge->setBoth('showCommentBox', $showCommentBox);
         $this->FrontendBridge->setBoth('modelHistory', $modelHistory);
         $this->FrontendBridge->setBoth('limit', $limit);
         $this->FrontendBridge->setBoth('model', $model);

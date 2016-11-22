@@ -24,6 +24,11 @@ class ModelHistoryHelper extends Helper
      */
     public function modelHistoryArea($entity, array $options = [])
     {
+        $options = Hash::merge([
+            'showCommentBox' => false,
+            'showFilterBox' => false
+        ], $options);
+
         $page = 1;
         $limit = TableRegistry::get($entity->source())->getEntriesLimit();
 
@@ -41,7 +46,9 @@ class ModelHistoryHelper extends Helper
             'model' => $entity->source(),
             'foreignKey' => $entity->id,
             'limit' => $limit,
-            'searchableFields' => TableRegistry::get($entity->source())->getTranslatedFields()
+            'searchableFields' => TableRegistry::get($entity->source())->getTranslatedFields(),
+            'showCommentBox' => $options['showCommentBox'],
+            'showFilterBox' => $options['showFilterBox']
         ]);
     }
 

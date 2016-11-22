@@ -198,6 +198,10 @@
     width: 50%;
 }
 
+.model-history-area .actions {
+    text-align: right;
+}
+
 .model-history-area .table thead tr th:first-child {
     width: 25%;
 }

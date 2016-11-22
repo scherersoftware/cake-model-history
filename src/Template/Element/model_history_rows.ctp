@@ -31,7 +31,7 @@
                     }
                 ]) ?>
             </td>
-            <td><a href="#" data-history-id="<?= $historyEntry->id ?>" class="diff-btn btn btn-xs btn-primary">Diff</a></td>
+            <td class="actions"><a href="#" data-history-id="<?= $historyEntry->id ?>" class="diff-btn btn btn-xs btn-primary"><?= __d('model_history', 'diff.open_diff') ?></a></td>
         </tr>
     <?php endforeach; ?>
     <?php if ($showNextEntriesButton): ?>

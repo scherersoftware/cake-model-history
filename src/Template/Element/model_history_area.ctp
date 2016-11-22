@@ -15,8 +15,8 @@ use Cake\Routing\Router;
                             <thead>
                                 <tr>
                                     <th></th>
-                                    <th>Felder</th>
-                                    <th>Aktionen</th>
+                                    <th><?= __d('model_history', 'table.heading.fields') ?></th>
+                                    <th class="actions"><?= __d('model_history', 'table.heading.actions') ?></th>
                                 </tr>
                             </thead>
                             <?= $this->element('ModelHistory.model_history_rows', compact('modelHistory', 'showPrevEntriesButton', 'showNextEntriesButton', 'page')) ?>

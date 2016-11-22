@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2016-11-15 13:13+0100\n"
+"POT-Creation-Date: 2016-11-22 12:10+0100\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -26,9 +26,6 @@ msgstr ""
 msgid "field.modified"
 msgstr ""
 
-msgid "field.forename"
-msgstr ""
-
 msgid "context.type.controller"
 msgstr ""
 
@@ -41,10 +38,19 @@ msgstr ""
 msgid "no_history"
 msgstr ""
 
+msgid "table.heading.fields"
+msgstr ""
+
+msgid "table.heading.actions"
+msgstr ""
+
 msgid "model_history"
 msgstr ""
 
 msgid "load_previous"
+msgstr ""
+
+msgid "diff.open_diff"
 msgstr ""
 
 msgid "load_next"
@@ -72,6 +78,27 @@ msgid "submit_filter"
 msgstr ""
 
 msgid "reset_filter"
+msgstr ""
+
+msgid "diff.close_button"
+msgstr ""
+
+msgid "diff.title"
+msgstr ""
+
+msgid "no_diff"
+msgstr ""
+
+msgid "diff.fieldname"
+msgstr ""
+
+msgid "diff.old_value"
+msgstr ""
+
+msgid "diff.new_value"
+msgstr ""
+
+msgid "no_historical_data"
 msgstr ""
 
 msgid "created"

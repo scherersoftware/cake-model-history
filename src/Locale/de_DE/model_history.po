@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2016-11-15 13:14+0100\n"
-"PO-Revision-Date: 2016-11-15 13:14+0100\n"
+"POT-Creation-Date: 2016-11-22 12:10+0100\n"
+"PO-Revision-Date: 2016-11-22 12:10+0100\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: EMAIL@ADDRESS\n"
 "Language: de\n"
@@ -27,9 +27,6 @@ msgstr "Erstellungsdatum"
 msgid "field.modified"
 msgstr "Änderungsdatum"
 
-msgid "field.forename"
-msgstr "Vorname"
-
 msgid "context.type.controller"
 msgstr "Controller"
 
@@ -42,11 +39,20 @@ msgstr "kein Kommentar vorhanden"
 msgid "no_history"
 msgstr "Keine Historie vorhanden"
 
+msgid "table.heading.fields"
+msgstr "Felder"
+
+msgid "table.heading.actions"
+msgstr "Aktionen"
+
 msgid "model_history"
 msgstr "Model Historie"
 
 msgid "load_previous"
 msgstr "Vorherige Einträge laden..."
+
+msgid "diff.open_diff"
+msgstr "Änderungshistorie"
 
 msgid "load_next"
 msgstr "Nächste Einträge laden..."
@@ -75,6 +81,27 @@ msgstr "Filtern"
 msgid "reset_filter"
 msgstr "Zurücksetzen"
 
+msgid "diff.close_button"
+msgstr "Schließen"
+
+msgid "diff.title"
+msgstr "Änderungshistorie"
+
+msgid "no_diff"
+msgstr "Keine Änderungshistorie vorhanden"
+
+msgid "diff.fieldname"
+msgstr "Feldname"
+
+msgid "diff.old_value"
+msgstr "Alter Wert"
+
+msgid "diff.new_value"
+msgstr "Neuer Wert"
+
+msgid "no_historical_data"
+msgstr "Keine historischen Daten"
+
 msgid "created"
 msgstr "erstellt"
 
@@ -89,3 +116,6 @@ msgstr "kommentiert"
 
 msgid "by"
 msgstr "von"
+
+#~ msgid "field.forename"
+#~ msgstr "Vorname"

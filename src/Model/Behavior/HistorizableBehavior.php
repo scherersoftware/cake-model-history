@@ -30,14 +30,6 @@ class HistorizableBehavior extends Behavior
             'lastname' => 'Users.lastname',
             'id' => 'Users.id'
         ],
-        'obfuscatedFields' => [
-            'password',
-            'password_confirm',
-            'password_new',
-            'new_password',
-            'change_password',
-            'password_change',
-        ],
         'fields' => []
     ];
 
@@ -232,16 +224,6 @@ class HistorizableBehavior extends Behavior
     public function getUserNameFields()
     {
         return $this->config('userNameFields');
-    }
-
-    /**
-     * Get the obfuscated fields fields
-     *
-     * @return array
-     */
-    public function getObfuscatedFields()
-    {
-        return $this->config('obfuscatedFields');
     }
 
     /**

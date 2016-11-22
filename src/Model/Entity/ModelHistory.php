@@ -43,15 +43,6 @@ class ModelHistory extends Entity
      */
     protected function _getData($data)
     {
-        // Obfuscate password fields
-        $obfuscatedFields = TableRegistry::get($this->model)->getObfuscatedFields();
-        if (!empty($data) && !empty($obfuscatedFields)) {
-            foreach ($data as $fieldName => $value) {
-                if (in_array($fieldName, $obfuscatedFields)) {
-                    $data[$fieldName] = '********';
-                }
-            }
-        }
         // Stringify empty values
         if (!empty($data)) {
             foreach ($data as $fieldName => $value) {
@@ -69,11 +60,7 @@ class ModelHistory extends Entity
      */
     protected function _stringifyEmptyValue($value)
     {
-        if ($value === true) {
-            return 'true';
-        } elseif ($value === false) {
-            return 'false';
-        } elseif ($value === null) {
+        if ($value === null) {
             return 'NULL';
         } elseif ($value === '') {
             return '""';

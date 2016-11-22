@@ -83,7 +83,10 @@ class ModelHistoryTable extends Table
         $fieldConfig = TableRegistry::get($entity->source())->getFields();
 
         foreach ($fieldConfig as $fieldName => $data) {
-            if ($data['searchable'] == true && isset($options['data'][$fieldName])) {
+            if ($data['searchable'] === true && isset($options['data'][$fieldName])) {
+                if ($data['obfuscated'] === true) {
+                    $options['data'][$fieldName] = '****************';
+                }
                 $saveFields[$fieldName] = $options['data'][$fieldName];
             }
         }
@@ -105,16 +108,6 @@ class ModelHistoryTable extends Table
                 }
             }
             $options['data'] = $newData;
-        }
-
-        // Obfuscate password fields
-        $obfuscatedFields = TableRegistry::get($entity->source())->getObfuscatedFields();
-        if (!empty($options['data']) && !empty($obfuscatedFields)) {
-            foreach ($options['data'] as $fieldName => $data) {
-                if (in_array($fieldName, $obfuscatedFields)) {
-                    $options['data'][$fieldName] = '********';
-                }
-            }
         }
 
         $context = null;

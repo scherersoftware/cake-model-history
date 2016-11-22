@@ -1,8 +1,8 @@
 <?php
 
-namespace ModelHistory\Model\Filter;
+namespace ModelHistory\Model\Transform;
 
-class BoolFilter extends Filter
+class NumberTransform extends Transform
 {
     /**
      * {@inheritDoc}
@@ -16,7 +16,6 @@ class BoolFilter extends Filter
      */
     public function display($fieldname, $value, $model = null)
     {
-        $value = $value === true ? 'true' : 'false';
         return $value;
     }
 }

@@ -1,8 +1,8 @@
 <?php
 
-namespace ModelHistory\Model\Filter;
+namespace ModelHistory\Model\Transform;
 
-class StringFilter extends Filter
+class StringTransform extends Transform
 {
     /**
      * {@inheritDoc}

@@ -222,6 +222,14 @@
     margin-bottom: 10px;
 }
 
+#diff-output tr td:first-child {
+    background: #FFF;
+}
+
+#diff-output tr td:last-child {
+    border-left: 1px solid #EEE;
+}
+
 #diff-output .changed {
     background-color: #77DD77;
 }

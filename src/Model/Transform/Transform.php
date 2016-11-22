@@ -1,11 +1,11 @@
 <?php
 
-namespace ModelHistory\Model\Filter;
+namespace ModelHistory\Model\Transform;
 
 use Cake\Utility\Inflector;
 use InvalidArgumentException;
 
-abstract class Filter
+abstract class Transform
 {
 
     /**
@@ -29,18 +29,18 @@ abstract class Filter
     abstract public function save($fieldname, $value, $model = null);
 
     /**
-     * Filter factory
+     * Transform factory
      *
-     * @param  string  $type  Filter type
-     * @return Filter
+     * @param  string  $type  Transform type
+     * @return Transform
      */
     public static function get($type)
     {
-        $namespace = '\\ModelHistory\\Model\\Filter\\';
-        $filterClass = $namespace . ucfirst(strtolower($type)) . 'Filter';
-        if (class_exists($filterClass)) {
-            return new $filterClass();
+        $namespace = '\\ModelHistory\\Model\\Transform\\';
+        $transformClass = $namespace . ucfirst(strtolower($type)) . 'Transform';
+        if (class_exists($transformClass)) {
+            return new $transformClass();
         }
-        throw new InvalidArgumentException('Filter ' . $filterClass . ' not found!');
+        throw new InvalidArgumentException('Transform ' . $transformClass . ' not found!');
     }
 }

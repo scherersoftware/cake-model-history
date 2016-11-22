@@ -52,6 +52,74 @@ class ModelHistoryTableTest extends TestCase
         parent::tearDown();
     }
 
+    protected function _getBehaviorConfig($callback = null) {
+        return [
+            'userIdCallback' => $callback,
+            'fields' => [
+                [
+                    'name' => 'id',
+                    'translation' => __('articles.id'),
+                    'searchable' => true,
+                    'saveable' => true,
+                    'obfuscated' => false,
+                    'type' => 'string',
+                    'displayParser' => null,
+                    'saveParser' => null
+                ],
+                [
+                    'name' => 'title',
+                    'translation' => __('articles.title'),
+                    'searchable' => true,
+                    'saveable' => true,
+                    'obfuscated' => false,
+                    'type' => 'string',
+                    'displayParser' => null,
+                    'saveParser' => null
+                ],
+                [
+                    'name' => 'status',
+                    'translation' => __('articles.status'),
+                    'searchable' => true,
+                    'saveable' => true,
+                    'obfuscated' => false,
+                    'type' => 'string',
+                    'displayParser' => null,
+                    'saveParser' => null
+                ],
+                [
+                    'name' => 'content',
+                    'translation' => __('articles.content'),
+                    'searchable' => true,
+                    'saveable' => true,
+                    'obfuscated' => false,
+                    'type' => 'string',
+                    'displayParser' => null,
+                    'saveParser' => null
+                ],
+                [
+                    'name' => 'json_field',
+                    'translation' => __('articles.json_field'),
+                    'searchable' => false,
+                    'saveable' => false,
+                    'obfuscated' => false,
+                    'type' => 'string',
+                    'displayParser' => null,
+                    'saveParser' => null
+                ],
+                [
+                    'name' => 'int_field',
+                    'translation' => __('articles.int_field'),
+                    'searchable' => false,
+                    'saveable' => false,
+                    'obfuscated' => false,
+                    'type' => 'string',
+                    'displayParser' => null,
+                    'saveParser' => null
+                ]
+            ]
+        ];
+    }
+
     /**
      * Test create, update, delete
      *
@@ -59,7 +127,7 @@ class ModelHistoryTableTest extends TestCase
      */
     public function testBasicCreateAndUpdateAndDelete()
     {
-        $this->Articles->addBehavior('ModelHistory.Historizable');
+        $this->Articles->addBehavior('ModelHistory.Historizable', $this->_getBehaviorConfig());
         $article = $this->Articles->newEntity([
             'title' => 'foobar'
         ]);
@@ -100,6 +168,7 @@ class ModelHistoryTableTest extends TestCase
                 'action' => ModelHistory::ACTION_DELETE
             ])
             ->first();
+
         $this->assertTrue(empty($entry->data));
     }
 
@@ -111,14 +180,9 @@ class ModelHistoryTableTest extends TestCase
     public function testPassUserIdCallbackWithBehaviorConfig()
     {
         $userId = '481fc6d0-b920-43e0-a40d-6d1740cf8562';
-        $callback = function () use ($userId) {
+        $this->Articles->addBehavior('ModelHistory.Historizable', $this->_getBehaviorConfig(function () use ($userId) {
             return $userId;
-        };
-
-        $this->Articles->addBehavior('ModelHistory.Historizable', [
-            'userIdCallback' => $callback
-        ]);
-
+        }));
         $article = $this->Articles->newEntity([
             'title' => 'foobar'
         ]);
@@ -139,8 +203,8 @@ class ModelHistoryTableTest extends TestCase
         $callback = function () use ($userId) {
             return $userId;
         };
-        
-        $this->Articles->addBehavior('ModelHistory.Historizable');
+
+        $this->Articles->addBehavior('ModelHistory.Historizable', $this->_getBehaviorConfig());
         $this->Articles->setModelHistoryUserIdCallback($callback);
 
         $article = $this->Articles->newEntity([
@@ -159,7 +223,7 @@ class ModelHistoryTableTest extends TestCase
      */
     public function testModelHistoryRevision()
     {
-        $this->Articles->addBehavior('ModelHistory.Historizable');
+        $this->Articles->addBehavior('ModelHistory.Historizable', $this->_getBehaviorConfig());
         $article = $this->Articles->newEntity([
             'title' => 'foobar'
         ]);
@@ -170,7 +234,7 @@ class ModelHistoryTableTest extends TestCase
 
         $article->title = 'changed';
         $this->Articles->save($article);
-        
+
         $entry = $this->ModelHistory->find()
             ->where([
                 'model' => 'Articles',
@@ -179,10 +243,10 @@ class ModelHistoryTableTest extends TestCase
             ])
             ->first();
         $this->assertEquals($entry->revision, 2);
-        
+
         $article->title = 'changed again';
         $this->Articles->save($article);
-        
+
         $entry = $this->ModelHistory->find()
             ->where([
                 'model' => 'Articles',
@@ -201,13 +265,13 @@ class ModelHistoryTableTest extends TestCase
      */
     public function testDataDiff()
     {
-        $this->Articles->addBehavior('ModelHistory.Historizable');
+        $this->Articles->addBehavior('ModelHistory.Historizable', $this->_getBehaviorConfig());
         $article = $this->Articles->newEntity([
             'title' => 'foobar',
             'content' => 'lorem'
         ]);
         $this->Articles->save($article);
-        
+
         $article->title = 'changed';
         $this->Articles->save($article);
 
@@ -235,7 +299,7 @@ class ModelHistoryTableTest extends TestCase
         $userId = '481fc6d0-b920-43e0-a40d-6d1740cf8562';
         $comment = 'foo bar baz';
 
-        $this->Articles->addBehavior('ModelHistory.Historizable');
+        $this->Articles->addBehavior('ModelHistory.Historizable', $this->_getBehaviorConfig());
         $article = $this->Articles->newEntity([
             'title' => 'foobar',
             'content' => 'lorem'
@@ -257,46 +321,46 @@ class ModelHistoryTableTest extends TestCase
     }
 
     /**
-     * undocumented function
+     * Test searchable flag
      *
      * @return void
      */
-    public function testCustomActions()
+    public function testSearchableFields()
     {
-        $this->Articles->addBehavior('ModelHistory.Historizable', [
-            'customActions' => [
-                'finished' => [
-                    'status' => STATUS::COMPLETED,
-                    'action' => 'finished',
-                    'translation' => __('reviews.finished')
-                ],
-                'in_progress' => [
-                    'status' => STATUS::IN_PROGRESS,
-                    'action' => 'in_progress',
-                    'translation' => __('reviews.in_progress')
-                ],
-                'decline' => [
-                    'status' => STATUS::DECLINED,
-                    'action' => 'decline',
-                    'translation' => __('reviews.declined')
-                ]
-            ]
-        ]);
-        $article = $this->Articles->newEntity([
-            'title' => 'foobar',
-            'status' => 'new'
-        ]);
-        $this->Articles->save($article);
-        $entry = $this->ModelHistory->find()->first();
-        $this->assertEquals($entry->action, 'create');
-        $data = [
-            'status' => STATUS::IN_PROGRESS
-        ];
-        $article = $this->Articles->patchEntity($article, $data);
-        $this->Articles->save($article);
-        $entry = $this->ModelHistory->find()
-            ->order(['revision' => 'DESC'])
-            ->first();
-        $this->assertEquals($entry->action, 'in_progress');
+        $this->Articles->addBehavior('ModelHistory.Historizable', $this->_getBehaviorConfig());
+        $fields = $this->Articles->getFields();
+
+        foreach ($this->Articles->getTranslatedFields() as $fieldname => $translation) {
+            $searchable = $fields[$fieldname]['searchable'];
+            $this->assertEquals($searchable, true);
+
+            unset($fields[$fieldname]);
+        }
+
+        foreach ($fields as $fieldname => $data) {
+            $this->assertEquals($data['searchable'], false);
+        }
+    }
+
+    /**
+     * Test searchable flag
+     *
+     * @return void
+     */
+    public function testSaveableFields()
+    {
+        $this->Articles->addBehavior('ModelHistory.Historizable', $this->_getBehaviorConfig());
+        $fields = $this->Articles->getFields();
+
+        foreach ($this->Articles->getSaveableFields() as $fieldname => $data) {
+            $saveable = $data['saveable'];
+            $this->assertEquals($saveable, true);
+
+            unset($fields[$fieldname]);
+        }
+
+        foreach ($fields as $fieldname => $data) {
+            $this->assertEquals($data['saveable'], false);
+        }
     }
 }

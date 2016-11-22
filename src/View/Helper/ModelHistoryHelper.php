@@ -38,6 +38,11 @@ class ModelHistoryHelper extends Helper
         $showNextEntriesButton = $entries > 0 && $limit * $page < $entries;
         $showPrevEntriesButton = $page > 1;
 
+        $contexts = [];
+        if (method_exists($entity, 'getContexts')) {
+            $contexts = $entity::getContexts();
+        }
+
         return $this->_View->element('ModelHistory.model_history_area', [
             'modelHistory' => $modelHistory,
             'showNextEntriesButton' => $showNextEntriesButton,
@@ -48,7 +53,8 @@ class ModelHistoryHelper extends Helper
             'limit' => $limit,
             'searchableFields' => TableRegistry::get($entity->source())->getTranslatedFields(),
             'showCommentBox' => $options['showCommentBox'],
-            'showFilterBox' => $options['showFilterBox']
+            'showFilterBox' => $options['showFilterBox'],
+            'contexts' => $contexts
         ]);
     }
 

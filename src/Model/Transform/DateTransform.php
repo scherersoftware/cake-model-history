@@ -1,10 +1,10 @@
 <?php
 
-namespace ModelHistory\Model\Filter;
+namespace ModelHistory\Model\Transform;
 
 use Cake\I18n\Time;
 
-class DateFilter extends Filter
+class DateTransform extends Transform
 {
     /**
      * {@inheritDoc}

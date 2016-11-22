@@ -26,8 +26,8 @@ class HistorizableBehavior extends Behavior
         'userIdCallback' => null,
         'entriesToShow' => 10,
         'userNameFields' => [
-            'firstname' => 'Users.firstname',
-            'lastname' => 'Users.lastname',
+            'firstname' => 'Users.forename',
+            'lastname' => 'Users.surname',
             'id' => 'Users.id'
         ],
         'fields' => []
@@ -265,6 +265,22 @@ class HistorizableBehavior extends Behavior
                 $formatted[$data['name']] = $data['translation'];
             }
             return Hash::sort($formatted, '{s}', 'asc');
+        });
+    }
+
+    /**
+     * Get saveable fields
+     *
+     * @return array
+     */
+    public function getSaveableFields()
+    {
+        return Hash::apply($this->config('fields'), '{n}[saveable=true]', function ($array) {
+            $formatted = [];
+            foreach ($array as $data) {
+                $formatted[$data['name']] = $data;
+            }
+            return $formatted;
         });
     }
 }

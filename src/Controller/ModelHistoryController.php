@@ -64,6 +64,12 @@ class ModelHistoryController extends AppController
         $showNextEntriesButton = $entries > 0 && $limit * $page < $entries;
         $showPrevEntriesButton = $page > 1;
 
+        $contexts = [];
+        if (method_exists($entity, 'getContexts')) {
+            $contexts = $entity::getContexts();
+        }
+        $this->FrontendBridge->setBoth('contexts', $contexts);
+
         $this->FrontendBridge->setBoth('modelHistory', $modelHistory);
         $this->FrontendBridge->setBoth('showNextEntriesButton', $showNextEntriesButton);
         $this->FrontendBridge->setBoth('showPrevEntriesButton', $showPrevEntriesButton);
@@ -173,6 +179,14 @@ class ModelHistoryController extends AppController
         $this->FrontendBridge->setBoth('foreignKey', $foreignKey);
         $this->FrontendBridge->setBoth('searchableFields', TableRegistry::get($model)->getTranslatedFields());
         $this->FrontendBridge->set('filter', isset($this->request->data['filter']) ? $this->request->data['filter'] : []);
+
+        $entity = $this->ModelHistory->getEntityWithHistory($model, $foreignKey);
+
+        $contexts = [];
+        if (method_exists($entity, 'getContexts')) {
+            $contexts = $entity::getContexts();
+        }
+        $this->FrontendBridge->setBoth('contexts', $contexts);
 
         return $this->render('index');
     }

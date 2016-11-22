@@ -1,11 +1,11 @@
 <?php
 
-namespace ModelHistory\Model\Filter;
+namespace ModelHistory\Model\Transform;
 
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Inflector;
 
-class RelationFilter extends Filter
+class RelationTransform extends Transform
 {
     /**
      * {@inheritDoc}

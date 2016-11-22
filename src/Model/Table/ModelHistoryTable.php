@@ -12,7 +12,7 @@ use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
 use Cake\Validation\Validator;
 use ModelHistory\Model\Entity\ModelHistory;
-use ModelHistory\Model\Filter\Filter;
+use ModelHistory\Model\Transform\Transform;
 
 /**
  * ModelHistory Model
@@ -80,24 +80,40 @@ class ModelHistoryTable extends Table
         }
 
         $saveFields = [];
-        $fieldConfig = TableRegistry::get($entity->source())->getFields();
+        $saveableFields = TableRegistry::get($entity->source())->getSaveableFields();
 
-        foreach ($fieldConfig as $fieldName => $data) {
-            if ($data['searchable'] === true && isset($options['data'][$fieldName])) {
-                if ($data['obfuscated'] === true) {
-                    $options['data'][$fieldName] = '****************';
+        if ($action === ModelHistory::ACTION_COMMENT) {
+            $saveFields = [
+                'comment' => $options['data']['comment']
+            ];
+        } else {
+            foreach ($saveableFields as $fieldName => $data) {
+                if (isset($options['data'][$fieldName])) {
+                    if ($data['obfuscated'] === true) {
+                        $options['data'][$fieldName] = '****************';
+                    }
+                    if (is_callable($data['saveParser'])) {
+                        $callback = $data['saveParser'];
+                        $options['data'][$fieldName] = $callback($fieldName, $options['data'][$fieldName], $entity);
+                    } else {
+                        if (isset($data[$fieldName]['type'])) {
+                            $filterClass = Transform::get($data[$fieldName]['type']);
+                            $options['data'][$fieldName] = $filterClass->save($fieldName, $value, $entity->source());
+                        }
+                    }
+                    $saveFields[$fieldName] = $options['data'][$fieldName];
                 }
-                $saveFields[$fieldName] = $options['data'][$fieldName];
             }
         }
 
-        if (empty($saveFields)) {
+        if ($action !== ModelHistory::ACTION_DELETE && empty($saveFields)) {
             return false;
         }
+
         $options['data'] = $saveFields;
 
         if ($action === ModelHistory::ACTION_DELETE) {
-            $options['data'] = $entity->toArray();
+            $options['data'] = [];
         }
 
         if ($action === ModelHistory::ACTION_UPDATE && $options['dirtyFields']) {
@@ -156,10 +172,10 @@ class ModelHistoryTable extends Table
                 }
                 if (is_callable($fieldConfig[$field]['displayParser'])) {
                     $callback = $fieldConfig[$field]['displayParser'];
-                    $entityData[$field] = $callback($field, $value);
+                    $entityData[$field] = $callback($field, $value, $entity);
                     continue;
                 }
-                $filterClass = Filter::get($fieldConfig[$field]['type']);
+                $filterClass = Transform::get($fieldConfig[$field]['type']);
                 $entityData[$field] = $filterClass->display($field, $value, $model);
             }
             $history[$index]->data = $entityData;
@@ -177,11 +193,12 @@ class ModelHistoryTable extends Table
      */
     public function addComment(EntityInterface $entity, $comment, $userId = null)
     {
-        return $this->add($entity, ModelHistory::ACTION_COMMENT, $userId, [
+        $add = $this->add($entity, ModelHistory::ACTION_COMMENT, $userId, [
             'data' => [
                 'comment' => $comment
             ]
         ]);
+        return $add;
     }
 
     /**
@@ -326,6 +343,7 @@ class ModelHistoryTable extends Table
             ])
             ->order(['revision' => 'DESC'])
             ->toArray();
+        $entity = $this->getEntityWithHistory($historyEntry->model, $historyEntry->foreign_key);
 
         $diffOutput = [
             'changed' => [],
@@ -333,16 +351,33 @@ class ModelHistoryTable extends Table
             'unchanged' => []
         ];
 
+        $fieldConfig = TableRegistry::get($historyEntry->model)->getFields();
+        $transformers = [];
+
         // 1. Get old values for changed fields in passed entry, ignore arrays
         foreach ($historyEntry->data as $fieldName => $newValue) {
             foreach ($previousRevisions as $revision) {
                 if (isset($revision->data[$fieldName])) {
-                    if (is_array($revision->data[$fieldName])) {
+                    if (is_array($revision->data[$fieldName]) || !isset($fieldConfig[$fieldName])) {
                         continue 2;
                     }
+                    if (isset($fieldConfig[$fieldName]['displayParser'])) {
+                        $callback = $fieldConfig[$fieldName]['displayParser'];
+                        $diffOutput['changed'][$fieldName] = [
+                            'old' => $callback($fieldName, $revision->data[$fieldName], $entity),
+                            'new' => $callback($fieldName, $newValue, $entity)
+                        ];
+                        continue 2;
+                    }
+                    $type = $fieldConfig[$fieldName]['type'];
+
+                    if (!isset($transformers[$type])) {
+                        $transformers[$type] = Transform::get($type);
+                    }
+
                     $diffOutput['changed'][$fieldName] = [
-                        'old' => $revision->data[$fieldName],
-                        'new' => $newValue
+                        'old' => $transformers[$type]->display($fieldName, $revision->data[$fieldName], $historyEntry->model),
+                        'new' => $transformers[$type]->display($fieldName, $newValue, $historyEntry->model)
                     ];
                     continue 2;
                 }
@@ -353,7 +388,7 @@ class ModelHistoryTable extends Table
 
         // 2. Try to get old values for any other fields defined in searchableFields and
 
-        foreach (TableRegistry::get($historyEntry->model)->getFields() as $fieldName => $data) {
+        foreach ($fieldConfig as $fieldName => $data) {
             foreach ($previousRevisions as $revisionIndex => $revision) {
                 if (!isset($revision->data[$fieldName])) {
                     continue;
@@ -361,20 +396,25 @@ class ModelHistoryTable extends Table
                 if (is_array($revision->data[$fieldName]) || isset($diffOutput['changed'][$fieldName])) {
                     continue 2;
                 }
-                if ($currentEntity->{$fieldName} instanceof Time || $currentEntity->{$fieldName} instanceof Date) {
-                    $timeFormat = $currentEntity->{$fieldName}->format('Y-m-d') . 'T' . $currentEntity->{$fieldName}->format('H:i:s');
-                    if ($timeFormat != $revision->data[$fieldName]) {
+                if ($revision->data[$fieldName] != $currentEntity->{$fieldName}) {
+                    if (is_callable($data['displayParser'])) {
+                        $callback = $data['displayParser'];
                         $diffOutput['changedBefore'][$fieldName] = [
-                            'old' => $revision->data[$fieldName],
-                            'new' => $timeFormat
+                            'old' => $callback($fieldName, $revision->data[$fieldName], $entity),
+                            'new' => $callback($fieldName, $currentEntity->{$fieldName}, $entity)
                         ];
                         continue 2;
                     }
-                }
-                if ($revision->data[$fieldName] != $currentEntity->{$fieldName}) {
-                    $diffOutput['changedBefore'][$fieldName] = [
-                        'old' => $revision->data[$fieldName],
-                        'new' => $currentEntity->{$fieldName}
+
+                    $type = $data['type'];
+
+                    if (!isset($transformers[$type])) {
+                        $transformers[$type] = Transform::get($type);
+                    }
+
+                    $diffOutput['changed'][$fieldName] = [
+                        'old' => $transformers[$type]->display($fieldName, $revision->data[$fieldName], $historyEntry->model),
+                        'new' => $transformers[$type]->display($fieldName, $currentEntity->{$fieldName}, $historyEntry->model)
                     ];
                     continue 2;
                 }
@@ -383,7 +423,7 @@ class ModelHistoryTable extends Table
 
         // 3. Get all unchanged fields
 
-        foreach (TableRegistry::get($historyEntry->model)->getFields() as $fieldName => $data) {
+        foreach ($fieldConfig as $fieldName => $data) {
             foreach ($previousRevisions as $revision) {
                 if (!isset($revision->data[$fieldName])) {
                     continue;
@@ -391,12 +431,58 @@ class ModelHistoryTable extends Table
                 if (is_array($revision->data[$fieldName]) || isset($diffOutput['changed'][$fieldName]) || isset($diffOutput['changedBefore'][$fieldName])) {
                     continue 2;
                 }
-                $diffOutput['unchanged'][$fieldName] = $currentEntity->{$fieldName};
+
+                if (is_callable($data['displayParser'])) {
+                    $callback = $data['displayParser'];
+                    $diffOutput['unchanged'][$fieldName] = $callback($fieldName, $currentEntity->{$fieldName}, $entity);
+                    continue 2;
+                }
+
+                $type = $data['type'];
+
+                if (!isset($transformers[$type])) {
+                    $transformers[$type] = Transform::get($type);
+                }
+
+                $diffOutput['unchanged'][$fieldName] = $transformers[$type]->display($fieldName, $currentEntity->{$fieldName}, $historyEntry->model);
                 continue 2;
+            }
+        }
+
+
+        // Translate all the fieldnames
+        foreach ($diffOutput as $type => $dataArr) {
+            if (!empty($dataArr)) {
+                foreach ($dataArr as $fieldName => $values) {
+                    $localizedField = $this->_translateFieldname($fieldName, $historyEntry->model);
+                    if ($localizedField != $fieldName)  {
+                        $dataArr[$localizedField] = $values;
+                        unset($dataArr[$fieldName]);
+                    }
+                }
+                $diffOutput[$type] = $dataArr;
             }
         }
 
         return $diffOutput;
     }
 
+    /**
+     * Try to translate fieldname
+     *
+     * @param  string  $fieldname  Fieldname
+     * @param  string  $model      Model
+     * @return string
+     */
+    protected function _translateFieldname($fieldname, $model) {
+        // Try to get the generic model.field translation string
+        $localeSlug = strtolower(Inflector::singularize(Inflector::delimit($model))) . '.' . strtolower($fieldname);
+        $translatedString = __($localeSlug);
+
+        // Return original value when no translation was made
+        if ($localeSlug == $translatedString) {
+            return $fieldname;
+        }
+        return $translatedString;
+    }
 }

@@ -26,12 +26,16 @@ use ModelHistory\Model\Entity\ModelHistory;
                             'empty' => __d('model_history', 'select.choose')
                         ]) ?>
                     </div>
-                    <div class="col-md-6">
-                        <?= $this->Form->input('search.context_slug', [
-                            'type' => 'text',
-                            'label' => __d('model_history', 'search.context_slug')
-                        ]) ?>
-                    </div>
+                    <?php if (!empty($contexts)): ?>
+                        <div class="col-md-6">
+                            <?= $this->Form->input('search.context_slug', [
+                                'type' => 'select',
+                                'label' => __d('model_history', 'search.context_slug'),
+                                'options' => $contexts,
+                                'empty' => __d('model_history', 'select.choose')
+                            ]) ?>
+                        </div>
+                    <?php endif; ?>
                 </div>
                 <div class="row">
                     <div class="col-md-6">

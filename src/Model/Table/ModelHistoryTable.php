@@ -244,16 +244,16 @@ class ModelHistoryTable extends Table
     /**
      * getEntityWithHistory function
      *
-     * @param string $model Model
-     * @param string $foreignKey ForeignKey
-     * @param array $options Options
-     * @return void
+     * @param string  $model          Model
+     * @param string  $foreignKey     ForeignKey
+     * @param array   $finderOptions  Options
+     * @return Entity
      */
-    public function getEntityWithHistory($model, $foreignKey, array $options = [])
+    public function getEntityWithHistory($model, $foreignKey, array $finderOptions = [], array $tableOptions = [])
     {
-        $Table = TableRegistry::get($model);
+        $Table = TableRegistry::get($model, $tableOptions);
         $userFields = $Table->getUserNameFields();
-        $options = Hash::merge([
+        $finderOptions = Hash::merge([
             'contain' => [
                 'ModelHistory' => [
                     'fields' => [
@@ -272,8 +272,8 @@ class ModelHistoryTable extends Table
                     ]
                 ]
             ]
-        ], $options);
-        $entity = $Table->get($foreignKey, $options);
+        ], $finderOptions);
+        $entity = $Table->get($foreignKey, $finderOptions);
 
         return $entity;
     }

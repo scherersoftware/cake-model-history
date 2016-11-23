@@ -38,6 +38,10 @@ class ModelHistoryTableTest extends TestCase
 
         $this->ModelHistory = TableRegistry::get('ModelHistory', ['className' => 'ModelHistory\Model\Table\ModelHistoryTable']);
         $this->Articles = TableRegistry::get('ArticlesTable', ['className' => 'ModelHistoryTestApp\Model\Table\ArticlesTable']);
+
+        if ($this->Articles->hasBehavior('Historizable')) {
+            $this->Articles->removeBehavior('Historizable');
+        }
     }
 
     /**
@@ -361,6 +365,35 @@ class ModelHistoryTableTest extends TestCase
 
         foreach ($fields as $fieldname => $data) {
             $this->assertEquals($data['saveable'], false);
+        }
+    }
+
+    /**
+     * Test entity with contained history getter
+     *
+     * @return void
+     */
+    public function testGetEntityWithHistory()
+    {
+        $userId = '481fc6d0-b920-43e0-a40d-6d1740cf8562';
+        $this->Articles->addBehavior('ModelHistory.Historizable', $this->_getBehaviorConfig(function () use ($userId) {
+            return $userId;
+        }));
+
+        $article = $this->Articles->newEntity([
+            'title' => 'foobar',
+            'content' => 'lorem'
+        ]);
+        $this->Articles->save($article);
+
+        $entityWithHistory = $this->ModelHistory->getEntityWithHistory('Articles', $article->id, [], ['className' => 'ModelHistoryTestApp\Model\Table\ArticlesTable']);
+
+        $this->assertInstanceOf('ModelHistoryTestApp\Model\Entity\Article', $entityWithHistory);
+        $this->assertNotEmpty($entityWithHistory->model_history);
+        $this->assertEquals(1, count($entityWithHistory->model_history));
+
+        foreach ($entityWithHistory->model_history as $historyEntry) {
+            $this->assertEquals($historyEntry->foreign_key, $article->id);
         }
     }
 }

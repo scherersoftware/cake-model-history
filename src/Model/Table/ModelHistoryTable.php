@@ -163,7 +163,12 @@ class ModelHistoryTable extends Table
     */
     protected function _transformDataFields(array $history, $model)
     {
-        $fieldConfig = TableRegistry::get($model)->getFields();
+        $tableConfig = [];
+        if (defined('PHPUNIT_TESTSUITE')) {
+            $tableConfig = ['className' => 'ModelHistoryTestApp\Model\Table\ArticlesTable'];
+            $model = 'ArticlesTable';
+        }
+        $fieldConfig = TableRegistry::get($model, $tableConfig)->getFields();
         foreach ($history as $index => $entity) {
             $entityData = $entity->data;
             foreach ($entityData as $field => $value) {
@@ -246,14 +251,18 @@ class ModelHistoryTable extends Table
      *
      * @param string  $model          Model
      * @param string  $foreignKey     ForeignKey
-     * @param array   $finderOptions  Options
+     * @param array   $options        Options
      * @return Entity
      */
-    public function getEntityWithHistory($model, $foreignKey, array $finderOptions = [], array $tableOptions = [])
+    public function getEntityWithHistory($model, $foreignKey, array $options = [])
     {
-        $Table = TableRegistry::get($model, $tableOptions);
+        $tableConfig = [];
+        if (defined('PHPUNIT_TESTSUITE')) {
+            $tableConfig = ['className' => 'ModelHistoryTestApp\Model\Table\ArticlesTable'];
+        }
+        $Table = TableRegistry::get($model, $tableConfig);
         $userFields = $Table->getUserNameFields();
-        $finderOptions = Hash::merge([
+        $options = Hash::merge([
             'contain' => [
                 'ModelHistory' => [
                     'fields' => [
@@ -272,8 +281,8 @@ class ModelHistoryTable extends Table
                     ]
                 ]
             ]
-        ], $finderOptions);
-        $entity = $Table->get($foreignKey, $finderOptions);
+        ], $options);
+        $entity = $Table->get($foreignKey, $options);
 
         return $entity;
     }

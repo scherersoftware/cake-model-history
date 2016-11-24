@@ -78,8 +78,12 @@ class ModelHistoryTableTest extends TestCase
                     'saveable' => true,
                     'obfuscated' => false,
                     'type' => 'string',
-                    'displayParser' => null,
-                    'saveParser' => null
+                    'displayParser' => function ($fieldname, $value, $entity) {
+                        return $value;
+                    },
+                    'saveParser' => function ($fieldname, $value, $entity) {
+                        return $value;
+                    }
                 ],
                 [
                     'name' => 'status',
@@ -487,30 +491,54 @@ class ModelHistoryTableTest extends TestCase
 
         $article = $this->Articles->patchEntity($article, [
             'title' => 'bar',
-            'content' => 'foo'
+            'content' => 'ipsum'
         ]);
         $this->Articles->save($article);
 
         $modelHistory = $this->ModelHistory->getModelHistory('Articles', $article->id, 1000, 1);
         $this->assertEquals(2, count($modelHistory));
 
-        for ($i = 2, $n = 0; $i > $n; $i--) {
-            $index = $i-1;
-            $diff = $this->ModelHistory->buildDiff($modelHistory[$index]);
+        $article = $this->Articles->get($article->id);
+        $article = $this->Articles->patchEntity($article, [
+            'status' => 'woot'
+        ]);
+        $this->Articles->save($article);
+
+        $modelHistory = $this->ModelHistory->getModelHistory('Articles', $article->id, 1000, 1);
+        $this->assertEquals(3, count($modelHistory));
+
+        $i = count($modelHistory);
+        foreach ($modelHistory as $historyEntry) {
+            $this->assertEquals($i, $historyEntry->revision);
+
+            $diff = $this->ModelHistory->buildDiff($historyEntry);
+
             switch ($i) {
-                case 0:
-                    // 2nd revision
-                    $this->assertEquals(1, $modelHistory[$index]->revision);
+                case 3:
+                    $this->assertNotEmpty($diff);
                     $this->assertNotEmpty($diff['changed']);
                     $this->assertNotEmpty($diff['changedBefore']);
                     $this->assertNotEmpty($diff['unchanged']);
+                    $this->assertArrayHasKey('status', $diff['changed']);
+                    $this->assertArrayHasKey('title', $diff['changedBefore']);
+                    $this->assertArrayHasKey('content', $diff['changedBefore']);
+                    $this->assertArrayHasKey('id', $diff['unchanged']);
+                    break;
+                case 2:
+                    $this->assertNotEmpty($diff);
+                    $this->assertNotEmpty($diff['changed']);
+                    $this->assertNotEmpty($diff['changedBefore']);
+                    $this->assertNotEmpty($diff['unchanged']);
+                    $this->assertArrayHasKey('title', $diff['changed']);
+                    $this->assertArrayHasKey('content', $diff['changed']);
+                    $this->assertArrayHasKey('status', $diff['changedBefore']);
+                    $this->assertArrayHasKey('id', $diff['unchanged']);
                     break;
                 case 1:
-                    // 1st revision
-                    $this->assertEquals(2, $modelHistory[$index]->revision);
                     $this->assertEmpty($diff);
                     break;
             }
+            $i--;
         }
     }
 }

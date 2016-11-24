@@ -30,6 +30,8 @@ class ModelHistoryFixture extends TestFixture
         'user_id' => ['type' => 'uuid', 'length' => null, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null],
         'action' => ['type' => 'string', 'length' => 45, 'null' => true, 'default' => null, 'comment' => 'e.g. "create", "update", "delete"', 'precision' => null, 'fixed' => null],
         'data' => ['type' => 'binary', 'length' => null, 'null' => true, 'default' => null, 'comment' => 'JSON blob, schema per action', 'precision' => null],
+        'context' => ['type' => 'binary', 'length' => null, 'null' => true, 'default' => null, 'comment' => 'JSON blob, schema per action', 'precision' => null],
+        'context_slug' => ['type' => 'string', 'length' => 255, 'null' => true, 'default' => null, 'comment' => 'e.g. "create", "update", "delete"', 'precision' => null, 'fixed' => null],
         'revision' => ['type' => 'integer', 'length' => 8, 'unsigned' => false, 'null' => false, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
         'created' => ['type' => 'datetime', 'length' => null, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null],
         '_constraints' => [

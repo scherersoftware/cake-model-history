@@ -9,6 +9,8 @@ use Cake\ORM\Entity;
 class Article extends Entity
 {
 
+    use \ModelHistory\Model\Entity\HistoryContextTrait;
+
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *

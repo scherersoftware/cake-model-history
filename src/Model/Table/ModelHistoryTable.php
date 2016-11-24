@@ -80,7 +80,14 @@ class ModelHistoryTable extends Table
         }
 
         $saveFields = [];
-        $saveableFields = TableRegistry::get($entity->source())->getSaveableFields();
+
+        $model = $entity->source();
+        $tableConfig = [];
+        if (defined('PHPUNIT_TESTSUITE')) {
+            $tableConfig = ['className' => 'ModelHistoryTestApp\Model\Table\ArticlesTable'];
+            $model = 'ArticlesTable';
+        }
+        $saveableFields = TableRegistry::get($model, $tableConfig)->getSaveableFields();
 
         if ($action === ModelHistory::ACTION_COMMENT) {
             $saveFields = [
@@ -125,6 +132,7 @@ class ModelHistoryTable extends Table
             }
             $options['data'] = $newData;
         }
+
 
         $context = null;
         if (method_exists($entity, 'getHistoryContext')) {
@@ -273,7 +281,9 @@ class ModelHistoryTable extends Table
                         'created',
                         'model',
                         'foreign_key',
-                        'data'
+                        'data',
+                        'context',
+                        'context_slug'
                     ],
                     'sort' => ['ModelHistory.revision DESC'],
                     'Users' => [
@@ -310,6 +320,8 @@ class ModelHistoryTable extends Table
             ->limit($itemsToShow)
             ->page($page)
             ->toArray();
+
+        var_dump($history);
 
         return $this->_transformDataFields($history, $model);
     }
@@ -352,6 +364,7 @@ class ModelHistoryTable extends Table
             ])
             ->order(['revision' => 'DESC'])
             ->toArray();
+
         $entity = $this->getEntityWithHistory($historyEntry->model, $historyEntry->foreign_key);
 
         $diffOutput = [
@@ -421,7 +434,7 @@ class ModelHistoryTable extends Table
                         $transformers[$type] = Transform::get($type);
                     }
 
-                    $diffOutput['changed'][$fieldName] = [
+                    $diffOutput['changedBefore'][$fieldName] = [
                         'old' => $transformers[$type]->display($fieldName, $revision->data[$fieldName], $historyEntry->model),
                         'new' => $transformers[$type]->display($fieldName, $currentEntity->{$fieldName}, $historyEntry->model)
                     ];

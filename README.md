@@ -1,5 +1,6 @@
 # CakePHP 3 cake-model-history
 
+[![codecov](https://codecov.io/gh/scherersoftware/cake-model-history/branch/master/graph/badge.svg)](https://codecov.io/gh/scherersoftware/cake-model-history)
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.txt)
 
 CakePHP 3 Historization for database records. Keeps track of changes performed by users and provides a customizable view element for displaying them.

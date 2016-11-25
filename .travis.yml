@@ -9,6 +9,7 @@ services:
 
 before_script:
   - composer self-update
+  - composer update
   - composer install --prefer-dist
   - mysql -uroot -e "DROP DATABASE IF EXISTS model_history_test; CREATE DATABASE model_history_test;"
 

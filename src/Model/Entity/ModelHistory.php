@@ -16,6 +16,7 @@ class ModelHistory extends Entity
 
     const CONTEXT_TYPE_CONTROLLER = 'controller';
     const CONTEXT_TYPE_SHELL = 'shell';
+    const CONTEXT_TYPE_SLUG = 'slug';
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().

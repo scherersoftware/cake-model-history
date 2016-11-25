@@ -57,7 +57,7 @@ class ModelHistoryTableTest extends TestCase
     {
         $dataObject = new \stdClass();
         $article = $this->Articles->newEntity();
-        $article->setHistoryContext($dataObject, 'foo');
+        $article->setHistoryContext('foo');
     }
 
     /**

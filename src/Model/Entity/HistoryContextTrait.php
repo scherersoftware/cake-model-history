@@ -21,9 +21,11 @@ trait HistoryContextTrait
      * Sets a context given through a request to identify the creation
      * point of the revision.
      *
-     * @param object  $dataObject  Data object to get context infos from
+     * @param string  $type        Context type
+     * @param object  $dataObject  Optional dataobject to get additional data from
+     * @param string  $slug        Optional slug. Must implement getContexts() when using
      */
-    public function setHistoryContext($dataObject, $type)
+    public function setHistoryContext($type, $dataObject = null, $slug = null)
     {
         if (!in_array($type, array_keys(ModelHistory::getContextTypes()))) {
             throw new InvalidArgumentException("$type is not allowed as context type. Allowed types are: " . implode(', ', ModelHistory::getContextTypes()));
@@ -46,9 +48,11 @@ trait HistoryContextTrait
                     'taskNames' => $dataObject->taskNames
                 ];
                 $contextSlug = null;
+                if ($slug !== null) {
+                    $contextSlug = $slug;
+                }
                 break;
             case ModelHistory::CONTEXT_TYPE_CONTROLLER:
-            default:
                 if (!$dataObject instanceof Request) {
                     throw new InvalidArgumentException('You have to specify a Request data object for this context type.');
                 }
@@ -56,11 +60,23 @@ trait HistoryContextTrait
                     'params' => $dataObject->params,
                     'method' => $dataObject->method()
                 ];
-                $contextSlug = Text::insert(':plugin/:controller/:action', [
-                    'plugin' => $context['params']['plugin'],
-                    'controller' => $context['params']['controller'],
-                    'action' => $context['params']['action']
-                ]);
+                if ($slug !== null) {
+                    $contextSlug = $slug;
+                } else {
+                    $contextSlug = Text::insert(':plugin/:controller/:action', [
+                        'plugin' => $context['params']['plugin'],
+                        'controller' => $context['params']['controller'],
+                        'action' => $context['params']['action']
+                    ]);
+                }
+                break;
+            case ModelHistory::CONTEXT_TYPE_SLUG:
+            default:
+                $context = [];
+                if ($slug === null) {
+                    throw new InvalidArgumentException('You have to specify a slug for this context type.');
+                }
+                $contextSlug = $slug;
                 break;
         }
 

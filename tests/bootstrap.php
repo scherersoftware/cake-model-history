@@ -1,30 +1,8 @@
 <?php
-// /**
-//  * Test suite bootstrap for ModelHistory.
-//  *
-//  * This function is used to find the location of CakePHP whether CakePHP
-//  * has been installed as a dependency of the plugin, or the plugin is itself
-//  * installed as a dependency of an application.
-//  */
-// $findRoot = function ($root) {
-//     do {
-//         $lastRoot = $root;
-//         $root = dirname($root);
-//         if (is_dir($root . '/vendor/cakephp/cakephp')) {
-//             return $root;
-//         }
-//     } while ($root !== $lastRoot);
-//
-//     throw new Exception("Cannot find the root of the application, unable to run tests");
-// };
-// $root = $findRoot(__FILE__);
-// unset($findRoot);
-//
-// chdir($root);
-// require $root . '/config/bootstrap.php';
 
 use Cake\Cache\Cache;
 use Cake\Core\Configure;
+use Cake\Database\Type;
 
 Configure::write('debug', true);
 /**
@@ -32,6 +10,11 @@ Configure::write('debug', true);
  */
 // Customize this to be a relative path for embedded plugins.
 // For standalone plugins, this should point at a CakePHP installation.
+if (!defined('DS')) {
+    define('DS', DIRECTORY_SEPARATOR);
+}
+define('APP', 'tests' . DS . 'ModelHistoryTestApp' . DS);
+
 $vendorPos = strpos(__DIR__, 'vendor/codekanzlei/cake-model-history');
 if ($vendorPos !== false) {
     // Package has been cloned within another composer package, resolve path to autoloader
@@ -61,3 +44,4 @@ Cache::config('_cake_core_', [
     'serialize' => true,
     'duration' => '+2 minutes',
 ]);
+Type::map('json', '\CkTools\Database\Type\JsonType');

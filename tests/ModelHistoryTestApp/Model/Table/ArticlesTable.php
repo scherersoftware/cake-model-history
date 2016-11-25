@@ -87,6 +87,16 @@ class ArticlesTable extends Table
                     'type' => 'string',
                     'displayParser' => null,
                     'saveParser' => null
+                ],
+                [
+                    'name' => 'articles_id',
+                    'translation' => __('articles.articles_id'),
+                    'searchable' => true,
+                    'saveable' => true,
+                    'obfuscated' => false,
+                    'type' => 'relation',
+                    'displayParser' => null,
+                    'saveParser' => null
                 ]
             ]
         ]);
@@ -107,6 +117,7 @@ class ArticlesTable extends Table
             ->allowEmpty('status')
             ->allowEmpty('content')
             ->allowEmpty('json_field')
+            ->allowEmpty('articles_id')
             ->add('int_field', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('int_field');
 

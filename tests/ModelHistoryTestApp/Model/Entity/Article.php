@@ -22,5 +22,6 @@ class Article extends Entity
         'content' => true,
         'json_field' => true,
         'int_field' => true,
+        'articles_id' => true
     ];
 }

@@ -96,6 +96,7 @@ class ModelHistoryTable extends Table
                 'comment' => $options['data']['comment']
             ];
         } else {
+            // var_dump($saveableFields);
             foreach ($saveableFields as $fieldName => $data) {
                 if (isset($options['data'][$fieldName])) {
                     if ($data['obfuscated'] === true) {

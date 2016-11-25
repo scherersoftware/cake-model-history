@@ -1,4 +1,5 @@
 coverage:
+  branch: feature/frontend-widget
   status:
     project:
       default: false  # disable the default status that measures entire project

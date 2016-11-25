@@ -49,6 +49,7 @@ class ModelHistory extends Entity
                 $data[$fieldName] = $this->_stringifyEmptyValue($value);
             }
         }
+
         return $data;
     }
 

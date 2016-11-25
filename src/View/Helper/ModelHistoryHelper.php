@@ -81,6 +81,7 @@ class ModelHistoryHelper extends Helper
                 $class = 'info';
                 break;
         }
+
         return $class;
     }
 
@@ -115,6 +116,7 @@ class ModelHistoryHelper extends Helper
             $lastname = $history->user->{$userNameFields['lastname']};
             $username = $firstname . ' ' . $lastname;
         }
+
         return ucfirst($action) . ' ' . __d('model_history', 'by') . ' ' . $username;
     }
 
@@ -141,6 +143,7 @@ class ModelHistoryHelper extends Helper
                 $icon = 'plus-circle';
                 break;
         }
+
         return '<i class="fa fa-' . $icon . '"></i>';
     }
 
@@ -152,7 +155,7 @@ class ModelHistoryHelper extends Helper
      */
     public function getLocalizedFieldnames(ModelHistory $historyEntry)
     {
-        $fields = join(', ', array_map(function($value) use ($historyEntry) {
+        $fields = join(', ', array_map(function ($value) use ($historyEntry) {
             if (!is_string($value)) {
                 return $value;
             }

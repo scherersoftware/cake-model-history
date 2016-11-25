@@ -2,12 +2,12 @@
 namespace ModelHistory\Model\Table;
 
 use Cake\Datasource\EntityInterface;
+use Cake\I18n\Date;
+use Cake\I18n\Time;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
-use Cake\I18n\Date;
-use Cake\I18n\Time;
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
 use Cake\Validation\Validator;
@@ -52,10 +52,12 @@ class ModelHistoryTable extends Table
                 if ($context['data']['action'] != ModelHistory::ACTION_COMMENT) {
                     return true;
                 }
+
                 return !empty($value['comment']);
             },
             'message' => __d('model_history', 'comment_empty')
         ]);
+
         return $validator;
     }
 
@@ -159,16 +161,17 @@ class ModelHistoryTable extends Table
             'revision' => $this->getNextRevisionNumberForEntity($entity)
         ]);
         $this->save($entry);
+
         return $entry;
     }
 
     /**
-    * Transforms data fields to human readable form
-    *
-    * @param  array   $history  Data
-    * @param  string  $model    Model name
-    * @return array
-    */
+     * Transforms data fields to human readable form
+     *
+     * @param  array   $history  Data
+     * @param  string  $model    Model name
+     * @return array
+     */
     protected function _transformDataFields(array $history, $model)
     {
         $tableConfig = [];
@@ -193,6 +196,7 @@ class ModelHistoryTable extends Table
             }
             $history[$index]->data = $entityData;
         }
+
         return $history;
     }
 
@@ -211,6 +215,7 @@ class ModelHistoryTable extends Table
                 'comment' => $comment
             ]
         ]);
+
         return $add;
     }
 
@@ -236,6 +241,7 @@ class ModelHistoryTable extends Table
         if (isset($last['revision'])) {
             $revision = $last['revision'] + 1;
         }
+
         return $revision;
     }
 
@@ -251,6 +257,7 @@ class ModelHistoryTable extends Table
         if (substr($source, -5) == 'Table') {
             $source = substr($source, 0, -5);
         }
+
         return $source;
     }
 
@@ -337,6 +344,7 @@ class ModelHistoryTable extends Table
             'model' => $model,
             'foreign_key' => $foreignKey
         ], $conditions);
+
         return $this->find()
             ->where($conditions)
             ->count();
@@ -475,7 +483,7 @@ class ModelHistoryTable extends Table
             if (!empty($dataArr)) {
                 foreach ($dataArr as $fieldName => $values) {
                     $localizedField = $this->_translateFieldname($fieldName, $historyEntry->model);
-                    if ($localizedField != $fieldName)  {
+                    if ($localizedField != $fieldName) {
                         $dataArr[$localizedField] = $values;
                         unset($dataArr[$fieldName]);
                     }
@@ -494,7 +502,8 @@ class ModelHistoryTable extends Table
      * @param  string  $model      Model
      * @return string
      */
-    protected function _translateFieldname($fieldname, $model) {
+    protected function _translateFieldname($fieldname, $model)
+    {
         // Try to get the generic model.field translation string
         $localeSlug = strtolower(Inflector::singularize(Inflector::delimit($model))) . '.' . strtolower($fieldname);
         $translatedString = __($localeSlug);
@@ -503,6 +512,7 @@ class ModelHistoryTable extends Table
         if ($localeSlug == $translatedString) {
             return $fieldname;
         }
+
         return $translatedString;
     }
 }

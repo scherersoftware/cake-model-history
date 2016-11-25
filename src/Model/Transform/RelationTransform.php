@@ -10,7 +10,8 @@ class RelationTransform extends Transform
     /**
      * {@inheritDoc}
      */
-    public function save($fieldname, $value, $model = null) {
+    public function save($fieldname, $value, $model = null)
+    {
         return $value;
     }
 

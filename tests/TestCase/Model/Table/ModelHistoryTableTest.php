@@ -58,7 +58,8 @@ class ModelHistoryTableTest extends TestCase
         parent::tearDown();
     }
 
-    protected function _getBehaviorConfig($callback = null) {
+    protected function _getBehaviorConfig($callback = null)
+    {
         return [
             'userIdCallback' => $callback,
             'fields' => [

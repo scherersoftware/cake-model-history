@@ -115,12 +115,6 @@ class HistorizableBehavior extends Behavior
         $this->ModelHistory->add($entity, $action, $this->_getUserId(), [
             'dirtyFields' => $dirtyFields
         ]);
-        // foreach ($this->config('customActions') as $customAction) {
-        //     if ($customAction['status'] == $entity['status']) {
-        //         $action = $customAction['action'];
-        //         $this->ModelHistory->add($entity, $action, $this->_getUserId(), []);
-        //     }
-        // }
     }
 
     /**
@@ -149,6 +143,7 @@ class HistorizableBehavior extends Behavior
         if (!$userId) {
             $userId = $this->_getUserId();
         }
+
         return $this->ModelHistory->addComment($entity, $comment, $userId);
     }
 
@@ -164,6 +159,7 @@ class HistorizableBehavior extends Behavior
         if (is_callable($callback)) {
             $userId = $callback();
         }
+
         return $userId;
     }
 
@@ -243,11 +239,12 @@ class HistorizableBehavior extends Behavior
      */
     public function getFields()
     {
-        return Hash::apply($this->config('fields'), '{n}', function($array) {
+        return Hash::apply($this->config('fields'), '{n}', function ($array) {
             $output = [];
             foreach ($array as $data) {
                 $output[$data['name']] = $data;
             }
+
             return $output;
         });
     }
@@ -264,6 +261,7 @@ class HistorizableBehavior extends Behavior
             foreach ($array as $data) {
                 $formatted[$data['name']] = $data['translation'];
             }
+
             return Hash::sort($formatted, '{s}', 'asc');
         });
     }
@@ -280,6 +278,7 @@ class HistorizableBehavior extends Behavior
             foreach ($array as $data) {
                 $formatted[$data['name']] = $data;
             }
+
             return $formatted;
         });
     }

@@ -9,11 +9,13 @@ class DateTransform extends Transform
     /**
      * {@inheritDoc}
      */
-    public function save($fieldname, $dateValue, $model = null) {
+    public function save($fieldname, $dateValue, $model = null)
+    {
         if (!is_object($dateValue)) {
             $dateValue = new Time($dateValue);
         }
         $dateValue->setTimezone('Europe/Berlin');
+
         return $dateValue;
     }
 
@@ -26,6 +28,7 @@ class DateTransform extends Transform
             $dateValue = new Time($dateValue);
         }
         $dateValue->setTimezone('Europe/Berlin');
+
         return $dateValue->nice();
     }
 }

@@ -7,7 +7,8 @@ class BoolTransform extends Transform
     /**
      * {@inheritDoc}
      */
-    public function save($fieldname, $value, $model = null) {
+    public function save($fieldname, $value, $model = null)
+    {
         return $value;
     }
 
@@ -17,6 +18,7 @@ class BoolTransform extends Transform
     public function display($fieldname, $value, $model = null)
     {
         $value = $value === true ? 'true' : 'false';
+
         return $value;
     }
 }

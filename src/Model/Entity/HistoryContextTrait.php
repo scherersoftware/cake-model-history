@@ -56,7 +56,7 @@ trait HistoryContextTrait
                     'params' => $dataObject->params,
                     'method' => $dataObject->method()
                 ];
-                $contextSlug = Text::insert(':plugin/:controller/:action',[
+                $contextSlug = Text::insert(':plugin/:controller/:action', [
                     'plugin' => $context['params']['plugin'],
                     'controller' => $context['params']['controller'],
                     'action' => $context['params']['action']

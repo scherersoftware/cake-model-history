@@ -32,13 +32,14 @@ class ModelHistoryFixture extends TestFixture
         'data' => ['type' => 'binary', 'length' => null, 'null' => true, 'default' => null, 'comment' => 'JSON blob, schema per action', 'precision' => null],
         'context' => ['type' => 'binary', 'length' => null, 'null' => true, 'default' => null, 'comment' => 'JSON blob, schema per action', 'precision' => null],
         'context_slug' => ['type' => 'string', 'length' => 255, 'null' => true, 'default' => null, 'comment' => 'e.g. "create", "update", "delete"', 'precision' => null, 'fixed' => null],
+        'context_type' => ['type' => 'string', 'length' => 255, 'null' => true, 'default' => null, 'comment' => 'e.g. "create", "update", "delete"', 'precision' => null, 'fixed' => null],
         'revision' => ['type' => 'integer', 'length' => 8, 'unsigned' => false, 'null' => false, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
         'created' => ['type' => 'datetime', 'length' => null, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null],
         '_constraints' => [
             'primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []],
         ],
         '_options' => [
-'engine' => 'InnoDB', 'collation' => 'utf8_general_ci'
+            'engine' => 'InnoDB', 'collation' => 'utf8_general_ci'
         ],
     ];
     // @codingStandardsIgnoreEnd

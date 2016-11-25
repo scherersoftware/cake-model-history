@@ -80,7 +80,8 @@ class ModelHistory extends Entity
     {
         return [
             self::CONTEXT_TYPE_CONTROLLER => __d('model_history', 'context.type.controller'),
-            self::CONTEXT_TYPE_SHELL => __d('model_history', 'context.type.shell')
+            self::CONTEXT_TYPE_SHELL => __d('model_history', 'context.type.shell'),
+            self::CONTEXT_TYPE_SLUG => __d('model_history', 'context.type.slug')
         ];
     }
 }

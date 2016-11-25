@@ -11,7 +11,7 @@
         "codekanzlei/cake-cktools": "~1.2.8"
     },
     "require-dev": {
-        "phpunit/phpunit": "*",
+        "phpunit/phpunit": "3.7.*",
         "cakephp/cakephp": "3.1.*"
     },
     "autoload": {

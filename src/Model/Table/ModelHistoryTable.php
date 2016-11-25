@@ -321,8 +321,6 @@ class ModelHistoryTable extends Table
             ->page($page)
             ->toArray();
 
-        var_dump($history);
-
         return $this->_transformDataFields($history, $model);
     }
 

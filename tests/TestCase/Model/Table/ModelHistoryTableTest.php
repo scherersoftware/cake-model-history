@@ -25,6 +25,7 @@ class ModelHistoryTableTest extends TestCase
     public $fixtures = [
         'ModelHistory' => 'plugin.model_history.model_history',
         'Articles' => 'plugin.model_history.articles',
+        'Users' => 'plugin.model_history.users',
     ];
 
     /**

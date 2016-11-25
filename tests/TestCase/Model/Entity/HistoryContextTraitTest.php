@@ -69,8 +69,6 @@ class ModelHistoryTableTest extends TestCase
     {
         $dataObject = new \Cake\Console\Shell();
 
-        var_dump(get_class($dataObject));
-
         $dataObject->OptionParser = 'OptionParser';
         $dataObject->interactive = 'interactive';
         $dataObject->params = 'params';

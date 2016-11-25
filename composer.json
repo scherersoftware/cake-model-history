@@ -7,11 +7,13 @@
         "installer-name": "ModelHistory"
     },
     "require": {
-        "php": ">=5.4"
+        "php": ">=5.4",
+        "codekanzlei/cake-cktools": "~1.2.8"
     },
     "require-dev": {
-        "phpunit/phpunit": "*",
-        "cakephp/cakephp": "3.1.*"
+        "phpunit/phpunit": "3.7.*",
+        "cakephp/cakephp": "3.3.*",
+        "cakephp/cakephp-codesniffer": "dev-master"
     },
     "autoload": {
         "psr-4": {

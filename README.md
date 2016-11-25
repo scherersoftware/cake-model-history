@@ -7,21 +7,21 @@ CakePHP 3 Historization for database records. Keeps track of changes performed b
 ## Requirements
 
 - [scherersoftware cake-cktools](https://github.com/scherersoftware/cake-cktools) for JSON to MEDIUMBLOB type mapping
-- [scherersoftware cake-frontend-bridge](https://github.com/scherersoftware/cake-frontend-bridge) for view elements and model history pagination via AJAX
 - [Font Awesome](https://fortawesome.github.io/Font-Awesome/) panel navigation buttons
 
 ## Installation
 
 #### 1. require the plugin in your `composer.json`
+
 ```
 "require": {
-	"codekanzlei/cake-model-history": "dev-master",
+	"codekanzlei/cake-model-history": "2.0.*",
 }
 ```
 
 Open a terminal in your project-folder and run these commands:
 
-	$ composer update
+	`$ composer update`
 
 #### 2. Configure `config/bootstrap.php`
 
@@ -39,32 +39,14 @@ Type::map('json', 'CkTools\Database\Type\JsonType');
 
 
 #### 3. Create a table `model_history` in your project database
-Run the following sql-quer on your project database. You can find it in the Plugin's `config/schema.sql` file.
+We have to create the database schema with help of the migrations plugin.
 
 ```
-CREATE TABLE `model_history` (
-	`id` char(36) NOT NULL,
-	`model` varchar(255) DEFAULT NULL COMMENT 'e.g. "Installation"',
-	`foreign_key` char(36) DEFAULT NULL COMMENT 'uuid',
-	`user_id` char(36) DEFAULT NULL,
-	`action` varchar(45) DEFAULT NULL COMMENT 'e.g. "create", "update", "delete"',
-	`data` mediumblob COMMENT 'JSON blob, schema per action',
-	`revision` int(8) NOT NULL,
-	`created` datetime DEFAULT NULL,
-	PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+    $ bin/cake migrations migrate -p ModelHistory
 ```
 
 #### 4. AppController.php
 
-**initialize()**
-
-```
-$this->loadComponent('RequestHandler');
-TableRegistry::get('TableWithHistorizableBehavior')->setModelHistoryUserIdCallback(function () {
-    return $this->Auth->user('id');
-});
-```
 **$helpers**
 
 ```
@@ -83,20 +65,86 @@ Add the Historizable Behavior in the `initialize` function of the **Table** you 
 $this->addBehavior('ModelHistory.Historizable');
 ```
 
-**Note:** By default, the model-history plugin matches changes to a database record to the user that performed and saved them by comparing table-fields 'firstname' and 'lastname' in `UsersTable` (See `$_defaultConfig` in `HistorizableBehavior.php` for these default settings). If your fields are not called 'forename' and 'surname', you can easily customize these settings according to the fieldnames in your UsersTable, like so:
+**Note:** By default, the model-history plugin matches changes to a database record to the user that performed and saved them by comparing table-fields 'forename' and 'surname' in `UsersTable` (See `$_defaultConfig` in `HistorizableBehavior.php` for these default settings). If your fields are not called 'forename' and 'surname', you can easily customize these settings according to the fieldnames in your UsersTable, like so:
 
 ```
 $this->addBehavior('ModelHistory.Historizable', [
     'userNameFields' => [
-        'firstname' => 'yourFirstName',
-        'lastname' => 'yourLastName',
+        'firstname' => 'User.your_first_name_field',
+        'lastname' => 'Users.your_last_name_field',
         'id' => 'Users.id'
     ],
-    'obfuscatedFields' => [
-        'password'
+    'userIdCallback' => null,
+    'entriesToShow' => 10,
+    'fields' => []
+]);
+```
+
+To control which fields are saved, how they are transformed for displaying and providing ofuscation and translations.
+
+```
+$this->addBehavior('ModelHistory.Historizable', [
+    'fields' => [
+        [
+            // The field name
+            'name' => 'forename',
+            'translation' => __('user.forename'),
+            // The searchable indicator is used to show the field in the filter box
+            'searchable' => true,
+            // The savable indicator is used to decide wether the field is tracked
+            'saveable' => true,
+            'obfuscated' => false,
+            // Allowed: string, bool, number, relation, date
+            'type' => 'string',
+            // Optional display parser to modify the value before displaying it,
+            // if no displayParser is found, the \ModelHistory\Model\Transform\{$type}Transformer is used.
+            'displayParser' => function ($fieldname, $value, $entity) {
+                return $value;
+            },
+            // Optional save parser to modify the value before saving the history entry
+            'saveParser' => function ($fieldname, $value, $entity) {
+                return $value;
+            },
+        ],
     ]
 ]);
 ```
+
+To keep track of a context, you can implement `\ModelHistory\Model\Entity\HistoryContextTrait` and set a context before saving the entity, triggered through a controller or a shell.
+
+```
+    /**
+     * Index action of a controller
+     */
+    public function index()
+    {
+        if ($this->request->is(['post'])) {
+            $entity = $this->Table->newEntity($this->request->data);
+            $entity->setHistoryContext(ModelHistory::CONTEXT_TYPE_CONTROLLER, $this->request, 'optional_slug');
+            $this->Table->save($entity);
+        }
+    }
+
+```
+
+You can also specify a context getter inside an entity to search for defined contexts. Please keep in mind that you have to use the `TypeAwareTrait` from the `CkTools`:
+
+```
+    use \CkTools\Utility\TypeAwareTrait;
+
+    /**
+     * Retrieve defined contexts
+     *
+     * @return void
+     */
+    public static function getContexts()
+    {
+        return self::getTypeMap(
+            self::CONTEXT_TYPE_FORGOT_PASSWORD
+        );
+    }
+```
+
 
 #### View setup
 Use `ModelHistoryHelper.php` to create neat view elements containing a record's change history with one call in your view:
@@ -107,13 +155,13 @@ Use `ModelHistoryHelper.php` to create neat view elements containing a record's 
 
 `modelHistoryArea` has the following **Options:**
 
-- `commentBox` (false)
+- `showCommentBox` (false)
 
 	Additionally renders an comment field (input type text). User input will be saved to the model_history table
 
-- `panel` (false)
+- `showFilterBox` (false)
 
-	Renders the model history as a view element with additional type 'panel', including a handy show/hide button
+	Additionally renders a filter box which can be used to search for entries.
 
 For the modelHistoryArea to fetch its data, add the 'ModelHistory' component to the baseComponents property in your Frontend.AppController under `/webroot/js/app/app_controller.js`.
 If you haven't set up the FrontendBridge yet, follow [these steps](https://github.com/scherersoftware/cake-frontend-bridge). There you will also find a template for this file.

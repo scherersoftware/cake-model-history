@@ -1,11 +1,15 @@
 <?php
 namespace ModelHistory\Model\Behavior;
 
+use Cake\Core\Exception\Exception;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
 use Cake\ORM\Behavior;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
+use Cake\Routing\Router;
+use Cake\Utility\Hash;
+use Cake\Utility\Inflector;
 use ModelHistory\Model\Entity\ModelHistory;
 
 /**
@@ -21,24 +25,13 @@ class HistorizableBehavior extends Behavior
      */
     protected $_defaultConfig = [
         'userIdCallback' => null,
-        'customActions' => [],
+        'entriesToShow' => 10,
         'userNameFields' => [
-            'firstname' => 'firstname',
-            'lastname' => 'lastname',
+            'firstname' => 'Users.forename',
+            'lastname' => 'Users.surname',
             'id' => 'Users.id'
         ],
-        'obfuscatedFields' => [
-            'password',
-            'password_confirm',
-            'password_new',
-            'new_password',
-            'change_password',
-            'password_change',
-        ],
-        'skipFields' => [
-            'failed_login_count',
-            'failed_login_timestamp'
-        ]
+        'fields' => []
     ];
 
     /**
@@ -64,6 +57,14 @@ class HistorizableBehavior extends Behavior
      */
     public function initialize(array $config)
     {
+        // Set default translations
+        $this->config('translations', [
+            'id' => __d('model_history', 'field.id'),
+            'comment' => __d('model_history', 'field.comment'),
+            'created' => __d('model_history', 'field.created'),
+            'modified' => __d('model_history', 'field.modified')
+        ]);
+
         $this->ModelHistory = TableRegistry::get('ModelHistory.ModelHistory');
         // Dynamically attach the hasMany relationship
         $this->_table->hasMany('ModelHistory.ModelHistory', [
@@ -115,12 +116,6 @@ class HistorizableBehavior extends Behavior
         $this->ModelHistory->add($entity, $action, $this->_getUserId(), [
             'dirtyFields' => $dirtyFields
         ]);
-        foreach ($this->config('customActions') as $customAction) {
-            if ($customAction['status'] == $entity['status']) {
-                $action = $customAction['action'];
-                $this->ModelHistory->add($entity, $action, $this->_getUserId(), []);
-            }
-        }
     }
 
     /**
@@ -149,6 +144,7 @@ class HistorizableBehavior extends Behavior
         if (!$userId) {
             $userId = $this->_getUserId();
         }
+
         return $this->ModelHistory->addComment($entity, $comment, $userId);
     }
 
@@ -164,7 +160,42 @@ class HistorizableBehavior extends Behavior
         if (is_callable($callback)) {
             $userId = $callback();
         }
+
         return $userId;
+    }
+
+    /**
+     * Get <a /> element for given ID Field
+     *
+     * @param  string  $fieldName   Fieldname
+     * @param  string  $fieldValue  Value
+     * @return string
+     */
+    public function getRelationLink($fieldName, $fieldValue = null)
+    {
+        $tableName = Inflector::camelize(Inflector::pluralize(str_replace('_id', '', $fieldName)));
+        $relationConfig = [
+            'model' => $tableName,
+            'bindingKey' => 'id',
+            'url' => [
+                'plugin' => 'Admin',
+                'controller' => $tableName,
+                'action' => 'view',
+            ]
+        ];
+
+        $pass = [];
+        if ($fieldValue !== null) {
+            $pass = [$fieldValue];
+        }
+
+        try {
+            $url = Router::url(Hash::merge($relationConfig['url'], $pass));
+        } catch (Exception $e) {
+            return $fieldValue;
+        }
+
+        return '<a href="' . $url . '" target="_blank">' . __(strtolower($tableName)) . '</a>';
     }
 
     /**
@@ -179,16 +210,6 @@ class HistorizableBehavior extends Behavior
     }
 
     /**
-     * Get all custom action for current Table
-     *
-     * @return array
-     */
-    public function getCustomActions()
-    {
-        return $this->config('customActions');
-    }
-
-    /**
      * Get the user fields
      *
      * @return array
@@ -199,22 +220,63 @@ class HistorizableBehavior extends Behavior
     }
 
     /**
-     * Get the obfuscated fields fields
+     * Get count of entries to show.
      *
-     * @return array
+     * @return int
      */
-    public function getObfuscatedFields()
+    public function getEntriesLimit()
     {
-        return $this->config('obfuscatedFields');
+        return $this->config('entriesToShow');
     }
 
     /**
-     * Get fields to skip and not save
+     * Get fields config
      *
      * @return array
      */
-    public function getSkipFields()
+    public function getFields()
     {
-        return $this->config('skipFields');
+        return Hash::apply($this->config('fields'), '{n}', function ($array) {
+            $output = [];
+            foreach ($array as $data) {
+                $output[$data['name']] = $data;
+            }
+
+            return $output;
+        });
+    }
+
+    /**
+     * Get translated fields
+     *
+     * @return array
+     */
+    public function getTranslatedFields()
+    {
+        return Hash::apply($this->config('fields'), '{n}[searchable=true]', function ($array) {
+            $formatted = [];
+            foreach ($array as $data) {
+                $formatted[$data['name']] = $data['translation'];
+            }
+
+            return Hash::sort($formatted, '{s}', 'asc');
+        });
+    }
+
+    /**
+     * Get saveable fields
+     *
+     * @return array
+     */
+    public function getSaveableFields()
+    {
+        return Hash::apply($this->config('fields'), '{n}[saveable=true]', function ($array) {
+            $formatted = [];
+            foreach ($array as $data) {
+                $formatted[$data['name']] = $data;
+            }
+
+            return $formatted;
+        });
     }
 }

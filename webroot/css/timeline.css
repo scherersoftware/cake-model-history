@@ -184,3 +184,68 @@
             right: auto;
         }
 }
+
+.model-history-area .model-history.form .input-group  {
+    width: 100%;
+    margin: 15px 0;
+}
+.model-history-area .fields .fields-table {
+    margin: 10px 0 0 0;
+    background-color: transparent;
+}
+
+.model-history-area .fields .fields-table td {
+    width: 50%;
+}
+
+.model-history-area .actions {
+    text-align: right;
+}
+
+.model-history-area .table thead tr th:first-child {
+    width: 25%;
+}
+
+.model-history-area .bootstrap-datetimepicker-widget {
+    z-index: 9999;
+}
+
+.model-history-filter .submit,
+.model-history-filter .submit-btn,
+.model-history-filter .reset-btn {
+    display: inline-block;
+    color: #FFF;
+    text-transform: uppercase;
+}
+
+.model-history-comment {
+    margin-bottom: 10px;
+}
+
+#diff-output tr td:first-child {
+    background: #FFF;
+}
+
+#diff-output tr td:last-child {
+    border-left: 1px solid #EEE;
+}
+
+#diff-output .changed {
+    background-color: #77DD77;
+}
+
+#diff-output .changed-before {
+    background-color: #FFB347;
+}
+
+#diff-output .unchanged {
+    background-color: #CFCFC4;
+}
+
+#diff-output .italic {
+    font-style: italic;
+}
+
+#diff-output tr th {
+    border: medium none;
+}

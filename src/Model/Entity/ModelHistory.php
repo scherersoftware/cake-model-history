@@ -9,11 +9,14 @@ use Cake\ORM\TableRegistry;
  */
 class ModelHistory extends Entity
 {
-
     const ACTION_CREATE = 'create';
     const ACTION_UPDATE = 'update';
     const ACTION_DELETE = 'delete';
     const ACTION_COMMENT = 'comment';
+
+    const CONTEXT_TYPE_CONTROLLER = 'controller';
+    const CONTEXT_TYPE_SHELL = 'shell';
+    const CONTEXT_TYPE_SLUG = 'slug';
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -26,6 +29,9 @@ class ModelHistory extends Entity
         'user_id' => true,
         'action' => true,
         'data' => true,
+        'context' => true,
+        'context_slug' => true,
+        'context_type' => true,
         'user' => true,
         'revision' => true,
     ];
@@ -38,21 +44,13 @@ class ModelHistory extends Entity
      */
     protected function _getData($data)
     {
-        // Obfuscate password fields
-        $obfuscatedFields = TableRegistry::get($this->model)->getObfuscatedFields();
-        if (!empty($data) && !empty($obfuscatedFields)) {
-            foreach ($data as $fieldName => $value) {
-                if (in_array($fieldName, $obfuscatedFields)) {
-                    $data[$fieldName] = '********';
-                }
-            }
-        }
         // Stringify empty values
         if (!empty($data)) {
             foreach ($data as $fieldName => $value) {
                 $data[$fieldName] = $this->_stringifyEmptyValue($value);
             }
         }
+
         return $data;
     }
 
@@ -64,16 +62,26 @@ class ModelHistory extends Entity
      */
     protected function _stringifyEmptyValue($value)
     {
-        if ($value === true) {
-            return 'true';
-        } elseif ($value === false) {
-            return 'false';
-        } elseif ($value === null) {
+        if ($value === null) {
             return 'NULL';
         } elseif ($value === '') {
             return '""';
         } else {
             return $value;
         }
+    }
+
+    /**
+     * Retrieve available context types
+     *
+     * @return array
+     */
+    public static function getContextTypes()
+    {
+        return [
+            self::CONTEXT_TYPE_CONTROLLER => __d('model_history', 'context.type.controller'),
+            self::CONTEXT_TYPE_SHELL => __d('model_history', 'context.type.shell'),
+            self::CONTEXT_TYPE_SLUG => __d('model_history', 'context.type.slug')
+        ];
     }
 }

@@ -4,9 +4,9 @@ namespace ModelHistoryTestApp\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Article Entity.
+ * User Entity.
  */
-class Article extends Entity
+class User extends Entity
 {
 
     use \ModelHistory\Model\Entity\HistoryContextTrait;
@@ -17,11 +17,7 @@ class Article extends Entity
      * @var array
      */
     protected $_accessible = [
-        'title' => true,
-        'status' => true,
-        'content' => true,
-        'json_field' => true,
-        'int_field' => true,
-        'articles_id' => true
+        'forename' => true,
+        'surename' => true
     ];
 }

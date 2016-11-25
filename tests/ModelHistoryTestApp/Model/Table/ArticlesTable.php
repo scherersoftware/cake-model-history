@@ -25,6 +25,81 @@ class ArticlesTable extends Table
         $this->displayField('title');
         $this->primaryKey('id');
         $this->addBehavior('Timestamp');
+        $this->addBehavior('ModelHistory.Historizable', [
+            'userIdCallback' => null,
+            'fields' => [
+                [
+                    'name' => 'id',
+                    'translation' => __('articles.id'),
+                    'searchable' => true,
+                    'saveable' => true,
+                    'obfuscated' => false,
+                    'type' => 'string',
+                    'displayParser' => null,
+                    'saveParser' => null
+                ],
+                [
+                    'name' => 'title',
+                    'translation' => __('articles.title'),
+                    'searchable' => true,
+                    'saveable' => true,
+                    'obfuscated' => false,
+                    'type' => 'string',
+                    'displayParser' => null,
+                    'saveParser' => null
+                ],
+                [
+                    'name' => 'status',
+                    'translation' => __('articles.status'),
+                    'searchable' => true,
+                    'saveable' => true,
+                    'obfuscated' => false,
+                    'type' => 'string',
+                    'displayParser' => null,
+                    'saveParser' => null
+                ],
+                [
+                    'name' => 'content',
+                    'translation' => __('articles.content'),
+                    'searchable' => true,
+                    'saveable' => true,
+                    'obfuscated' => false,
+                    'type' => 'string',
+                    'displayParser' => null,
+                    'saveParser' => null
+                ],
+                [
+                    'name' => 'json_field',
+                    'translation' => __('articles.json_field'),
+                    'searchable' => false,
+                    'saveable' => false,
+                    'obfuscated' => false,
+                    'type' => 'string',
+                    'displayParser' => null,
+                    'saveParser' => null
+                ],
+                [
+                    'name' => 'int_field',
+                    'translation' => __('articles.int_field'),
+                    'searchable' => false,
+                    'saveable' => false,
+                    'obfuscated' => false,
+                    'type' => 'string',
+                    'displayParser' => null,
+                    'saveParser' => null
+                ],
+                [
+                    'name' => 'articles_id',
+                    'translation' => __('articles.articles_id'),
+                    'searchable' => true,
+                    'saveable' => true,
+                    'obfuscated' => false,
+                    'type' => 'relation',
+                    'displayParser' => null,
+                    'saveParser' => null
+                ]
+            ]
+        ]);
     }
 
     /**
@@ -42,6 +117,7 @@ class ArticlesTable extends Table
             ->allowEmpty('status')
             ->allowEmpty('content')
             ->allowEmpty('json_field')
+            ->allowEmpty('articles_id')
             ->add('int_field', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('int_field');
 

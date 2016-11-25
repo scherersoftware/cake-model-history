@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2015-03-24 08:46+0000\n"
+"POT-Creation-Date: 2016-11-22 12:10+0100\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -14,32 +14,105 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: /Users/cleptric/Sites/curveup_backend/Model/Table/ModelHistoryTable.php:52
+msgid "field.id"
+msgstr ""
+
+msgid "field.comment"
+msgstr ""
+
+msgid "field.created"
+msgstr ""
+
+msgid "field.modified"
+msgstr ""
+
+msgid "context.type.controller"
+msgstr ""
+
+msgid "context.type.shell"
+msgstr ""
+
 msgid "comment_empty"
 msgstr ""
 
-#: /Users/cleptric/Sites/curveup_backend/Template/Element/model_history_area_panel.ctp:3
-#: /Users/cleptric/Sites/curveup_backend/View/Helper/ModelHistoryHelper.php:53
-msgid "model_history"
-msgstr ""
-
-#: /Users/cleptric/Sites/curveup_backend/Template/ModelHistory/index.ctp:2
 msgid "no_history"
 msgstr ""
 
-#: /Users/cleptric/Sites/curveup_backend/View/Helper/ModelHistoryHelper.php:56
+msgid "table.heading.fields"
+msgstr ""
+
+msgid "table.heading.actions"
+msgstr ""
+
+msgid "model_history"
+msgstr ""
+
+msgid "load_previous"
+msgstr ""
+
+msgid "diff.open_diff"
+msgstr ""
+
+msgid "load_next"
+msgstr ""
+
+msgid "filter.fields"
+msgstr ""
+
+msgid "select.choose"
+msgstr ""
+
+msgid "search.context_type"
+msgstr ""
+
+msgid "search.context_slug"
+msgstr ""
+
+msgid "search.date_from"
+msgstr ""
+
+msgid "search.date_to"
+msgstr ""
+
+msgid "submit_filter"
+msgstr ""
+
+msgid "reset_filter"
+msgstr ""
+
+msgid "diff.close_button"
+msgstr ""
+
+msgid "diff.title"
+msgstr ""
+
+msgid "no_diff"
+msgstr ""
+
+msgid "diff.fieldname"
+msgstr ""
+
+msgid "diff.old_value"
+msgstr ""
+
+msgid "diff.new_value"
+msgstr ""
+
+msgid "no_historical_data"
+msgstr ""
+
+msgid "created"
+msgstr ""
+
 msgid "updated"
 msgstr ""
 
-#: /Users/cleptric/Sites/curveup_backend/View/Helper/ModelHistoryHelper.php:59
 msgid "deleted"
 msgstr ""
 
-#: /Users/cleptric/Sites/curveup_backend/View/Helper/ModelHistoryHelper.php:62
 msgid "commented"
 msgstr ""
 
-#: /Users/cleptric/Sites/curveup_backend/View/Helper/ModelHistoryHelper.php:76
 msgid "by"
 msgstr ""
 

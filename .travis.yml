@@ -1,0 +1,21 @@
+language: php
+
+php:
+  - 5.6
+  - 7.0
+
+services:
+  - mysql
+
+before_script:
+  - composer self-update
+  - composer update
+  - composer install --prefer-dist
+  - mysql -uroot -e "DROP DATABASE IF EXISTS model_history_test; CREATE DATABASE model_history_test;"
+
+script:
+  - vendor/bin/phpunit --coverage-clover=coverage.xml
+  - vendor/bin/phpcs -pn --extensions=php --standard=vendor/cakephp/cakephp-codesniffer/CakePHP ./src ./tests
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

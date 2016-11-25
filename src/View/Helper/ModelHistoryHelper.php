@@ -4,6 +4,7 @@ namespace ModelHistory\View\Helper;
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Cake\Utility\Inflector;
 use Cake\View\Helper;
 use Cake\View\View;
 use ModelHistory\Model\Entity\ModelHistory;
@@ -17,25 +18,71 @@ class ModelHistoryHelper extends Helper
     public $helpers = ['Html'];
 
     /**
-     * Render an Contact Perosns area for the given entity
-     * @return contact_persons_area View
+     * Render the model history area where needed
+     *
+     * @return string History area
      */
     public function modelHistoryArea($entity, array $options = [])
     {
         $options = Hash::merge([
-            'commentBox' => false,
-            'panel' => false
+            'showCommentBox' => false,
+            'showFilterBox' => false
         ], $options);
-        $entity = [
-            'id' => $entity->id,
-            'repository' => $entity->source(),
-            'comment-box' => $options['commentBox']
-        ];
-        if ($options['panel']) {
-            return $this->_View->element('ModelHistory.model_history_area_panel', ['data' => $entity]);
-        } else {
-            return $this->_View->element('ModelHistory.model_history_area', ['data' => $entity]);
+
+        $page = 1;
+        $limit = TableRegistry::get($entity->source())->getEntriesLimit();
+
+        $modelHistory = TableRegistry::get('ModelHistory.ModelHistory')->getModelHistory($entity->source(), $entity->id, $limit, $page);
+
+        $entries = TableRegistry::get('ModelHistory.ModelHistory')->getModelHistoryCount($entity->source(), $entity->id);
+        $showNextEntriesButton = $entries > 0 && $limit * $page < $entries;
+        $showPrevEntriesButton = $page > 1;
+
+        $contexts = [];
+        if (method_exists($entity, 'getContexts')) {
+            $contexts = $entity::getContexts();
         }
+
+        return $this->_View->element('ModelHistory.model_history_area', [
+            'modelHistory' => $modelHistory,
+            'showNextEntriesButton' => $showNextEntriesButton,
+            'showPrevEntriesButton' => $showPrevEntriesButton,
+            'page' => $page,
+            'model' => $entity->source(),
+            'foreignKey' => $entity->id,
+            'limit' => $limit,
+            'searchableFields' => TableRegistry::get($entity->source())->getTranslatedFields(),
+            'showCommentBox' => $options['showCommentBox'],
+            'showFilterBox' => $options['showFilterBox'],
+            'contexts' => $contexts
+        ]);
+    }
+
+    /**
+     * Convert action to bootstrap class
+     *
+     * @param  string  $action  History Action
+     * @return string
+     */
+    public function actionClass($action)
+    {
+        switch ($action) {
+            case ModelHistory::ACTION_CREATE:
+                $class = 'success';
+                break;
+            case ModelHistory::ACTION_DELETE:
+                $class = 'danger';
+                break;
+            case ModelHistory::ACTION_COMMENT:
+                $class = 'active';
+                break;
+            case ModelHistory::ACTION_UPDATE:
+            default:
+                $class = 'info';
+                break;
+        }
+
+        return $class;
     }
 
     /**
@@ -45,7 +92,6 @@ class ModelHistoryHelper extends Helper
      */
     public function historyText($history)
     {
-        $customActions = TableRegistry::get($history->model)->getCustomActions();
         $action = '';
         switch ($history->action) {
             case ModelHistory::ACTION_CREATE:
@@ -61,11 +107,6 @@ class ModelHistoryHelper extends Helper
                 $action = __d('model_history', 'commented');
                 break;
             default:
-                foreach ($customActions as $customAction) {
-                    if ($customAction['action'] == $history->action) {
-                        $action = $customAction['translation'];
-                    }
-                }
         }
         if (empty($history->user_id)) {
             $username = 'Anonymous';
@@ -75,6 +116,7 @@ class ModelHistoryHelper extends Helper
             $lastname = $history->user->{$userNameFields['lastname']};
             $username = $firstname . ' ' . $lastname;
         }
+
         return ucfirst($action) . ' ' . __d('model_history', 'by') . ' ' . $username;
     }
 
@@ -85,38 +127,57 @@ class ModelHistoryHelper extends Helper
      */
     public function historyBadge($history)
     {
-        $customActions = TableRegistry::get($history->model)->getCustomActions();
         $action = '';
         switch ($history->action) {
-            case ModelHistory::ACTION_CREATE:
-                $style = 'success';
-                $icon = 'plus-circle';
-                $color = '';
-                break;
             case ModelHistory::ACTION_UPDATE:
-                $style = 'info';
                 $icon = 'refresh';
-                $color = '';
                 break;
             case ModelHistory::ACTION_DELETE:
-                $style = 'danger';
                 $icon = 'minus-circle';
-                $color = '';
                 break;
             case ModelHistory::ACTION_COMMENT:
-                $style = 'primary';
                 $icon = 'comments';
-                $color = '';
                 break;
             default:
-                $style = '';
-                foreach ($customActions as $customAction) {
-                    if ($customAction['action'] == $history->action) {
-                        $color = $customAction['color'];
-                        $icon = 'fa fa-' . $customAction['icon'];
-                    }
-                }
+            case ModelHistory::ACTION_CREATE:
+                $icon = 'plus-circle';
+                break;
         }
-        return '<div class="timeline-badge ' . $style . '" style="background-color:' . $color . '"><i class="fa fa-' . $icon . '"></i></div>';
+
+        return '<i class="fa fa-' . $icon . '"></i>';
+    }
+
+    /**
+     * Retrieve field names as localized, comma seperated string.
+     *
+     * @param  ModelHistory  $historyEntry  A History entry
+     * @return string
+     */
+    public function getLocalizedFieldnames(ModelHistory $historyEntry)
+    {
+        $fields = join(', ', array_map(function ($value) use ($historyEntry) {
+            if (!is_string($value)) {
+                return $value;
+            }
+
+            // Get pre configured translations and return it if found
+            $fields = TableRegistry::get($historyEntry->model)->getFields();
+            if (isset($fields[$value]['translation'])) {
+                return $fields[$value]['translation'];
+            }
+
+            // Try to get the generic model.field translation string
+            $localeSlug = strtolower(Inflector::singularize(Inflector::delimit($historyEntry->model))) . '.' . strtolower($value);
+            $translatedString = __($localeSlug);
+
+            // Return original value when no translation was made
+            if ($localeSlug == $translatedString) {
+                return $value;
+            }
+
+            return $translatedString;
+        }, array_keys($historyEntry->data)));
+
+        return $fields;
     }
 }

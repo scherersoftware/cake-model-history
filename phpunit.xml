@@ -35,10 +35,9 @@
         <blacklist>
             <directory suffix=".php">./vendor/</directory>
             <directory suffix=".ctp">./vendor/</directory>
-
             <directory suffix=".php">./tests/</directory>
             <directory suffix=".ctp">./tests/</directory>
+            <file>./src/Model/Transform/Transform.php</file>
         </blacklist>
     </filter>
-
 </phpunit>

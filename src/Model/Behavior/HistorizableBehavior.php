@@ -1,6 +1,7 @@
 <?php
 namespace ModelHistory\Model\Behavior;
 
+use Cake\Core\Exception\Exception;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
 use Cake\ORM\Behavior;
@@ -180,22 +181,18 @@ class HistorizableBehavior extends Behavior
                 'plugin' => 'Admin',
                 'controller' => $tableName,
                 'action' => 'view',
-                'addFieldAsPass' => true
             ]
         ];
 
         $pass = [];
-        if (isset($relationConfig['url']['addFieldAsPass']) && $relationConfig['url']['addFieldAsPass'] === true) {
+        if ($fieldValue !== null) {
             $pass = [$fieldValue];
         }
-        unset($relationConfig['url']['addFieldAsPass']);
 
-        if (is_array($relationConfig['url'])) {
-            try {
-                $url = Router::url(Hash::merge($relationConfig['url'], $pass));
-            } catch (\Cake\Core\Exception\Exception $e) {
-                return $fieldValue;
-            }
+        try {
+            $url = Router::url(Hash::merge($relationConfig['url'], $pass));
+        } catch (Exception $e) {
+            return $fieldValue;
         }
 
         return '<a href="' . $url . '" target="_blank">' . __(strtolower($tableName)) . '</a>';

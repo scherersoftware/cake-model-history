@@ -2,6 +2,7 @@
 namespace ModelHistory\Test\TestCase\Model\Behavior;
 
 use Cake\ORM\TableRegistry;
+use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
 use ModelHistory\Model\Behavior\HistorizableBehavior;
 
@@ -59,8 +60,15 @@ class HistorizableBehaviorTest extends TestCase
 
 
         $article = $this->Articles->newEntity([
-            'articles_id' => $articlesId,
+            'title' => 'title',
+            'content' => 'content'
         ]);
-        $this->Articles->save($article);
+
+        $fieldValue = 123;
+
+        Router::reload();
+        $relationLink = $this->Articles->getRelationLink('foobar', $fieldValue);
+
+        $this->assertEquals($fieldValue, $relationLink);
     }
 }

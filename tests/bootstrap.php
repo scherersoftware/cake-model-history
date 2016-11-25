@@ -14,6 +14,7 @@ if (!defined('DS')) {
     define('DS', DIRECTORY_SEPARATOR);
 }
 define('APP', 'tests' . DS . 'ModelHistoryTestApp' . DS);
+define('CONFIG', __DIR__ . DS . '..' . DS . 'config' . DS);
 
 $vendorPos = strpos(__DIR__, 'vendor/codekanzlei/cake-model-history');
 if ($vendorPos !== false) {

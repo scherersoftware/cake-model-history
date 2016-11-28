@@ -1,5 +1,6 @@
 # CakePHP 3 cake-model-history
 
+[![Build Status](https://travis-ci.org/scherersoftware/cake-model-history.svg?branch=master)](https://travis-ci.org/scherersoftware/cake-model-history)
 [![codecov](https://codecov.io/gh/scherersoftware/cake-model-history/branch/master/graph/badge.svg)](https://codecov.io/gh/scherersoftware/cake-model-history)
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.txt)
 

@@ -27,8 +27,8 @@ class HistorizableBehavior extends Behavior
         'userIdCallback' => null,
         'entriesToShow' => 10,
         'userNameFields' => [
-            'firstname' => 'Users.forename',
-            'lastname' => 'Users.surname',
+            'firstname' => 'Users.firstname',
+            'lastname' => 'Users.lastname',
             'id' => 'Users.id'
         ],
         'fields' => []

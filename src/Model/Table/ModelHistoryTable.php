@@ -81,6 +81,11 @@ class ModelHistoryTable extends Table
             $options['data'] = $entity->toArray();
         }
 
+        $hiddenProperties = $entity->hiddenProperties();
+        if (!empty($hiddenProperties)) {
+            $options['data'] = Hash::merge($options['data'], $entity->extract($hiddenProperties));
+        }
+
         $saveFields = [];
 
         $model = $entity->source();
@@ -96,13 +101,12 @@ class ModelHistoryTable extends Table
                 'comment' => $options['data']['comment']
             ];
         } else {
-            // var_dump($saveableFields);
             foreach ($saveableFields as $fieldName => $data) {
                 if (isset($options['data'][$fieldName])) {
                     if ($data['obfuscated'] === true) {
                         $options['data'][$fieldName] = '****************';
                     }
-                    if (is_callable($data['saveParser'])) {
+                    if (isset($data['saveParser']) && is_callable($data['saveParser'])) {
                         $callback = $data['saveParser'];
                         $options['data'][$fieldName] = $callback($fieldName, $options['data'][$fieldName], $entity);
                     } else {
@@ -187,7 +191,7 @@ class ModelHistoryTable extends Table
                 if (!isset($fieldConfig[$field]) || $fieldConfig[$field]['searchable'] !== true) {
                     continue;
                 }
-                if (is_callable($fieldConfig[$field]['displayParser'])) {
+                if (isset($fieldConfig[$field]['displayParser']) && is_callable($fieldConfig[$field]['displayParser'])) {
                     $callback = $fieldConfig[$field]['displayParser'];
                     $entityData[$field] = $callback($field, $value, $entity);
                     continue;
@@ -390,7 +394,7 @@ class ModelHistoryTable extends Table
                     if (is_array($revision->data[$fieldName]) || !isset($fieldConfig[$fieldName])) {
                         continue 2;
                     }
-                    if (isset($fieldConfig[$fieldName]['displayParser'])) {
+                    if (isset($fieldConfig[$fieldName]['displayParser']) && is_callable($fieldConfig[$field]['displayParser'])) {
                         $callback = $fieldConfig[$fieldName]['displayParser'];
                         $diffOutput['changed'][$fieldName] = [
                             'old' => $callback($fieldName, $revision->data[$fieldName], $entity),
@@ -426,7 +430,7 @@ class ModelHistoryTable extends Table
                     continue 2;
                 }
                 if ($revision->data[$fieldName] != $currentEntity->{$fieldName}) {
-                    if (is_callable($data['displayParser'])) {
+                    if (isset($data['displayParser']) && is_callable($data['displayParser'])) {
                         $callback = $data['displayParser'];
                         $diffOutput['changedBefore'][$fieldName] = [
                             'old' => $callback($fieldName, $revision->data[$fieldName], $entity),
@@ -461,7 +465,7 @@ class ModelHistoryTable extends Table
                     continue 2;
                 }
 
-                if (is_callable($data['displayParser'])) {
+                if (isset($data['displayParser']) && is_callable($data['displayParser'])) {
                     $callback = $data['displayParser'];
                     $diffOutput['unchanged'][$fieldName] = $callback($fieldName, $currentEntity->{$fieldName}, $entity);
                     continue 2;

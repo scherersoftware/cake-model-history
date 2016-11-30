@@ -140,8 +140,10 @@ class ModelHistoryTableTest extends TestCase
     {
         $this->Articles->addBehavior('ModelHistory.Historizable', $this->_getBehaviorConfig());
         $article = $this->Articles->newEntity([
-            'title' => 'foobar'
+            'title' => 'foobar',
+            'status' => 'barfoo'
         ]);
+        $article->hiddenProperties(['status']);
         $this->Articles->save($article);
 
         $modelHistoriesCount = $this->ModelHistory->find()
@@ -157,6 +159,7 @@ class ModelHistoryTableTest extends TestCase
         $this->assertTrue(is_array($entry->data));
         $this->assertEquals($entry->data['id'], $article->id);
         $this->assertEquals($entry->data['title'], $article->title);
+        $this->assertEquals($entry->data['status'], $article->status);
 
         $article->title = 'changed';
         $this->Articles->save($article);

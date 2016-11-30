@@ -67,7 +67,7 @@ Add the Historizable Behavior in the `initialize` function of the **Table** you 
 $this->addBehavior('ModelHistory.Historizable');
 ```
 
-**Note:** By default, the model-history plugin matches changes to a database record to the user that performed and saved them by comparing table-fields 'forename' and 'surname' in `UsersTable` (See `$_defaultConfig` in `HistorizableBehavior.php` for these default settings). If your fields are not called 'forename' and 'surname', you can easily customize these settings according to the fieldnames in your UsersTable, like so:
+**Note:** By default, the model-history plugin matches changes to a database record to the user that performed and saved them by comparing table-fields 'firstname' and 'lastname' in `UsersTable` (See `$_defaultConfig` in `HistorizableBehavior.php` for these default settings). If your fields are not called 'firstname' and 'lastname', you can easily customize these settings according to the fieldnames in your UsersTable, like so:
 
 ```
 $this->addBehavior('ModelHistory.Historizable', [
@@ -89,8 +89,8 @@ $this->addBehavior('ModelHistory.Historizable', [
     'fields' => [
         [
             // The field name
-            'name' => 'forename',
-            'translation' => __('user.forename'),
+            'name' => 'firstname',
+            'translation' => __('user.firstname'),
             // The searchable indicator is used to show the field in the filter box
             'searchable' => true,
             // The savable indicator is used to decide wether the field is tracked
@@ -112,7 +112,8 @@ $this->addBehavior('ModelHistory.Historizable', [
 ]);
 ```
 
-To keep track of a context, you can implement `\ModelHistory\Model\Entity\HistoryContextTrait` and set a context before saving the entity, triggered through a controller or a shell.
+To further specify the context in which the entity was saved and get additional information, you can implement `\ModelHistory\Model\Entity\HistoryContextTrait` inside your entity.
+You have to call `setHistoryContext` on the entity to trigger this. Currently there are three context types: `ModelHistory::CONTEXT_TYPE_CONTROLLER`, `ModelHistory::CONTEXT_TYPE_SHELL` and `ModelHistory::CONTEXT_TYPE_SLUG`.
 
 ```
     /**

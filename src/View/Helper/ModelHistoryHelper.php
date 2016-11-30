@@ -26,7 +26,8 @@ class ModelHistoryHelper extends Helper
     {
         $options = Hash::merge([
             'showCommentBox' => false,
-            'showFilterBox' => false
+            'showFilterBox' => false,
+            'columnClass' => 'col-md-12'
         ], $options);
 
         $page = 1;

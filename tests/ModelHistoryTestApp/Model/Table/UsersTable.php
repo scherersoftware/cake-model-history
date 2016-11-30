@@ -22,7 +22,7 @@ class UsersTable extends Table
     public function initialize(array $config)
     {
         $this->table('users');
-        $this->displayField('forename');
+        $this->displayField('firstname');
         $this->primaryKey('id');
         $this->addBehavior('Timestamp');
         $this->addBehavior('ModelHistory.Historizable', [
@@ -39,8 +39,8 @@ class UsersTable extends Table
                     'saveParser' => null
                 ],
                 [
-                    'name' => 'forename',
-                    'translation' => __('users.forename'),
+                    'name' => 'firstname',
+                    'translation' => __('users.firstname'),
                     'searchable' => true,
                     'saveable' => true,
                     'obfuscated' => false,
@@ -49,8 +49,8 @@ class UsersTable extends Table
                     'saveParser' => null
                 ],
                 [
-                    'name' => 'surname',
-                    'translation' => __('users.surname'),
+                    'name' => 'lastname',
+                    'translation' => __('users.lastname'),
                     'searchable' => true,
                     'saveable' => true,
                     'obfuscated' => false,
@@ -73,8 +73,8 @@ class UsersTable extends Table
         $validator
             ->add('id', 'valid', ['rule' => 'uuid'])
             ->allowEmpty('id', 'create')
-            ->allowEmpty('forename')
-            ->allowEmpty('surname');
+            ->allowEmpty('firstname')
+            ->allowEmpty('lastname');
 
         return $validator;
     }

@@ -117,5 +117,5 @@ msgstr "kommentiert"
 msgid "by"
 msgstr "von"
 
-#~ msgid "field.forename"
+#~ msgid "field.firstname"
 #~ msgstr "Vorname"

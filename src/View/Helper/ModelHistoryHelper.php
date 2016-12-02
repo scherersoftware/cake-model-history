@@ -55,6 +55,7 @@ class ModelHistoryHelper extends Helper
             'searchableFields' => TableRegistry::get($entity->source())->getTranslatedFields(),
             'showCommentBox' => $options['showCommentBox'],
             'showFilterBox' => $options['showFilterBox'],
+            'columnClass' => $options['columnClass'],
             'contexts' => $contexts
         ]);
     }

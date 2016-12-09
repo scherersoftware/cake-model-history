@@ -71,4 +71,21 @@ class HistorizableBehaviorTest extends TestCase
 
         $this->assertEquals($fieldValue, $relationLink);
     }
+
+    public function testGetUserNameFields()
+    {
+        $userNameFieldsWithModel = $this->Articles->getUserNameFields();
+        $this->assertEquals([
+            'firstname' => 'Users.firstname',
+            'lastname' => 'Users.lastname',
+            'id' => 'Users.id',
+        ], $userNameFieldsWithModel);
+
+        $userNameFieldsWithoutModel = $this->Articles->getUserNameFields(true);
+        $this->assertEquals([
+            'firstname' => 'firstname',
+            'lastname' => 'lastname',
+            'id' => 'id',
+        ], $userNameFieldsWithoutModel);
+    }
 }

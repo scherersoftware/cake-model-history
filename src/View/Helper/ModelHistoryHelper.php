@@ -20,6 +20,8 @@ class ModelHistoryHelper extends Helper
     /**
      * Render the model history area where needed
      *
+     * @param  Entity $entity  one historizable entity
+     * @param  array  $options options array
      * @return string History area
      */
     public function modelHistoryArea($entity, array $options = [])
@@ -90,9 +92,10 @@ class ModelHistoryHelper extends Helper
     /**
      * Returns the text displayed in the widget
      *
+     * @param ModelHistory $history one ModelHistory entity
      * @return string
      */
-    public function historyText($history)
+    public function historyText(ModelHistory $history)
     {
         $action = '';
         switch ($history->action) {
@@ -125,9 +128,10 @@ class ModelHistoryHelper extends Helper
     /**
      * Returns the badge displayed in the widget
      *
+     * @param ModelHistory $history one ModelHistory entity
      * @return string
      */
-    public function historyBadge($history)
+    public function historyBadge(ModelHistory $history)
     {
         $action = '';
         switch ($history->action) {

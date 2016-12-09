@@ -316,6 +316,7 @@ class ModelHistoryTable extends Table
      * @param string $foreignKey    foreign key
      * @param int    $itemsToShow   Amount of items to be shown
      * @param int    $page          Current position
+     * @param array  $conditions    additional conditions for find
      * @return array
      */
     public function getModelHistory($model, $foreignKey, $itemsToShow, $page, array $conditions = [])
@@ -341,6 +342,7 @@ class ModelHistoryTable extends Table
      *
      * @param string $model         model name
      * @param string $foreignKey    foreign key
+     * @param array  $conditions    additional conditions for find
      * @return int
      */
     public function getModelHistoryCount($model, $foreignKey, array $conditions = [])

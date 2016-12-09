@@ -316,6 +316,7 @@ class ModelHistoryTable extends Table
      * @param string $foreignKey    foreign key
      * @param int    $itemsToShow   Amount of items to be shown
      * @param int    $page          Current position
+     * @param array  $conditions    additional conditions for find
      * @return array
      */
     public function getModelHistory($model, $foreignKey, $itemsToShow, $page, array $conditions = [])
@@ -341,6 +342,7 @@ class ModelHistoryTable extends Table
      *
      * @param string $model         model name
      * @param string $foreignKey    foreign key
+     * @param array  $conditions    additional conditions for find
      * @return int
      */
     public function getModelHistoryCount($model, $foreignKey, array $conditions = [])
@@ -394,7 +396,7 @@ class ModelHistoryTable extends Table
                     if (is_array($revision->data[$fieldName]) || !isset($fieldConfig[$fieldName])) {
                         continue 2;
                     }
-                    if (isset($fieldConfig[$fieldName]['displayParser']) && is_callable($fieldConfig[$field]['displayParser'])) {
+                    if (isset($fieldConfig[$fieldName]['displayParser']) && is_callable($fieldConfig[$fieldName]['displayParser'])) {
                         $callback = $fieldConfig[$fieldName]['displayParser'];
                         $diffOutput['changed'][$fieldName] = [
                             'old' => $callback($fieldName, $revision->data[$fieldName], $entity),
@@ -420,7 +422,6 @@ class ModelHistoryTable extends Table
         $currentEntity = TableRegistry::get($historyEntry->model)->get($historyEntry->foreign_key);
 
         // 2. Try to get old values for any other fields defined in searchableFields and
-
         foreach ($fieldConfig as $fieldName => $data) {
             foreach ($previousRevisions as $revisionIndex => $revision) {
                 if (!isset($revision->data[$fieldName])) {
@@ -455,7 +456,6 @@ class ModelHistoryTable extends Table
         }
 
         // 3. Get all unchanged fields
-
         foreach ($fieldConfig as $fieldName => $data) {
             foreach ($previousRevisions as $revision) {
                 if (!isset($revision->data[$fieldName])) {

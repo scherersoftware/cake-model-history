@@ -24,6 +24,7 @@ trait HistoryContextTrait
      * @param string  $type        Context type
      * @param object  $dataObject  Optional dataobject to get additional data from
      * @param string  $slug        Optional slug. Must implement getContexts() when using
+     * @return void
      */
     public function setHistoryContext($type, $dataObject = null, $slug = null)
     {

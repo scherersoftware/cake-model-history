@@ -212,11 +212,22 @@ class HistorizableBehavior extends Behavior
     /**
      * Get the user fields
      *
+     * @param  bool $withoutModel set to true to only get the field names without model name
      * @return array
      */
-    public function getUserNameFields()
+    public function getUserNameFields($withoutModel = false)
     {
-        return $this->config('userNameFields');
+        $userNameFields = $this->config('userNameFields');
+        if ($withoutModel) {
+            foreach ($userNameFields as $key => $value) {
+                $exploded = explode('.', $value);
+                if (count($exploded) === 2) {
+                    $userNameFields[$key] = $exploded[1];
+                }
+            }
+        }
+
+        return $userNameFields;
     }
 
     /**

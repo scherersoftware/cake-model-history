@@ -195,7 +195,7 @@ class ModelHistoryController extends AppController
      * Build diff for a given modelHistory entry
      *
      * @param  string   $currentId   UUID of ModelHistory entry to get diff for
-     * @return array
+     * @return void
      */
     public function diff($currentId = null)
     {

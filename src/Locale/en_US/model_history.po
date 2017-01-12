@@ -4,43 +4,116 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2015-03-24 08:46+0000\n"
-"PO-Revision-Date: 2015-03-24 09:47+0100\n"
+"POT-Creation-Date: 2017-01-12 16:58+0100\n"
+"PO-Revision-Date: 2017-01-12 17:14+0100\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
-"Language-Team:  <EMAIL@ADDRESS>\n"
+"Language-Team: EMAIL@ADDRESS\n"
 "Language: en_US\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.7.4\n"
+"X-Generator: Poedit 1.8.11\n"
 
-#: /Users/cleptric/Sites/curveup_backend/Model/Table/ModelHistoryTable.php:52
+msgid "field.id"
+msgstr "ID"
+
+msgid "field.comment"
+msgstr "Comment"
+
+msgid "field.created"
+msgstr "Created"
+
+msgid "field.modified"
+msgstr "Modified"
+
+msgid "context.type.controller"
+msgstr "Controller"
+
+msgid "context.type.shell"
+msgstr "Shell"
+
 msgid "comment_empty"
 msgstr "Please enter a comment."
 
-#: /Users/cleptric/Sites/curveup_backend/Template/Element/model_history_area_panel.ctp:3
-#: /Users/cleptric/Sites/curveup_backend/View/Helper/ModelHistoryHelper.php:53
-msgid "model_history"
-msgstr "Activities"
-
-#: /Users/cleptric/Sites/curveup_backend/Template/ModelHistory/index.ctp:2
 msgid "no_history"
 msgstr "No activities found yet."
 
-#: /Users/cleptric/Sites/curveup_backend/View/Helper/ModelHistoryHelper.php:56
+msgid "table.heading.fields"
+msgstr "Fields"
+
+msgid "table.heading.actions"
+msgstr "Actions"
+
+msgid "model_history"
+msgstr "Activities"
+
+msgid "load_previous"
+msgstr "Load Previous"
+
+msgid "diff.open_diff"
+msgstr "Change History"
+
+msgid "load_next"
+msgstr "Load Next"
+
+msgid "filter.fields"
+msgstr "Fields"
+
+msgid "select.choose"
+msgstr "Choose"
+
+msgid "search.context_type"
+msgstr "Context Type"
+
+msgid "search.context_slug"
+msgstr "Context Slug"
+
+msgid "search.date_from"
+msgstr "Date From"
+
+msgid "search.date_to"
+msgstr "Date To"
+
+msgid "submit_filter"
+msgstr "Filter"
+
+msgid "reset_filter"
+msgstr "Reset"
+
+msgid "diff.close_button"
+msgstr "Close"
+
+msgid "diff.title"
+msgstr "Change History"
+
+msgid "no_diff"
+msgstr "No differences found"
+
+msgid "diff.fieldname"
+msgstr "Fieldname"
+
+msgid "diff.old_value"
+msgstr "Old Value"
+
+msgid "diff.new_value"
+msgstr "New Value"
+
+msgid "no_historical_data"
+msgstr "No historical data"
+
+msgid "created"
+msgstr "created"
+
 msgid "updated"
 msgstr "updated"
 
-#: /Users/cleptric/Sites/curveup_backend/View/Helper/ModelHistoryHelper.php:59
 msgid "deleted"
 msgstr "deleted"
 
-#: /Users/cleptric/Sites/curveup_backend/View/Helper/ModelHistoryHelper.php:62
 msgid "commented"
 msgstr "commented"
 
-#: /Users/cleptric/Sites/curveup_backend/View/Helper/ModelHistoryHelper.php:76
 msgid "by"
 msgstr "by"
 

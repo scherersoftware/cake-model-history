@@ -393,7 +393,7 @@ class ModelHistoryTable extends Table
         foreach ($historyEntry->data as $fieldName => $newValue) {
             foreach ($previousRevisions as $revision) {
                 if (isset($revision->data[$fieldName])) {
-                    if (is_array($revision->data[$fieldName]) || !isset($fieldConfig[$fieldName])) {
+                    if (!isset($fieldConfig[$fieldName])) {
                         continue 2;
                     }
                     if (isset($fieldConfig[$fieldName]['displayParser']) && is_callable($fieldConfig[$fieldName]['displayParser'])) {
@@ -427,7 +427,7 @@ class ModelHistoryTable extends Table
                 if (!isset($revision->data[$fieldName])) {
                     continue;
                 }
-                if (is_array($revision->data[$fieldName]) || isset($diffOutput['changed'][$fieldName])) {
+                if (isset($diffOutput['changed'][$fieldName])) {
                     continue 2;
                 }
                 if ($revision->data[$fieldName] != $currentEntity->{$fieldName}) {
@@ -461,7 +461,7 @@ class ModelHistoryTable extends Table
                 if (!isset($revision->data[$fieldName])) {
                     continue;
                 }
-                if (is_array($revision->data[$fieldName]) || isset($diffOutput['changed'][$fieldName]) || isset($diffOutput['changedBefore'][$fieldName])) {
+                if (isset($diffOutput['changed'][$fieldName]) || isset($diffOutput['changedBefore'][$fieldName])) {
                     continue 2;
                 }
 

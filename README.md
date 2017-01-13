@@ -96,7 +96,8 @@ $this->addBehavior('ModelHistory.Historizable', [
             // The savable indicator is used to decide wether the field is tracked
             'saveable' => true,
             'obfuscated' => false,
-            // Allowed: string, bool, number, relation, date
+            // Allowed: string, bool, number, relation, date, hash, array.
+            // Use hash for associative array and array for sequential(indexed) array. 
             'type' => 'string',
             // Optional display parser to modify the value before displaying it,
             // if no displayParser is found, the \ModelHistory\Model\Transform\{$type}Transformer is used.

@@ -17,6 +17,11 @@ class HashTransform extends Transform
      */
     public function display($fieldname, $value, $model = null)
     {
-        return $value;
+        $return = '';
+        foreach ($value as $k => $v) {
+            $return .= $k . ': ' . $v . '</br>';
+        }
+
+        return $return;
     }
 }

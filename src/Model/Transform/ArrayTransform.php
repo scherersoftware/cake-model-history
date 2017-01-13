@@ -28,7 +28,7 @@ class ArrayTransform extends Transform
             }
             $value = $return;
         }
-        return $value;
 
+        return $value;
     }
 }

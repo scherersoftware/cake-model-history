@@ -40,5 +40,36 @@ class ArticlesFixture extends TestFixture
      * @var array
      */
     public $records = [
+        [
+            'id' => '7997df22-ed8e-4703-b971-d9514179904b',
+            'title' => 'First Article',
+            'status' => null,
+            'content' => 'check',
+            'json_field' => null,
+            'int_field' => null,
+            'created' => '2007-03-18 10:39:23',
+            'modified' => '2007-03-18 10:41:31'
+        ],
+        [
+            'id' => 'd744e525-2957-4b28-a0ac-d5ffecb74485',
+            'title' => 'Second Article',
+            'status' => null,
+            'content' => 'Second Article Content',
+            'json_field' => null,
+            'int_field' => null,
+            'created' => '2007-03-18 10:41:23',
+            'modified' => '2007-03-18 10:43:31'
+        ],
+        [
+            'id' => '80cd952f-f410-4e25-9323-11922e90ee0b',
+            'title' => 'Third Article',
+            'status' => null,
+            'content' => 'Third Article Content',
+            'json_field' => null,
+            'int_field' => null,
+            'published' => '1',
+            'created' => '2007-03-18 10:43:23',
+            'modified' => '2007-03-18 10:45:31'
+        ]
     ];
 }

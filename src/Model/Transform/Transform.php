@@ -11,8 +11,8 @@ abstract class Transform
     /**
      * Amend the data before displaying.
      *
-     * @param  string  $fieldname  Field name
-     * @param  mixed   $value      Value to be amended
+     * @param  mixed  $fieldname  Field name
+     * @param  mixed  $value      Value to be amended
      * @param  mixed  $model      Optional model to be used
      * @return mixed
      */
@@ -21,12 +21,12 @@ abstract class Transform
     /**
      * Amend the data before saving.
      *
-     * @param  mixed  $fieldname  Field name
-     * @param  mixed  $value      Value to be amended
-     * @param  mixed  $model      Optional model to be used
+     * @param  string  $fieldname   Field name
+     * @param  array   $cfg         field config
+     * @param  mixed   $entity      entity
      * @return mixed
      */
-    abstract public function save($fieldname, $value, $model = null);
+    abstract public function save($fieldname, $cfg, $entity);
 
     /**
      * Transform factory

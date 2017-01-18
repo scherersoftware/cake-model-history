@@ -174,14 +174,28 @@ class HistorizableBehavior extends Behavior
     public function getRelationLink($fieldName, $fieldValue = null)
     {
         $tableName = Inflector::camelize(Inflector::pluralize(str_replace('_id', '', $fieldName)));
+
+        $fieldConfig = $this->getFields()[$fieldName];
+
+        // reads the url defined for the given behavior (empty array if not defined)
+        $fieldUrl = $this->getUrl();
+
+
+        if (isset($fieldConfig['url'])) {
+            // if url defined in fieldconfig. Overwrites default and behavior url config.
+            $fieldUrl = $fieldConfig['url'];
+        }
+
+        unset($fieldUrl['controller']);
+
         $relationConfig = [
             'model' => $tableName,
             'bindingKey' => 'id',
-            'url' => [
-                'plugin' => 'Admin',
+            'url' => Hash::merge([
+                'plugin' => null,
                 'controller' => $tableName,
                 'action' => 'view',
-            ]
+            ], $fieldUrl)
         ];
 
         $pass = [];
@@ -255,6 +269,20 @@ class HistorizableBehavior extends Behavior
 
             return $output;
         });
+    }
+
+    /**
+     * Get url config for behavior
+     *
+     * @return array
+     */
+    public function getUrl()
+    {
+        if (is_array($this->config('url'))) {
+            return $this->config('url');
+        }
+
+        return [];
     }
 
     /**

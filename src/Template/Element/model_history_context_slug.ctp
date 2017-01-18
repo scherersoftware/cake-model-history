@@ -1,1 +1,1 @@
-By: <?= $historyEntry->context_slug ?>
+<?= $historyEntry->context_slug ?>

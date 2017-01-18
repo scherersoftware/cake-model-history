@@ -58,7 +58,6 @@ class HistorizableBehaviorTest extends TestCase
         $userId = '481fc6d0-b920-43e0-a40d-6d1740cf8562';
         $articlesId = '99dbcad7-21d5-4dd1-b193-e00543c0224c';
 
-
         $article = $this->Articles->newEntity([
             'title' => 'title',
             'content' => 'content'
@@ -67,7 +66,7 @@ class HistorizableBehaviorTest extends TestCase
         $fieldValue = 123;
 
         Router::reload();
-        $relationLink = $this->Articles->getRelationLink('foobar', $fieldValue);
+        $relationLink = $this->Articles->getRelationLink('articles_id', $fieldValue);
 
         $this->assertEquals($fieldValue, $relationLink);
     }

@@ -9,8 +9,9 @@ class DateTransform extends Transform
     /**
      * {@inheritDoc}
      */
-    public function save($fieldname, $dateValue, $model = null)
+    public function save($fieldname, $config, $entity)
     {
+        $dateValue = $entity->$fieldname;
         if (!is_object($dateValue)) {
             $dateValue = new Time($dateValue);
         }

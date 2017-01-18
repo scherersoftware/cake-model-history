@@ -37,5 +37,19 @@ class UsersFixture extends TestFixture
      * @var array
      */
     public $records = [
+        [
+            'id' => 'e5fba0df-33cf-46dc-9940-5f16382a9bd3',
+            'firstname' => 'Robert',
+            'lastname' => 'Scherer',
+            'created' => '2007-03-18 10:39:23',
+            'modified' => '2007-03-18 10:41:31'
+        ],
+        [
+            'id' => '40cb9723-58e7-460c-ba27-19ac851c8214',
+            'firstname' => 'Wolfgang',
+            'lastname' => 'Braun',
+            'created' => '2007-03-18 10:39:23',
+            'modified' => '2007-03-18 10:41:31'
+        ]
     ];
 }

@@ -96,8 +96,7 @@ $this->addBehavior('ModelHistory.Historizable', [
             // The savable indicator is used to decide wether the field is tracked
             'saveable' => true,
             'obfuscated' => false,
-            // Allowed: string, bool, number, relation, date, hash, array.
-            // Use hash for associative array and array for sequential(indexed) array. 
+            // Allowed: string, bool, number, relation, date, hash, array, association.
             'type' => 'string',
             // Optional display parser to modify the value before displaying it,
             // if no displayParser is found, the \ModelHistory\Model\Transform\{$type}Transformer is used.
@@ -108,6 +107,52 @@ $this->addBehavior('ModelHistory.Historizable', [
             'saveParser' => function ($fieldname, $value, $entity) {
                 return $value;
             },
+        ],
+    ]
+]);
+```
+
+**Types:**
+
+`string`: for string values.
+`bool`: for bool values.
+`number`: for integer values.
+`date`: for date values.
+`hash`: for associative arrays.
+`array`: for sequential (indexed) arrays.
+`relation`: for 1 to n relations.
+`association`: for n to m relations.
+
+The two types `relation` and `association` are able to link to associated entities. The url defaults to:
+
+```
+'url' => [
+    'plugin' => null,
+    'controller' => $entityController // automatically set to the entities controller
+    'action' => 'view'
+]
+```
+
+The default url can be overwriten: `url` in the behavior-array overwrites default and the defined url in the field-config has the highest priority.
+
+```
+$this->addBehavior('ModelHistory.Historizable', [
+    'url' => [
+        'plugin' => 'Admin',
+        'action' => 'index'
+    ],
+    'fields' => [
+        [
+            'name' => 'firstname',
+            'translation' => __('user.firstname'),
+            'searchable' => true,
+            'saveable' => true,
+            'obfuscated' => false,
+            'type' => 'relation',
+            'url' => [
+                'plugin' => 'Special',
+                'action' => 'show'
+            ]
         ],
     ]
 ]);

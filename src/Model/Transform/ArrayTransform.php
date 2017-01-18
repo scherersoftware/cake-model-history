@@ -7,9 +7,9 @@ class ArrayTransform extends Transform
     /**
      * {@inheritDoc}
      */
-    public function save($fieldname, $value, $model = null)
+    public function save($fieldname, $config, $entity)
     {
-        return $value;
+         return $entity->$fieldname;
     }
 
     /**

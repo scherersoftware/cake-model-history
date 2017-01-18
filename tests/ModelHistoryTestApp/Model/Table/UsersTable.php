@@ -57,8 +57,22 @@ class UsersTable extends Table
                     'type' => 'string',
                     'displayParser' => null,
                     'saveParser' => null
+                ],
+                [
+                    'name' => 'article_id',
+                    'translation' => __('users.article_id'),
+                    'searchable' => true,
+                    'saveable' => false,
+                    'obfuscated' => false,
+                    'type' => 'association'
                 ]
             ]
+        ]);
+
+        $this->belongsToMany('Articles', [
+            'foreignKey' => 'user_id',
+            'targetForeignKey' => 'articles_id',
+            'joinTable' => 'articles_users'
         ]);
     }
 

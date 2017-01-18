@@ -89,13 +89,18 @@ class ModelHistoryTable extends Table
         $saveFields = [];
 
         $model = $entity->source();
+
         $tableConfig = [];
         if (defined('PHPUNIT_TESTSUITE')) {
-            $tableConfig = ['className' => 'ModelHistoryTestApp\Model\Table\ArticlesTable'];
-            $model = 'ArticlesTable';
+            if ($model != 'ArticlesUsersTable') {
+                $tableConfig = ['className' => 'ModelHistoryTestApp\Model\Table\ArticlesTable'];
+                $model = 'ArticlesTable';
+            }
         }
+
         $saveableFields = TableRegistry::get($model, $tableConfig)->getSaveableFields();
 
+        $entries = [];
         if ($action === ModelHistory::ACTION_COMMENT) {
             $saveFields = [
                 'comment' => $options['data']['comment']
@@ -110,16 +115,30 @@ class ModelHistoryTable extends Table
                         $callback = $data['saveParser'];
                         $options['data'][$fieldName] = $callback($fieldName, $options['data'][$fieldName], $entity);
                     } else {
-                        if (isset($data[$fieldName]['type'])) {
-                            $filterClass = Transform::get($data[$fieldName]['type']);
-                            $options['data'][$fieldName] = $filterClass->save($fieldName, $value, $entity->source());
+                        if (isset($data['type'])) {
+                            $filterClass = Transform::get($data['type']);
+
+                            if ($data['type'] == 'association' && isset($data['associationKey'])) {
+                                $tableName = Inflector::camelize(Inflector::pluralize(str_replace('_id', '', $fieldName)));
+
+                                $foreignEntity = TableRegistry::get($tableName)->get($entity->$fieldName);
+
+                                $entries[] = $this->newEntity([
+                                    'model' => $this->getEntityModel($foreignEntity),
+                                    'foreign_key' => $foreignEntity->id,
+                                    'action' => $action,
+                                    'data' => [$data['associationKey'] => $filterClass->save($fieldName, $data, $entity)],
+                                    'revision' => $this->getNextRevisionNumberForEntity($foreignEntity)
+                                ]);
+                            } else {
+                                $options['data'][$fieldName] = $filterClass->save($fieldName, $data, $entity);
+                            }
                         }
                     }
                     $saveFields[$fieldName] = $options['data'][$fieldName];
                 }
             }
         }
-
         if ($action !== ModelHistory::ACTION_DELETE && empty($saveFields)) {
             return false;
         }
@@ -154,20 +173,34 @@ class ModelHistoryTable extends Table
             $contextType = $entity->getHistoryContextType();
         }
 
-        $entry = $this->newEntity([
-            'model' => $this->getEntityModel($entity),
-            'foreign_key' => $entity->id,
-            'action' => $action,
-            'data' => $options['data'],
-            'context_type' => $contextType,
-            'context' => $context,
-            'context_slug' => $contextSlug,
-            'user_id' => $userId,
-            'revision' => $this->getNextRevisionNumberForEntity($entity)
-        ]);
-        $this->save($entry);
+        if (!empty($entries)) {
+            foreach ($entries as $entry) {
+                $entry = $this->patchEntity($entry, [
+                    'context_type' => $contextType,
+                    'context' => $context,
+                    'context_slug' => $contextSlug,
+                    'user_id' => $userId,
+                ]);
+                $this->save($entry);
+            }
+        }
 
-        return $entry;
+        if (!empty($entity->id)) {
+            $entry = $this->newEntity([
+                'model' => $this->getEntityModel($entity),
+                'foreign_key' => $entity->id,
+                'action' => $action,
+                'data' => $options['data'],
+                'context_type' => $contextType,
+                'context' => $context,
+                'context_slug' => $contextSlug,
+                'user_id' => $userId,
+                'revision' => $this->getNextRevisionNumberForEntity($entity)
+            ]);
+            $this->save($entry);
+        }
+
+        return;
     }
 
     /**

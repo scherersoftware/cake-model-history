@@ -5,14 +5,14 @@ namespace ModelHistory\Model\Transform;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Inflector;
 
-class RelationTransform extends Transform
+class AssociationTransform extends Transform
 {
     /**
      * {@inheritDoc}
      */
-    public function save($fieldname, $config, $entity)
+    public function save($fieldname, $config, $entity = null)
     {
-         return $entity->$fieldname;
+        return $entity[$config['associationKey']];
     }
 
     /**
@@ -20,8 +20,7 @@ class RelationTransform extends Transform
      */
     public function display($fieldname, $value, $model = null)
     {
-        $tableString = str_replace('_id', '', $fieldname);
-        $tableName = Inflector::camelize(Inflector::pluralize($tableString));
+        $tableName = Inflector::camelize(Inflector::pluralize(str_replace('_id', '', $fieldname)));
         $table = TableRegistry::get($tableName);
 
         $tableConfig = [];

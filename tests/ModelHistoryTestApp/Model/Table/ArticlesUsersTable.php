@@ -59,19 +59,4 @@ class ArticlesUsersTable extends Table
             'joinType' => 'INNER'
         ]);
     }
-
-    /**
-     * Returns a rules checker object that will be used for validating
-     * application integrity.
-     *
-     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
-     * @return \Cake\ORM\RulesChecker
-     */
-    public function buildRules(RulesChecker $rules): RulesChecker
-    {
-        $rules->add($rules->existsIn(['article_id'], 'Articles'));
-        $rules->add($rules->existsIn(['user_id'], 'Users'));
-
-        return $rules;
-    }
 }

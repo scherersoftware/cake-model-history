@@ -67,7 +67,6 @@ class ArticlesFixture extends TestFixture
             'content' => 'Third Article Content',
             'json_field' => null,
             'int_field' => null,
-            'published' => '1',
             'created' => '2007-03-18 10:43:23',
             'modified' => '2007-03-18 10:45:31'
         ]

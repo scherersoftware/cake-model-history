@@ -25,9 +25,6 @@ class RelationTransform extends Transform
         $table = TableRegistry::get($tableName);
 
         $tableConfig = [];
-        if (defined('PHPUNIT_TESTSUITE')) {
-            $tableConfig = ['className' => 'ModelHistoryTestApp\Model\Table\ArticlesTable'];
-        }
 
         $historizableBehavior = TableRegistry::get($model, $tableConfig)->behaviors()->get('Historizable');
         if (is_object($historizableBehavior) && method_exists($historizableBehavior, 'getRelationLink')) {

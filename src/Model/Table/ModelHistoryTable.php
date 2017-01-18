@@ -89,11 +89,15 @@ class ModelHistoryTable extends Table
         $saveFields = [];
 
         $model = $entity->source();
+
         $tableConfig = [];
         if (defined('PHPUNIT_TESTSUITE')) {
-            $tableConfig = ['className' => 'ModelHistoryTestApp\Model\Table\ArticlesTable'];
-            $model = 'ArticlesTable';
+            if ($model != 'ArticlesUsersTable') {
+                $tableConfig = ['className' => 'ModelHistoryTestApp\Model\Table\ArticlesTable'];
+                $model = 'ArticlesTable';
+            }
         }
+
         $saveableFields = TableRegistry::get($model, $tableConfig)->getSaveableFields();
 
         $entries = [];

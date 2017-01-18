@@ -97,8 +97,24 @@ class ArticlesTable extends Table
                     'type' => 'relation',
                     'displayParser' => null,
                     'saveParser' => null
+                ],
+                [
+                    'name' => 'user_id',
+                    'translation' => __('articles.user_id'),
+                    'searchable' => true,
+                    'saveable' => false,
+                    'obfuscated' => false,
+                    'type' => 'association',
+                    'displayParser' => null,
+                    'saveParser' => null
                 ]
             ]
+        ]);
+
+        $this->belongsToMany('Users', [
+            'foreignKey' => 'article_id',
+            'targetForeignKey' => 'user_id',
+            'joinTable' => 'articles_users'
         ]);
     }
 

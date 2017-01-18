@@ -8,6 +8,7 @@ use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use Cake\Utility\Hash;
 use ModelHistoryTestApp\Table\ArticlesTable;
+use ModelHistoryTestApp\Table\ArticlesUsersTable;
 use ModelHistory\Model\Entity\ModelHistory;
 use ModelHistory\Model\Table\ModelHistoryTable;
 
@@ -26,6 +27,7 @@ class ModelHistoryTableTest extends TestCase
         'ModelHistory' => 'plugin.model_history.model_history',
         'Articles' => 'plugin.model_history.articles',
         'Users' => 'plugin.model_history.users',
+        'ArticlesUsers' => 'plugin.model_history.articles_users'
     ];
 
     /**
@@ -40,9 +42,14 @@ class ModelHistoryTableTest extends TestCase
 
         $this->ModelHistory = TableRegistry::get('ModelHistory', ['className' => 'ModelHistory\Model\Table\ModelHistoryTable']);
         $this->Articles = TableRegistry::get('ArticlesTable', ['className' => 'ModelHistoryTestApp\Model\Table\ArticlesTable']);
+        $this->ArticlesUsers = TableRegistry::get('ArticlesUsersTable', ['className' => 'ModelHistoryTestApp\Model\Table\ArticlesUsersTable']);
+
 
         if ($this->Articles->hasBehavior('Historizable')) {
             $this->Articles->removeBehavior('Historizable');
+        }
+        if ($this->ArticlesUsers->hasBehavior('Historizable')) {
+            $this->ArticlesUsers->removeBehavior('Historizable');
         }
     }
 
@@ -55,6 +62,7 @@ class ModelHistoryTableTest extends TestCase
     {
         unset($this->ModelHistory);
         unset($this->Articles);
+        unset($this->ArticlesUsers);
         parent::tearDown();
     }
 
@@ -124,6 +132,16 @@ class ModelHistoryTableTest extends TestCase
                     'saveable' => false,
                     'obfuscated' => false,
                     'type' => 'string',
+                    'displayParser' => null,
+                    'saveParser' => null
+                ],
+                [
+                    'name' => 'user_id',
+                    'translation' => __('articles.assoc_field'),
+                    'searchable' => false,
+                    'saveable' => false,
+                    'obfuscated' => false,
+                    'type' => 'association',
                     'displayParser' => null,
                     'saveParser' => null
                 ]
@@ -545,5 +563,57 @@ class ModelHistoryTableTest extends TestCase
             }
             $i--;
         }
+    }
+
+    /**
+     * Test create, update, delete
+     *
+     * @return void
+     */
+    public function testSaveAssociation()
+    {
+        $articleUser = $this->ArticlesUsers->addBehavior('ModelHistory.Historizable', [
+            'userIdCallback' => null,
+            'fields' => [
+                [
+                    'name' => 'article_id',
+                    'translation' => __('articles_users.article'),
+                    'searchable' => true,
+                    'saveable' => true,
+                    'obfuscated' => false,
+                    'type' => 'association',
+                    'associationKey' => 'user_id'
+                ],
+                [
+                    'name' => 'user_id',
+                    'translation' => __('articles_users.user'),
+                    'searchable' => true,
+                    'saveable' => true,
+                    'obfuscated' => false,
+                    'type' => 'association',
+                    'associationKey' => 'article_id'
+                ]
+            ]
+        ]);
+        $articleUser = $this->ArticlesUsers->newEntity([
+            'article_id' => '7997df22-ed8e-4703-b971-d9514179904b',
+            'user_id' => 'e5fba0df-33cf-46dc-9940-5f16382a9bd3'
+        ]);
+
+        $this->ArticlesUsers->save($articleUser);
+        $modelHistoriesCount = $this->ModelHistory->find()
+            ->where([
+                'model' => 'Articles',
+                'foreign_key' => $articleUser->article_id,
+                'action' => ModelHistory::ACTION_CREATE
+            ])->count();
+        $this->assertEquals($modelHistoriesCount, 1);
+        $modelHistoriesCount = $this->ModelHistory->find()
+            ->where([
+                'model' => 'Users',
+                'foreign_key' => $articleUser->user_id,
+                'action' => ModelHistory::ACTION_CREATE
+            ])->count();
+        $this->assertEquals($modelHistoriesCount, 1);
     }
 }

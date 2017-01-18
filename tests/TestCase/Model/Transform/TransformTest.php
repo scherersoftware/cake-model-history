@@ -65,4 +65,32 @@ class TransformTest extends TestCase
         $trans = Transform::get('string');
         $this->assertEquals('check', $trans->save('content', [], $aritcle));
     }
+
+    public function testRelationTransformSave()
+    {
+        $aritcle = $this->Articles->get('7997df22-ed8e-4703-b971-d9514179904b');
+
+        $trans = Transform::get('relation');
+        $this->assertEquals('check', $trans->save('content', [], $aritcle));
+    }
+
+    public function testRelationTransformDisplay()
+    {
+        $trans = Transform::get('relation');
+        $this->assertEquals('7997df22-ed8e-4703-b971-d9514179904b', $trans->display('article_id', '7997df22-ed8e-4703-b971-d9514179904b', null));
+    }
+
+    public function testAssociationTransformSave()
+    {
+        $aritcle = $this->Articles->get('7997df22-ed8e-4703-b971-d9514179904b');
+
+        $trans = Transform::get('association');
+        $this->assertEquals('check', $trans->save('content', ['associationKey' => 'content'], $aritcle));
+    }
+
+    public function testAssociationTransformDisplay()
+    {
+        $trans = Transform::get('association');
+        $this->assertEquals('7997df22-ed8e-4703-b971-d9514179904b', $trans->display('article_id', '7997df22-ed8e-4703-b971-d9514179904b', null));
+    }
 }

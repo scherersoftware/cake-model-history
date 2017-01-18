@@ -10,9 +10,9 @@ class AssociationTransform extends Transform
     /**
      * {@inheritDoc}
      */
-    public function save($fieldname, $cfg, $entity = null)
+    public function save($fieldname, $config, $entity = null)
     {
-        return $entity[$cfg['associationKey']];
+        return $entity[$config['associationKey']];
     }
 
     /**

@@ -9,7 +9,7 @@ class DateTransform extends Transform
     /**
      * {@inheritDoc}
      */
-    public function save($fieldname, $cfg, $entity)
+    public function save($fieldname, $config, $entity)
     {
         $dateValue = $entity->$fieldname;
         if (!is_object($dateValue)) {

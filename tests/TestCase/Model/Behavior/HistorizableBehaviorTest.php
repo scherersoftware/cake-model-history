@@ -58,7 +58,6 @@ class HistorizableBehaviorTest extends TestCase
         $userId = '481fc6d0-b920-43e0-a40d-6d1740cf8562';
         $articlesId = '99dbcad7-21d5-4dd1-b193-e00543c0224c';
 
-
         $article = $this->Articles->newEntity([
             'title' => 'title',
             'content' => 'content'

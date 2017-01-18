@@ -7,7 +7,7 @@ class BoolTransform extends Transform
     /**
      * {@inheritDoc}
      */
-    public function save($fieldname, $cfg, $entity)
+    public function save($fieldname, $config, $entity)
     {
          return $entity->$fieldname;
     }

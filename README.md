@@ -114,14 +114,14 @@ $this->addBehavior('ModelHistory.Historizable', [
 
 **Types:**
 
-`string`: for string values.
-`bool`: for bool values.
-`number`: for integer values.
-`date`: for date values.
-`hash`: for associative arrays.
-`array`: for sequential (indexed) arrays.
-`relation`: for 1 to n relations.
-`association`: for n to m relations.
+- `string`: for string values.
+- `bool`: for bool values.
+- `number`: for integer values.
+- `date`: for date values.
+- `hash`: for associative arrays.
+- `array`: for sequential (indexed) arrays.
+- `relation`: for 1 to n relations.
+- `association`: for n to m relations.
 
 The two types `relation` and `association` are able to link to associated entities. The url defaults to:
 

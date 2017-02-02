@@ -198,7 +198,7 @@ class ModelHistoryHelper extends Helper
         $slug = $historyEntry->context_slug;
         if (!empty($historyEntry->context) && !empty($historyEntry->context['namespace'])) {
             $class = new $historyEntry->context['namespace'];
-            if (is_callable($class, 'typeDescriptions')) {
+            if (method_exists($class, 'typeDescriptions')) {
                 $typeDescriptions = $class::typeDescriptions();
                 if (isset($typeDescriptions[$slug])) {
                     $slug = $typeDescriptions[$slug];

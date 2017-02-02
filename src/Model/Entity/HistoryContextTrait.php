@@ -82,7 +82,8 @@ trait HistoryContextTrait
         }
 
         $this->_context = Hash::merge([
-            'type' => $type
+            'type' => $type,
+            'namespace' => get_class($this)
         ], $context);
         $this->_contextSlug = $contextSlug;
         $this->_contextType = $type;

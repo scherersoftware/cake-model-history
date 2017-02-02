@@ -160,6 +160,7 @@ $this->addBehavior('ModelHistory.Historizable', [
 
 To further specify the context in which the entity was saved and in order to gather additional information, you can implement `\ModelHistory\Model\Entity\HistoryContextTrait` inside your entity. You have to call `setHistoryContext` on the entity to add the context information.
 Currently there are three context types: `ModelHistory::CONTEXT_TYPE_CONTROLLER`, `ModelHistory::CONTEXT_TYPE_SHELL` and `ModelHistory::CONTEXT_TYPE_SLUG`.
+The optional slug gets translated automatically, when its defined in the entities `typeDescriptions`.
 
 ```
     /**

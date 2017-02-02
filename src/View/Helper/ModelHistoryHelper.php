@@ -204,6 +204,7 @@ class ModelHistoryHelper extends Helper
                 }
             }
         }
+
         return $slug;
     }
 }

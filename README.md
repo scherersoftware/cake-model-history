@@ -1,4 +1,4 @@
-# CakePHP 3 cake-model-history
+![CakePHP 3 Model History Plugin](https://raw.githubusercontent.com/scherersoftware/cake-model-history/master/model-history.png)
 
 [![Build Status](https://travis-ci.org/scherersoftware/cake-model-history.svg?branch=master)](https://travis-ci.org/scherersoftware/cake-model-history)
 [![codecov](https://codecov.io/gh/scherersoftware/cake-model-history/branch/master/graph/badge.svg)](https://codecov.io/gh/scherersoftware/cake-model-history)

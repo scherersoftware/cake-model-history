@@ -1,1 +1,1 @@
-<?= $historyEntry->context_slug ?>
+<?= $this->ModelHistory->getLocalizedSlug($historyEntry) ?>

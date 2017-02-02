@@ -186,4 +186,26 @@ class ModelHistoryHelper extends Helper
 
         return $fields;
     }
+
+    /**
+     * Retrieve localized slug, when translation is available in type descriptions.
+     *
+     * @param  ModelHistory  $historyEntry  HistoryEntry entity to get data from
+     * @return string
+     */
+    public function getLocalizedSlug(ModelHistory $historyEntry)
+    {
+        $slug = $historyEntry->context_slug;
+        if (!empty($historyEntry->context) && !empty($historyEntry->context['namespace'])) {
+            $class = new $historyEntry->context['namespace'];
+            if (is_callable($class, 'typeDescriptions')) {
+                $typeDescriptions = $class::typeDescriptions();
+                if (isset($typeDescriptions[$slug])) {
+                    $slug = $typeDescriptions[$slug];
+                }
+            }
+        }
+
+        return $slug;
+    }
 }

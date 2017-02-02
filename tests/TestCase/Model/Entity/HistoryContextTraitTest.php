@@ -188,7 +188,10 @@ class ModelHistoryTableTest extends TestCase
         $this->assertEquals(1, count($modelHistory));
 
         $this->assertNotEmpty($modelHistory[0]->context);
-        $this->assertEquals(['type' => 'slug'], $modelHistory[0]->context);
+        $this->assertEquals([
+            'type' => 'slug',
+            'namespace' => get_class($article)
+        ], $modelHistory[0]->context);
         $this->assertEquals(ModelHistory::CONTEXT_TYPE_SLUG, $modelHistory[0]->context_type);
         $this->assertEquals($slug, $modelHistory[0]->context_slug);
     }

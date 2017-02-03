@@ -73,7 +73,9 @@ class ModelHistoryTableTest extends TestCase
             'fields' => [
                 [
                     'name' => 'id',
-                    'translation' => __('articles.id'),
+                    'translation' => function () {
+                        return __('articles.id');
+                    },
                     'searchable' => true,
                     'saveable' => true,
                     'obfuscated' => false,
@@ -83,7 +85,9 @@ class ModelHistoryTableTest extends TestCase
                 ],
                 [
                     'name' => 'title',
-                    'translation' => __('articles.title'),
+                    'translation' => function () {
+                        return __('articles.title');
+                    },
                     'searchable' => true,
                     'saveable' => true,
                     'obfuscated' => false,
@@ -97,7 +101,9 @@ class ModelHistoryTableTest extends TestCase
                 ],
                 [
                     'name' => 'status',
-                    'translation' => __('articles.status'),
+                    'translation' => function () {
+                        return __('articles.status');
+                    },
                     'searchable' => true,
                     'saveable' => true,
                     'obfuscated' => false,
@@ -107,7 +113,9 @@ class ModelHistoryTableTest extends TestCase
                 ],
                 [
                     'name' => 'content',
-                    'translation' => __('articles.content'),
+                    'translation' => function () {
+                        return __('articles.content');
+                    },
                     'searchable' => true,
                     'saveable' => true,
                     'obfuscated' => false,
@@ -117,7 +125,9 @@ class ModelHistoryTableTest extends TestCase
                 ],
                 [
                     'name' => 'json_field',
-                    'translation' => __('articles.json_field'),
+                    'translation' => function () {
+                        return __('articles.json_field');
+                    },
                     'searchable' => false,
                     'saveable' => false,
                     'obfuscated' => false,
@@ -127,7 +137,9 @@ class ModelHistoryTableTest extends TestCase
                 ],
                 [
                     'name' => 'int_field',
-                    'translation' => __('articles.int_field'),
+                    'translation' => function () {
+                        return __('articles.int_field');
+                    },
                     'searchable' => false,
                     'saveable' => false,
                     'obfuscated' => false,
@@ -137,7 +149,9 @@ class ModelHistoryTableTest extends TestCase
                 ],
                 [
                     'name' => 'user_id',
-                    'translation' => __('articles.assoc_field'),
+                    'translation' => function () {
+                        return __('articles.assoc_field');
+                    },
                     'searchable' => false,
                     'saveable' => false,
                     'obfuscated' => false,
@@ -433,7 +447,9 @@ class ModelHistoryTableTest extends TestCase
             'fields' => [
                 [
                     'name' => 'id',
-                    'translation' => __('articles.id'),
+                    'translation' => function () {
+                        return __('articles.id');
+                    },
                     'searchable' => true,
                     'saveable' => true,
                     'obfuscated' => false,
@@ -443,7 +459,9 @@ class ModelHistoryTableTest extends TestCase
                 ],
                 [
                     'name' => 'title',
-                    'translation' => __('articles.title'),
+                    'translation' => function () {
+                        return __('articles.title');
+                    },
                     'searchable' => true,
                     'saveable' => true,
                     'obfuscated' => false,
@@ -455,7 +473,9 @@ class ModelHistoryTableTest extends TestCase
                 ],
                 [
                     'name' => 'status',
-                    'translation' => __('articles.status'),
+                    'translation' => function () {
+                        return __('articles.status');
+                    },
                     'searchable' => false,
                     'saveable' => true,
                     'obfuscated' => false,
@@ -465,7 +485,9 @@ class ModelHistoryTableTest extends TestCase
                 ],
                 [
                     'name' => 'content',
-                    'translation' => __('articles.content'),
+                    'translation' => function () {
+                        return __('articles.content');
+                    },
                     'searchable' => true,
                     'saveable' => true,
                     'obfuscated' => false,
@@ -577,7 +599,9 @@ class ModelHistoryTableTest extends TestCase
             'fields' => [
                 [
                     'name' => 'article_id',
-                    'translation' => __('articles_users.article'),
+                    'translation' => function () {
+                        return __('articles_users.article');
+                    },
                     'searchable' => true,
                     'saveable' => true,
                     'obfuscated' => false,
@@ -586,7 +610,9 @@ class ModelHistoryTableTest extends TestCase
                 ],
                 [
                     'name' => 'user_id',
-                    'translation' => __('articles_users.user'),
+                    'translation' => function () {
+                        return __('articles_users.user');
+                    },
                     'searchable' => true,
                     'saveable' => true,
                     'obfuscated' => false,

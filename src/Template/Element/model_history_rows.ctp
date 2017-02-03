@@ -8,7 +8,7 @@
     <?php endif; ?>
     <?php foreach($modelHistory as $historyEntry): ?>
         <tr>
-            <td class="action-label <?= $this->ModelHistory->actionClass($historyEntry->action) ?>" data-toggle="popover" data-content="<?= $this->ModelHistory->historyText($historyEntry) ?>">
+            <td class="action-label <?= $this->ModelHistory->actionClass($historyEntry->action) ?>" <?php if (!empty($historyEntry->user_id)): ?> data-toggle="popover" data-content="<?= $this->ModelHistory->historyText($historyEntry) ?>"<?php endif; ?>>
                 <?= $this->ModelHistory->historyBadge($historyEntry) ?>
                 <?= $historyEntry->created->format('d.m.Y, H:i') ?>
                 <?= isset($historyEntry->user) ? '| ' . $historyEntry->user->full_name : '' ?>

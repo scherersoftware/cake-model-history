@@ -90,9 +90,11 @@ $this->addBehavior('ModelHistory.Historizable', [
         [
             // The field name
             'name' => 'firstname',
-            'translation' => __('user.firstname'),
-            // Only the slug. If this is filled, the translation takes place in the Helper, not in the Table init
-            'translation_slug' => 'user.firstname',
+            // Allowed translation forms: String, Closure returning string
+            // Its recommended to use the closure, so translations are made after core initialize.
+            'translation' => function () {
+                return __('user.firstname');
+            },
             // The searchable indicator is used to show the field in the filter box
             'searchable' => true,
             // The savable indicator is used to decide wether the field is tracked
@@ -146,7 +148,9 @@ $this->addBehavior('ModelHistory.Historizable', [
     'fields' => [
         [
             'name' => 'firstname',
-            'translation' => __('user.firstname'),
+            'translation' => function () {
+                return __('user.firstname');
+            },
             'searchable' => true,
             'saveable' => true,
             'obfuscated' => false,

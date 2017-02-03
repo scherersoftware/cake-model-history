@@ -173,6 +173,7 @@ class ModelHistoryHelper extends Helper
                 if (is_callable($fields[$value]['translation'])) {
                     return $fields[$value]['translation']();
                 }
+
                 return $fields[$value]['translation'];
             }
 

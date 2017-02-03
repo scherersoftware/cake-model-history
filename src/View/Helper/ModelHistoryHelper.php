@@ -168,6 +168,11 @@ class ModelHistoryHelper extends Helper
 
             // Get pre configured translations and return it if found
             $fields = TableRegistry::get($historyEntry->model)->getFields();
+
+            if (isset($fields[$value]['translation_slug'])) {
+                return __($fields[$value]['translation_slug']);
+            }
+
             if (isset($fields[$value]['translation'])) {
                 return $fields[$value]['translation'];
             }

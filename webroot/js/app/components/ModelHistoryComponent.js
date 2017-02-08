@@ -50,6 +50,7 @@ App.Components.ModelHistoryComponent = Frontend.Component.extend({
             limit = 10,
             page = 1
             showFilter = $parentWrapper.data('showFilter'),
+            columnClass = $parentWrapper.parent().attr('class'),
             showComment = $parentWrapper.data('showComment');
 
         if ($parentWrapper.data('limit')) {
@@ -66,7 +67,8 @@ App.Components.ModelHistoryComponent = Frontend.Component.extend({
                 limit,
                 page,
                 showFilter,
-                showComment
+                showComment,
+                columnClass
             ]
         };
         App.Main.UIBlocker.blockElement($(e.currentTarget));
@@ -95,11 +97,12 @@ App.Components.ModelHistoryComponent = Frontend.Component.extend({
             page = $parentWrapper.data('page'),
             showFilter = $parentWrapper.data('showFilter'),
             showComment = $parentWrapper.data('showComment'),
+            columnClass = $parentWrapper.parent().attr('class'),
             url = {
                 plugin: 'model_history',
                 controller: 'ModelHistory',
                 action: 'filter',
-                pass: [model, foreignKey, limit, page, showFilter, showComment]
+                pass: [model, foreignKey, limit, page, showFilter, showComment, columnClass]
             };
 
         var formData = $(e.currentTarget).serialize();

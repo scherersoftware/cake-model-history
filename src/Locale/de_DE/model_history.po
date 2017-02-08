@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2016-11-22 12:10+0100\n"
-"PO-Revision-Date: 2016-11-22 12:10+0100\n"
+"POT-Creation-Date: 2017-02-08 13:12+0100\n"
+"PO-Revision-Date: 2017-02-08 13:13+0100\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: EMAIL@ADDRESS\n"
 "Language: de\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.8.8\n"
+"X-Generator: Poedit 1.8.11\n"
 
 msgid "field.id"
 msgstr "ID"
@@ -33,6 +33,9 @@ msgstr "Controller"
 msgid "context.type.shell"
 msgstr "Shell"
 
+msgid "context.type.slug"
+msgstr "Slug"
+
 msgid "comment_empty"
 msgstr "kein Kommentar vorhanden"
 
@@ -48,6 +51,9 @@ msgstr "Aktionen"
 msgid "model_history"
 msgstr "Model Historie"
 
+msgid "called_site"
+msgstr "Aufgerufene Seite"
+
 msgid "load_previous"
 msgstr "Vorherige Einträge laden..."
 
@@ -56,6 +62,12 @@ msgstr "Änderungshistorie"
 
 msgid "load_next"
 msgstr "Nächste Einträge laden..."
+
+msgid "enter_comment"
+msgstr "Kommentar eingeben..."
+
+msgid "save"
+msgstr "Speichern"
 
 msgid "filter.fields"
 msgstr "Felder"

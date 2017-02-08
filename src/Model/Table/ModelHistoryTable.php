@@ -68,7 +68,7 @@ class ModelHistoryTable extends Table
      * @param string $action One of ModelHistory::ACTION_*
      * @param string $userId User ID to assign this history entry to
      * @param array $options Additional options
-     * @return ModelHistory
+     * @return ModelHistory|false
      */
     public function add(EntityInterface $entity, $action, $userId = null, array $options = [])
     {
@@ -200,7 +200,7 @@ class ModelHistoryTable extends Table
             $this->save($entry);
         }
 
-        return;
+        return $entry;
     }
 
     /**

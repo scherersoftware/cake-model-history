@@ -42,9 +42,10 @@ class ModelHistoryController extends AppController
      * @param  int    $page            Current page
      * @param  bool   $showFilterBox   Show Filter Box
      * @param  bool   $showCommentBox  Show comment Box
+     * @param  string  $columnClass     div classes for column
      * @return void
      */
-    public function index($model = null, $foreignKey = null, $limit = null, $page = null, $showFilterBox = null, $showCommentBox = null)
+    public function index($model = null, $foreignKey = null, $limit = null, $page = null, $showFilterBox = null, $showCommentBox = null, $columnClass = '')
     {
         $this->ModelHistory->belongsTo('Users', [
             'foreignKey' => 'user_id'
@@ -78,6 +79,7 @@ class ModelHistoryController extends AppController
         $this->FrontendBridge->setBoth('model', $model);
         $this->FrontendBridge->setBoth('foreignKey', $foreignKey);
         $this->FrontendBridge->setBoth('limit', $limit);
+        $this->FrontendBridge->setBoth('columnClass', $columnClass);
         $this->FrontendBridge->setBoth('page', $page);
         $this->FrontendBridge->setBoth('searchableFields', TableRegistry::get($entity->source())->getTranslatedFields());
     }
@@ -91,9 +93,10 @@ class ModelHistoryController extends AppController
      * @param  int     $page            Current page to view
      * @param  bool    $showFilterBox   Show Filter Box
      * @param  bool    $showCommentBox  Show comment Box
+     * @param  string  $columnClass     div classes for column
      * @return string                   Index View
      */
-    public function filter($model = null, $foreignKey = null, $limit = null, $page = null, $showFilterBox = null, $showCommentBox = null)
+    public function filter($model = null, $foreignKey = null, $limit = null, $page = null, $showFilterBox = null, $showCommentBox = null, $columnClass = '')
     {
         $this->request->allowMethod(['post']);
 
@@ -176,6 +179,7 @@ class ModelHistoryController extends AppController
         $this->FrontendBridge->setBoth('limit', $limit);
         $this->FrontendBridge->setBoth('model', $model);
         $this->FrontendBridge->setBoth('page', $page);
+        $this->FrontendBridge->setBoth('columnClass', $columnClass);
         $this->FrontendBridge->setBoth('foreignKey', $foreignKey);
         $this->FrontendBridge->setBoth('searchableFields', TableRegistry::get($model)->getTranslatedFields());
         $this->FrontendBridge->set('filter', isset($this->request->data['filter']) ? $this->request->data['filter'] : []);

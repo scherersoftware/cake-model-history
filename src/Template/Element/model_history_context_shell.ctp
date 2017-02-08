@@ -1,1 +1,1 @@
-Job: <?= $historyEntry->context['name'] ?>
+<?= __d('model_history', 'context.type.shell') ?>: <?= $historyEntry->context['name'] ?>

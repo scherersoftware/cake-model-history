@@ -9,4 +9,4 @@ $url = Router::url([
 
 ?>
 
-<a href="<?= $url ?>" title="<?= $url ?>">Aufgerufene Seite</a>
+<a href="<?= $url ?>" title="<?= $url ?>"><?= __d('model_history', 'called_site') ?></a>

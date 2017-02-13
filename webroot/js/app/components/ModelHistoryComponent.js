@@ -11,7 +11,7 @@ App.Components.ModelHistoryComponent = Frontend.Component.extend({
 
         $('.model-history-area .load-next-history').off('click').on('click', this.loadNextEntries.bind(this));
         $('.model-history-area .load-prev-history').off('click').on('click', this.loadPrevEntries.bind(this));
-        $('.model-history-area .diff-btn').off('click').on('click', this._onDiff.bind(this));
+        $('.model-history-area .diff-btn').on('click', this._onDiff.bind(this));
 
         $('.model-history-comment form').off('submit').on('submit', this._onAddComment.bind(this));
 
@@ -134,20 +134,19 @@ App.Components.ModelHistoryComponent = Frontend.Component.extend({
         };
 
         this._dialog = new Frontend.Dialog({
-			onClose: function(arg) {
-                console.log(arg);
+            onClose: function(arg) {
             }.bind(this)
-		});
-		this._dialog.blockUi();
-		App.Main.loadJsonAction(url, {
-			parentController: this,
-			dialog: this._dialog,
-			target: this._dialog.getContent(),
-			onComplete: function() {
-				this._dialog.show();
-				this._dialog.unblockUi();
-			}.bind(this)
-		});
+        });
+        this._dialog.blockUi();
+        App.Main.loadJsonAction(url, {
+            parentController: this,
+            dialog: this._dialog,
+            target: this._dialog.getContent(),
+            onComplete: function() {
+                this._dialog.show();
+                this._dialog.unblockUi();
+            }.bind(this)
+        });
         return false;
     }
 });

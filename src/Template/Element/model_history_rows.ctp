@@ -1,3 +1,7 @@
+<?php
+use ModelHistory\Model\Entity\ModelHistory;
+?>
+
 <tbody>
     <?php if ($showPrevEntriesButton): ?>
         <tr>
@@ -31,7 +35,11 @@
                     }
                 ]) ?>
             </td>
-            <td class="actions"><div class="pull-right"><a href="#" data-history-id="<?= $historyEntry->id ?>" class="diff-btn btn btn-xs btn-primary"><?= __d('model_history', 'diff.open_diff') ?></a></div></td>
+            <td class="actions">
+                <?php if ($historyEntry->action !== ModelHistory::ACTION_CREATE): ?>
+                    <div class="pull-right"><a href="#" data-history-id="<?= $historyEntry->id ?>" class="diff-btn btn btn-xs btn-primary"><?= __d('model_history', 'diff.open_diff') ?></a></div>
+                <?php endif; ?>
+            </td>
         </tr>
     <?php endforeach; ?>
     <?php if ($showNextEntriesButton): ?>

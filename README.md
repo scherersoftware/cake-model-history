@@ -126,7 +126,7 @@ $this->addBehavior('ModelHistory.Historizable', [
 - `array`: for sequential (indexed) arrays.
 - `relation`: for 1 to n relations.
 - `association`: for n to m relations.
-- `mass_association`: for n to m relations which shall be viewed in one history entry.
+- `mass_association`: for n to m relations which shall be condensed into one history entry.
 
 The three types `relation`, `association` and `mass_association` are able to link to associated entities. The url defaults to:
 

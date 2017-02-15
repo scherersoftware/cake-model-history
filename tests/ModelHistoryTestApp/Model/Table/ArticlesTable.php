@@ -107,6 +107,16 @@ class ArticlesTable extends Table
                     'type' => 'association',
                     'displayParser' => null,
                     'saveParser' => null
+                ],
+                [
+                    'name' => 'users',
+                    'translation' => __('articles.users'),
+                    'searchable' => true,
+                    'saveable' => false,
+                    'obfuscated' => false,
+                    'type' => 'mass_association',
+                    'displayParser' => null,
+                    'saveParser' => null
                 ]
             ]
         ]);
@@ -116,6 +126,7 @@ class ArticlesTable extends Table
             'targetForeignKey' => 'user_id',
             'joinTable' => 'articles_users'
         ]);
+        $this->belongsToMany('Items');
     }
 
     /**

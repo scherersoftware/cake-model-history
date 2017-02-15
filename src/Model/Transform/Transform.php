@@ -37,7 +37,7 @@ abstract class Transform
     public static function get($type)
     {
         $namespace = '\\ModelHistory\\Model\\Transform\\';
-        $transformClass = $namespace . ucfirst(strtolower($type)) . 'Transform';
+        $transformClass = $namespace . Inflector::camelize($type) . 'Transform';
         if (class_exists($transformClass)) {
             return new $transformClass();
         }

@@ -11,9 +11,9 @@
         <?php else: ?>
             <table class="table">
                 <tr>
-                    <th><?= __d('model_history', 'diff.fieldname') ?></th>
-                    <th><?= __d('model_history', 'diff.old_value') ?></th>
-                    <th><?= __d('model_history', 'diff.new_value') ?></th>
+                    <th width="10%"><?= __d('model_history', 'diff.fieldname') ?></th>
+                    <th width="45%"><?= __d('model_history', 'diff.old_value') ?></th>
+                    <th width="45%"><?= __d('model_history', 'diff.new_value') ?></th>
                 </tr>
                 <?php foreach ($diffOutput as $type => $content): ?>
                     <?php if ($type == 'changed'): ?>

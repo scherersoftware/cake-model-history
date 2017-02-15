@@ -222,6 +222,10 @@
     margin-bottom: 10px;
 }
 
+#diff-output tr td {
+    word-break: break-all;
+}
+
 #diff-output tr td:first-child {
     background: #FFF;
 }

@@ -34,7 +34,7 @@ class MassAssociationTransform extends Transform
     public function display($fieldname, $value, $model = null)
     {
         if (is_array($value)) {
-            return join(', ', $value);
+            return implode(', ', $value);
         }
 
         $tableName = Inflector::camelize(Inflector::pluralize(str_replace('_id', '', $fieldname)));

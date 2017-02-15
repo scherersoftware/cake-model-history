@@ -9,14 +9,14 @@ App.Components.ModelHistoryComponent = Frontend.Component.extend({
             container: 'body'
         });
 
-        $('.model-history-area .load-next-history').off('click').on('click', this.loadNextEntries.bind(this));
-        $('.model-history-area .load-prev-history').off('click').on('click', this.loadPrevEntries.bind(this));
-        $('.model-history-area .diff-btn').on('click', this._onDiff.bind(this));
+        $('.model-history-area .load-next-history').off('click.ModelHistory').on('click.ModelHistory', this.loadNextEntries.bind(this));
+        $('.model-history-area .load-prev-history').off('click.ModelHistory').on('click.ModelHistory', this.loadPrevEntries.bind(this));
+        $('.model-history-area .diff-btn').off('click.ModelHistory').on('click.ModelHistory', this._onDiff.bind(this));
 
-        $('.model-history-comment form').off('submit').on('submit', this._onAddComment.bind(this));
+        $('.model-history-comment form').off('submit.ModelHistory').on('submit.ModelHistory', this._onAddComment.bind(this));
 
-        $('.model-history-filter form').off('submit').on('submit', this._onFilter.bind(this));
-        $('.model-history-filter .reset-btn').off('click').on('click', this._onResetFilter.bind(this));
+        $('.model-history-filter form').off('submit.ModelHistory').on('submit.ModelHistory', this._onFilter.bind(this));
+        $('.model-history-filter .reset-btn').off('click.ModelHistory').on('click.ModelHistory', this._onResetFilter.bind(this));
     },
     loadNextEntries: function(e) {
         var $parentWrapper = $(e.currentTarget).parents('.model-history-area'),

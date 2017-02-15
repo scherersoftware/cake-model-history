@@ -92,9 +92,8 @@ class ModelHistoryTable extends Table
 
         $tableConfig = [];
         if (defined('PHPUNIT_TESTSUITE')) {
-            if ($model != 'ArticlesUsersTable') {
-                $tableConfig = ['className' => 'ModelHistoryTestApp\Model\Table\ArticlesTable'];
-                $model = 'ArticlesTable';
+            if (!in_array($model, ['ArticlesUsersTable', 'ArticlesItemsTable'])) {
+                $tableConfig = ['className' => 'ModelHistoryTestApp\Model\Table\\' . $model];
             }
         }
 

@@ -27,7 +27,9 @@ class ModelHistoryTableTest extends TestCase
         'ModelHistory' => 'plugin.model_history.model_history',
         'Articles' => 'plugin.model_history.articles',
         'Users' => 'plugin.model_history.users',
-        'ArticlesUsers' => 'plugin.model_history.articles_users'
+        'ArticlesUsers' => 'plugin.model_history.articles_users',
+        'Items' => 'plugin.model_history.items',
+        'ArticlesItems' => 'plugin.model_history.articles_items',
     ];
 
     /**
@@ -43,6 +45,7 @@ class ModelHistoryTableTest extends TestCase
         $this->ModelHistory = TableRegistry::get('ModelHistory', ['className' => 'ModelHistory\Model\Table\ModelHistoryTable']);
         $this->Articles = TableRegistry::get('ArticlesTable', ['className' => 'ModelHistoryTestApp\Model\Table\ArticlesTable']);
         $this->ArticlesUsers = TableRegistry::get('ArticlesUsersTable', ['className' => 'ModelHistoryTestApp\Model\Table\ArticlesUsersTable']);
+        $this->Items = TableRegistry::get('ItemsTable', ['className' => 'ModelHistoryTestApp\Model\Table\ItemsTable']);
 
 
         if ($this->Articles->hasBehavior('Historizable')) {
@@ -63,6 +66,7 @@ class ModelHistoryTableTest extends TestCase
         unset($this->ModelHistory);
         unset($this->Articles);
         unset($this->ArticlesUsers);
+        unset($this->Items);
         parent::tearDown();
     }
 
@@ -136,6 +140,18 @@ class ModelHistoryTableTest extends TestCase
                     'saveParser' => null
                 ],
                 [
+                    'name' => 'users',
+                    'translation' => function () {
+                        return __('articles.mass_assoc_field');
+                    },
+                    'searchable' => false,
+                    'saveable' => true,
+                    'obfuscated' => false,
+                    'type' => 'mass_association',
+                    'displayParser' => null,
+                    'saveParser' => null
+                ],
+                [
                     'name' => 'int_field',
                     'translation' => function () {
                         return __('articles.int_field');
@@ -158,7 +174,7 @@ class ModelHistoryTableTest extends TestCase
                     'type' => 'association',
                     'displayParser' => null,
                     'saveParser' => null
-                ]
+                ],
             ]
         ];
     }
@@ -641,5 +657,49 @@ class ModelHistoryTableTest extends TestCase
                 'action' => ModelHistory::ACTION_CREATE
             ])->count();
         $this->assertEquals($modelHistoriesCount, 1);
+    }
+
+    /**
+     * Test create, update, delete
+     *
+     * @return void
+     */
+    public function testSaveMassAssociation()
+    {
+        $itemData = [
+            'name' => 'foobar',
+            'articles' => [
+                ['id' => '7997df22-ed8e-4703-b971-d9514179904b'],
+                ['id' => 'd744e525-2957-4b28-a0ac-d5ffecb74485'],
+                ['id' => '80cd952f-f410-4e25-9323-11922e90ee0b']
+            ]
+        ];
+        $item = $this->Items->newEntity();
+        $item = $this->Items->patchEntity($item, $itemData, [
+            'associated' => [
+                'Articles'
+            ]
+        ]);
+        $this->Items->save($item, [
+            'associated' => [
+                'Articles'
+            ]
+        ]);
+        $modelHistoriesCount = $this->ModelHistory->find()
+            ->where([
+                'model' => 'Items',
+                'foreign_key' => $item->id,
+                'action' => ModelHistory::ACTION_CREATE
+            ])->count();
+
+        $this->assertEquals($modelHistoriesCount, 1);
+
+        $entry = $this->ModelHistory->find()->first();
+
+        $this->assertInstanceOf('ModelHistory\Model\Entity\ModelHistory', $entry);
+        $this->assertTrue(is_array($entry->data));
+        $this->assertEquals($entry->foreign_key, $item->id);
+        $this->assertArrayHasKey('articles', $entry->data);
+        $this->assertEquals(count($entry->data['articles']), 3);
     }
 }

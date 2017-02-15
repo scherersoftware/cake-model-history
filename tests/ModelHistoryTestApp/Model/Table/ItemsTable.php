@@ -5,12 +5,12 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use ModelHistoryTestApp\Model\Entity\User;
+use ModelHistoryTestApp\Model\Entity\Item;
 
 /**
- * Users Model
+ * Items Model
  */
-class UsersTable extends Table
+class ItemsTable extends Table
 {
 
     /**
@@ -21,66 +21,51 @@ class UsersTable extends Table
      */
     public function initialize(array $config)
     {
-        $this->table('users');
-        $this->displayField('firstname');
+        $this->table('items');
+        $this->displayField('name');
         $this->primaryKey('id');
         $this->addBehavior('Timestamp');
+
         $this->addBehavior('ModelHistory.Historizable', [
             'userIdCallback' => null,
             'fields' => [
                 [
                     'name' => 'id',
-                    'translation' => __('users.id'),
-                    'searchable' => true,
-                    'saveable' => true,
-                    'obfuscated' => false,
-                    'type' => 'string',
-                    'displayParser' => null,
-                    'saveParser' => null
-                ],
-                [
-                    'name' => 'firstname',
-                    'translation' => __('users.firstname'),
-                    'searchable' => true,
-                    'saveable' => true,
-                    'obfuscated' => false,
-                    'type' => 'string',
-                    'displayParser' => null,
-                    'saveParser' => null
-                ],
-                [
-                    'name' => 'lastname',
-                    'translation' => __('users.lastname'),
-                    'searchable' => true,
-                    'saveable' => true,
-                    'obfuscated' => false,
-                    'type' => 'string',
-                    'displayParser' => null,
-                    'saveParser' => null
-                ],
-                [
-                    'name' => 'article_id',
-                    'translation' => __('users.article_id'),
+                    'translation' => __('items.id'),
                     'searchable' => true,
                     'saveable' => false,
                     'obfuscated' => false,
-                    'type' => 'association'
+                    'type' => 'string',
+                    'displayParser' => null,
+                    'saveParser' => null
                 ],
                 [
-                    'name' => 'article_id',
-                    'translation' => __('users.article_id'),
+                    'name' => 'name',
+                    'translation' => __('items.name'),
                     'searchable' => true,
-                    'saveable' => false,
+                    'saveable' => true,
                     'obfuscated' => false,
-                    'type' => 'association'
+                    'type' => 'string',
+                    'displayParser' => null,
+                    'saveParser' => null
+                ],
+                [
+                    'name' => 'articles',
+                    'translation' => __('items.articles'),
+                    'searchable' => true,
+                    'saveable' => true,
+                    'obfuscated' => false,
+                    'type' => 'mass_association',
+                    'displayParser' => null,
+                    'saveParser' => null
                 ]
             ]
         ]);
 
         $this->belongsToMany('Articles', [
-            'foreignKey' => 'user_id',
-            'targetForeignKey' => 'articles_id',
-            'joinTable' => 'articles_users'
+            'foreignKey' => 'article_id',
+            'targetForeignKey' => 'item_id',
+            'joinTable' => 'articles_items'
         ]);
     }
 
@@ -95,8 +80,7 @@ class UsersTable extends Table
         $validator
             ->add('id', 'valid', ['rule' => 'uuid'])
             ->allowEmpty('id', 'create')
-            ->allowEmpty('firstname')
-            ->allowEmpty('lastname');
+            ->allowEmpty('name');
 
         return $validator;
     }

@@ -100,7 +100,7 @@ $this->addBehavior('ModelHistory.Historizable', [
             // The savable indicator is used to decide wether the field is tracked
             'saveable' => true,
             'obfuscated' => false,
-            // Allowed: string, bool, number, relation, date, hash, array, association.
+            // Allowed: string, bool, number, relation, date, hash, array, association, mass_association.
             'type' => 'string',
             // Optional display parser to modify the value before displaying it,
             // if no displayParser is found, the \ModelHistory\Model\Transform\{$type}Transformer is used.
@@ -126,8 +126,9 @@ $this->addBehavior('ModelHistory.Historizable', [
 - `array`: for sequential (indexed) arrays.
 - `relation`: for 1 to n relations.
 - `association`: for n to m relations.
+- `mass_association`: for n to m relations which shall be condensed into one history entry.
 
-The two types `relation` and `association` are able to link to associated entities. The url defaults to:
+The three types `relation`, `association` and `mass_association` are able to link to associated entities. The url defaults to:
 
 ```
 'url' => [

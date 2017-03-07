@@ -44,7 +44,6 @@ class ModelHistoryTableTest extends TestCase
         $this->Articles = TableRegistry::get('ArticlesTable', ['className' => 'ModelHistoryTestApp\Model\Table\ArticlesTable']);
         $this->ArticlesUsers = TableRegistry::get('ArticlesUsersTable', ['className' => 'ModelHistoryTestApp\Model\Table\ArticlesUsersTable']);
 
-
         if ($this->Articles->hasBehavior('Historizable')) {
             $this->Articles->removeBehavior('Historizable');
         }
@@ -483,7 +482,6 @@ class ModelHistoryTableTest extends TestCase
         $this->Articles->save($article);
 
         $modelHistory = $this->ModelHistory->getModelHistory('Articles', $article->id, 10, 1);
-
 
         $modelHistory = $this->ModelHistory->getModelHistoryCount('Articles', $article->id);
         $this->assertEquals(1, count($modelHistory));

@@ -165,7 +165,6 @@ class ModelHistoryTable extends Table
             $options['data'] = $newData;
         }
 
-
         $context = null;
         if (method_exists($entity, 'getHistoryContext')) {
             $context = $entity->getHistoryContext();
@@ -518,7 +517,6 @@ class ModelHistoryTable extends Table
                 continue 2;
             }
         }
-
 
         // Translate all the fieldnames
         foreach ($diffOutput as $type => $dataArr) {

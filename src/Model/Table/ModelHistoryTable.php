@@ -136,6 +136,9 @@ class ModelHistoryTable extends Table
                         }
                     }
                     $saveFields[$fieldName] = $options['data'][$fieldName];
+                } elseif (is_array($options['dirtyFields']) && in_array($fieldName, $options['dirtyFields'])) {
+                    // if saveable field was changed to null
+                    $saveFields[$fieldName] = null;
                 }
             }
         }
@@ -154,6 +157,9 @@ class ModelHistoryTable extends Table
             foreach ($options['dirtyFields'] as $field) {
                 if (isset($options['data'][$field])) {
                     $newData[$field] = $options['data'][$field];
+                } elseif (array_key_exists($field, $options['data']) && is_null($options['data'][$field])) {
+                    // if saveable field was changed to null
+                    $newData[$field] = null;
                 }
             }
             $options['data'] = $newData;
@@ -199,8 +205,6 @@ class ModelHistoryTable extends Table
             ]);
             $this->save($entry);
         }
-
-        return;
     }
 
     /**

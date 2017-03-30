@@ -8,7 +8,8 @@
     },
     "require": {
         "php": ">=5.4",
-        "codekanzlei/cake-cktools": "~1.2.8"
+        "codekanzlei/cake-cktools": "~1.2.8",
+        "codekanzlei/cake-frontend-bridge": "1.2.*"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*",

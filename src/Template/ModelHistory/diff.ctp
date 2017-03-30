@@ -1,11 +1,4 @@
-<div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-label="<?= __d('model_history', 'diff.close_button') ?>"><span aria-hidden="true">&times;</span></button>
-    <h4 class="modal-title">
-        <?= __d('model_history', 'diff.title') ?>
-    </h4>
-</div>
-<div class="modal-body">
-    <div id="diff-output">
+<div id="diff-output">
         <?php if (empty($diffOutput)): ?>
             <div class="alert alert-info"><?=  __d('model_history', 'no_diff'); ?></div>
         <?php else: ?>
@@ -48,6 +41,5 @@
         <?php endif; ?>
     </div>
 </div>
-<div class="modal-footer">
-    <button type="button" class="btn btn-primary" data-dismiss="modal"><?= __d('model_history', 'diff.close_button') ?></button>
-</div>
+<hr />
+<button type="button" class="btn btn-primary" data-dismiss="modal"><?= __d('model_history', 'diff.close_button') ?></button>

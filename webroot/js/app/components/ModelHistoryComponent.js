@@ -133,20 +133,7 @@ App.Components.ModelHistoryComponent = Frontend.Component.extend({
             pass: [historyId]
         };
 
-        this._dialog = new Frontend.Dialog({
-            onClose: function(arg) {
-            }.bind(this)
-        });
-        this._dialog.blockUi();
-        App.Main.loadJsonAction(url, {
-            parentController: this,
-            dialog: this._dialog,
-            target: this._dialog.getContent(),
-            onComplete: function() {
-                this._dialog.show();
-                this._dialog.unblockUi();
-            }.bind(this)
-        });
+        App.Main.Dialog.loadDialog(url);
         return false;
     }
 });

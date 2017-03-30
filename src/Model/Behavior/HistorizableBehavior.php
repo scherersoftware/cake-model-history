@@ -180,7 +180,6 @@ class HistorizableBehavior extends Behavior
         // reads the url defined for the given behavior (empty array if not defined)
         $fieldUrl = $this->getUrl();
 
-
         if (isset($fieldConfig['url'])) {
             // if url defined in fieldconfig. Overwrites default and behavior url config.
             $fieldUrl = $fieldConfig['url'];

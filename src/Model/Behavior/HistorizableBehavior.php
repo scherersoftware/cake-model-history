@@ -31,7 +31,8 @@ class HistorizableBehavior extends Behavior
             'lastname' => 'Users.lastname',
             'id' => 'Users.id'
         ],
-        'fields' => []
+        'fields' => [],
+        'associations' => []
     ];
 
     /**
@@ -316,5 +317,15 @@ class HistorizableBehavior extends Behavior
 
             return $formatted;
         });
+    }
+
+    /**
+     * Retrieve associations to keep within this entry.
+     *
+     * @return array
+     */
+    public function getAssociations()
+    {
+        return $this->config('associations');
     }
 }

@@ -171,6 +171,35 @@ class ModelHistoryTable extends Table
             $contextType = $entity->getHistoryContextType();
         }
 
+        $associations = TableRegistry::get($model, $tableConfig)->getAssociations();
+        $foundAssociations = [];
+        if (!empty($associations)) {
+            foreach ($associations as $assoc) {
+                if ($entity === null) {
+                    continue;
+                }
+                if (stripos($assoc, '.') !== false) {
+                    $object = $this->_recursivelyFindObject($assoc, $entity, $entity);
+                } else {
+                    $object = $entity->{$assoc};
+                }
+                if ($object !== null) {
+                    $foundAssociations[$object->source()] = [
+                        'foreign_key' => $object->id,
+                        'source_id' => isset($object->source_entity_id) ? $object->source_entity_id : $entity->id
+                    ];
+                }
+            }
+            $mergeAssociations = [
+                'associations' => $foundAssociations
+            ];
+            if (is_array($context)) {
+                $context = Hash::merge($context, $mergeAssociations);
+            } else {
+                $context = $mergeAssociations;
+            }
+        }
+
         if (!empty($entries)) {
             foreach ($entries as $entry) {
                 $entry = $this->patchEntity($entry, [
@@ -199,6 +228,33 @@ class ModelHistoryTable extends Table
         }
 
         return $entry;
+    }
+
+    /**
+     * Recursively find object based on given dot-seperated string representing object properties.
+     *
+     * @param  string           $path    String path
+     * @param  EntityInterface  $object  Object to use
+     * @return object
+     */
+    protected function _recursivelyFindObject(string $path, EntityInterface $object, EntityInterface $sourceEntity): ?EntityInterface
+    {
+        if (stripos($path, '.') !== false) {
+            $split = explode('.', $path);
+            $path = array_shift($split);
+
+            if (count($split) > 0 && $object->{$path} !== null) {
+                return $this->_recursivelyFindObject(implode('.', $split), $object->{$path}, $sourceEntity);
+            }
+        } else {
+            $object = $object->{$path};
+            if (is_object($object)) {
+                $object->source_entity_id = $sourceEntity->id;
+            }
+            return $object;
+        }
+
+        return null;
     }
 
     /**

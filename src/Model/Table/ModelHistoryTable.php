@@ -184,10 +184,7 @@ class ModelHistoryTable extends Table
                     $object = $entity->{$assoc};
                 }
                 if ($object !== null) {
-                    $foundAssociations[$object->source()] = [
-                        'foreign_key' => $object->id,
-                        'source_id' => isset($object->source_entity_id) ? $object->source_entity_id : $entity->id
-                    ];
+                    $foundAssociations[$object->source()] = $object->id;
                 }
             }
             $mergeAssociations = [
@@ -399,19 +396,24 @@ class ModelHistoryTable extends Table
     /**
      * get Model History
      *
-     * @param string $model         model name
-     * @param string $foreignKey    foreign key
-     * @param int    $itemsToShow   Amount of items to be shown
-     * @param int    $page          Current position
-     * @param array  $conditions    additional conditions for find
+     * @param string  $model        model name
+     * @param string  $foreignKey   foreign key
+     * @param int     $itemsToShow  Amount of items to be shown
+     * @param int     $page         Current position
+     * @param array   $conditions   additional conditions for find
+     * @param array   $options      Additional options
      * @return array
      */
-    public function getModelHistory($model, $foreignKey, $itemsToShow, $page, array $conditions = [])
+    public function getModelHistory($model, $foreignKey, $itemsToShow, $page, array $conditions = [], array $options = [])
     {
         $conditions = Hash::merge([
             'model' => $model,
             'foreign_key' => $foreignKey
         ], $conditions);
+
+        $options = Hash::merge([
+            'includeAssociated' => false
+        ], $options);
 
         $history = $this->find()
             ->where($conditions)
@@ -421,7 +423,46 @@ class ModelHistoryTable extends Table
             ->page($page)
             ->toArray();
 
+        if ($options['includeAssociated']) {
+            $additional = [];
+            foreach ($history as $entry) {
+                if (!empty($entry->context) && !empty($entry->context['associations'])) {
+                    foreach ($entry->context['associations'] as $associatedModel => $associatedFk) {
+                        $associated = $this->find()
+                            ->where([
+                                'model' => $associatedModel,
+                                'foreign_key' => $associatedFk
+                            ])
+                            ->contain(['Users'])
+                            ->toArray();
+
+                        foreach ($associated as $assocEntry) {
+                            $additional[$assocEntry->id] = $assocEntry;
+                        }
+                    }
+                }
+            }
+
+            if (!empty($additional)) {
+                foreach ($additional as $additionalEntry) {
+                    $history[] = $additionalEntry;
+                }
+                usort($history, [$this, 'sortEntries']);
+            }
+        }
+
         return $this->_transformDataFields($history, $model);
+    }
+
+    /**
+     * Sorts entries based on date
+     * @param  EntityInterface  $first   First entity
+     * @param  EntityInterface  $second  Second Entity
+     * @return bool
+     */
+    public function sortEntries(EntityInterface $first, EntityInterface $second): bool
+    {
+        return $first->created < $second->created;
     }
 
     /**

@@ -35,7 +35,7 @@ class ModelHistoryHelper extends Helper
         $page = 1;
         $limit = TableRegistry::get($entity->source())->getEntriesLimit();
 
-        $modelHistory = TableRegistry::get('ModelHistory.ModelHistory')->getModelHistory($entity->source(), $entity->id, $limit, $page);
+        $modelHistory = TableRegistry::get('ModelHistory.ModelHistory')->getModelHistory($entity->source(), $entity->id, $limit, $page, [], $options);
 
         $entries = TableRegistry::get('ModelHistory.ModelHistory')->getModelHistoryCount($entity->source(), $entity->id);
         $showNextEntriesButton = $entries > 0 && $limit * $page < $entries;

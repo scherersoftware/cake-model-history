@@ -179,8 +179,10 @@ class ModelHistoryTableTest extends TestCase
         $article->hiddenProperties(['status']);
         $this->Articles->save($article);
 
-        $modelHistoryCount = $this->ModelHistory->getModelHistoryCount('Articles', $article->id);
+        $modelHistoryCount = $this->ModelHistory->getModelHistoryCount('Articles', $article->id, [], ['includeAssociated' => true]);
+        $this->assertEquals($modelHistoryCount, 0);
 
+        $modelHistoryCount = $this->ModelHistory->getModelHistoryCount('Articles', $article->id);
         $this->assertEquals($modelHistoryCount, 1);
 
         $entry = $this->ModelHistory->find()->first();

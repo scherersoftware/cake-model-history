@@ -157,7 +157,7 @@ class ModelHistoryTableTest extends TestCase
                     },
                     'searchable' => false,
                     'saveable' => false,
-                    'obfuscated' => false,
+                    'obfuscated' => true,
                     'type' => 'string',
                     'displayParser' => null,
                     'saveParser' => null
@@ -193,13 +193,9 @@ class ModelHistoryTableTest extends TestCase
         $article->hiddenProperties(['status']);
         $this->Articles->save($article);
 
-        $modelHistoriesCount = $this->ModelHistory->find()
-            ->where([
-                'model' => 'Articles',
-                'foreign_key' => $article->id,
-                'action' => ModelHistory::ACTION_CREATE
-            ])->count();
-        $this->assertEquals($modelHistoriesCount, 1);
+        $modelHistoryCount = $this->ModelHistory->getModelHistoryCount('Articles', $article->id);
+
+        $this->assertEquals($modelHistoryCount, 1);
 
         $entry = $this->ModelHistory->find()->first();
 
@@ -519,10 +515,10 @@ class ModelHistoryTableTest extends TestCase
         ]);
         $this->Articles->save($article);
 
-        $modelHistory = $this->ModelHistory->getModelHistory('Articles', $article->id, 10, 1);
+        $modelHistory = $this->ModelHistory->getModelHistory('Articles', $article->id, 10, 1, [], ['includeAssociated' => true]);
+        $modelHistoryCount = $this->ModelHistory->getModelHistoryCount('Articles', $article->id);
 
-        $modelHistory = $this->ModelHistory->getModelHistoryCount('Articles', $article->id);
-        $this->assertEquals(1, count($modelHistory));
+        $this->assertEquals(1, $modelHistoryCount);
     }
 
     /**

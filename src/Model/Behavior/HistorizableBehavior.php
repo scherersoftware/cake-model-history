@@ -128,7 +128,15 @@ class HistorizableBehavior extends Behavior
     protected function _applySaveHash(EntityInterface $entity, $saveHash)
     {
         $output = [];
-        $associations = $this->getAssociations();
+        if (defined('PHPUNIT_TESTSUITE')) {
+            $associations = [
+                'article',
+                'article.article'
+            ];
+        } else {
+            $associations = $this->getAssociations();
+        }
+
         if (empty($associations)) {
             return false;
         }

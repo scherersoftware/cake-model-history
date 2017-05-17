@@ -118,6 +118,9 @@ class ArticlesTable extends Table
                     'displayParser' => null,
                     'saveParser' => null
                 ]
+            ],
+            'associated' => [
+                'article.article'
             ]
         ]);
 

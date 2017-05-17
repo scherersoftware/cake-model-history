@@ -216,8 +216,8 @@ class ModelHistoryTable extends Table
     {
         $tableConfig = [];
         if (defined('PHPUNIT_TESTSUITE')) {
-            $tableConfig = ['className' => 'ModelHistoryTestApp\Model\Table\ArticlesTable'];
-            $model = 'ArticlesTable';
+            $tableConfig = ['className' => 'ModelHistoryTestApp\Model\Table\\' . ucfirst($model) . 'Table'];
+            $model = ucfirst($model) . 'Table';
         }
         $fieldConfig = TableRegistry::get($model, $tableConfig)->getFields();
         foreach ($history as $index => $entity) {

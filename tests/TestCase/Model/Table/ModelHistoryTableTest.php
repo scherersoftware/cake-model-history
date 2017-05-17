@@ -82,9 +82,7 @@ class ModelHistoryTableTest extends TestCase
                     'searchable' => true,
                     'saveable' => true,
                     'obfuscated' => false,
-                    'type' => 'string',
-                    'displayParser' => null,
-                    'saveParser' => null
+                    'type' => 'string'
                 ],
                 [
                     'name' => 'title',
@@ -110,9 +108,7 @@ class ModelHistoryTableTest extends TestCase
                     'searchable' => true,
                     'saveable' => true,
                     'obfuscated' => false,
-                    'type' => 'string',
-                    'displayParser' => null,
-                    'saveParser' => null
+                    'type' => 'string'
                 ],
                 [
                     'name' => 'content',
@@ -122,9 +118,7 @@ class ModelHistoryTableTest extends TestCase
                     'searchable' => true,
                     'saveable' => true,
                     'obfuscated' => false,
-                    'type' => 'string',
-                    'displayParser' => null,
-                    'saveParser' => null
+                    'type' => 'string'
                 ],
                 [
                     'name' => 'json_field',
@@ -134,9 +128,7 @@ class ModelHistoryTableTest extends TestCase
                     'searchable' => false,
                     'saveable' => false,
                     'obfuscated' => false,
-                    'type' => 'string',
-                    'displayParser' => null,
-                    'saveParser' => null
+                    'type' => 'string'
                 ],
                 [
                     'name' => 'users',
@@ -146,9 +138,7 @@ class ModelHistoryTableTest extends TestCase
                     'searchable' => false,
                     'saveable' => true,
                     'obfuscated' => false,
-                    'type' => 'mass_association',
-                    'displayParser' => null,
-                    'saveParser' => null
+                    'type' => 'mass_association'
                 ],
                 [
                     'name' => 'int_field',
@@ -158,9 +148,7 @@ class ModelHistoryTableTest extends TestCase
                     'searchable' => false,
                     'saveable' => false,
                     'obfuscated' => true,
-                    'type' => 'string',
-                    'displayParser' => null,
-                    'saveParser' => null
+                    'type' => 'string'
                 ],
                 [
                     'name' => 'user_id',
@@ -170,9 +158,7 @@ class ModelHistoryTableTest extends TestCase
                     'searchable' => false,
                     'saveable' => false,
                     'obfuscated' => false,
-                    'type' => 'association',
-                    'displayParser' => null,
-                    'saveParser' => null
+                    'type' => 'association'
                 ],
             ]
         ];
@@ -464,9 +450,7 @@ class ModelHistoryTableTest extends TestCase
                     'searchable' => true,
                     'saveable' => true,
                     'obfuscated' => false,
-                    'type' => 'string',
-                    'displayParser' => null,
-                    'saveParser' => null
+                    'type' => 'string'
                 ],
                 [
                     'name' => 'title',
@@ -479,8 +463,7 @@ class ModelHistoryTableTest extends TestCase
                     'type' => 'string',
                     'displayParser' => function ($fieldname, $value, $entity) {
                         return $value;
-                    },
-                    'saveParser' => null
+                    }
                 ],
                 [
                     'name' => 'status',
@@ -490,9 +473,7 @@ class ModelHistoryTableTest extends TestCase
                     'searchable' => false,
                     'saveable' => true,
                     'obfuscated' => false,
-                    'type' => 'string',
-                    'displayParser' => null,
-                    'saveParser' => null
+                    'type' => 'string'
                 ],
                 [
                     'name' => 'content',
@@ -502,9 +483,7 @@ class ModelHistoryTableTest extends TestCase
                     'searchable' => true,
                     'saveable' => true,
                     'obfuscated' => false,
-                    'type' => 'string',
-                    'displayParser' => null,
-                    'saveParser' => null
+                    'type' => 'string'
                 ],
             ]
         ]);
@@ -658,7 +637,7 @@ class ModelHistoryTableTest extends TestCase
      *
      * @return void
      */
-    public function testSaveMassAssociation()
+    public function testMassAssociation()
     {
         $itemData = [
             'name' => 'foobar',
@@ -695,5 +674,11 @@ class ModelHistoryTableTest extends TestCase
         $this->assertEquals($entry->foreign_key, $item->id);
         $this->assertArrayHasKey('articles', $entry->data);
         $this->assertEquals(count($entry->data['articles']), 3);
+
+        $modelHistory = $this->ModelHistory->getModelHistory('Items', $item->id, 10, 1);
+        $this->assertEquals(1, count($modelHistory));
+
+        $data = explode(',', $modelHistory[0]->data['articles']);
+        $this->assertEquals(3, count($data));
     }
 }

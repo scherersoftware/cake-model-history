@@ -78,7 +78,8 @@ $this->addBehavior('ModelHistory.Historizable', [
     ],
     'userIdCallback' => null,
     'entriesToShow' => 10,
-    'fields' => []
+    'fields' => [],
+    'associations' => []
 ]);
 ```
 
@@ -138,7 +139,7 @@ The three types `relation`, `association` and `mass_association` are able to lin
 ]
 ```
 
-The default url can be overwriten: `url` in the behavior-array overwrites default and the defined url in the field-config has the highest priority.
+The default url can be overwritten: `url` in the behavior-array overwrites default and the defined url in the field-config has the highest priority.
 
 ```
 $this->addBehavior('ModelHistory.Historizable', [
@@ -161,6 +162,21 @@ $this->addBehavior('ModelHistory.Historizable', [
                 'action' => 'show'
             ]
         ],
+    ]
+]);
+```
+
+If saved association's entries shall be viewed within the source entities entries, you can specify the `associations` key. It has to match the object property keys given in the
+source entity. Furthermore the model history area has to get the option `includeAssociated` with value `true`.
+
+```
+$this->addBehavior('ModelHistory.Historizable', [
+    'fields' => [
+        ...
+    ],
+    'associations' => [
+        'contact',
+        'contact.address'
     ]
 ]);
 ```
@@ -219,6 +235,10 @@ Use `ModelHistoryHelper.php` to create neat view elements containing a record's 
 - `showFilterBox` (false)
 
 	Additionally renders a filter box which can be used to search for entries.
+
+- `includeAssociated` (false)
+
+    Additionally include all associations saved.
 
 For the modelHistoryArea to fetch its data, add the 'ModelHistory' component to the baseComponents property in your Frontend.AppController under `/webroot/js/app/app_controller.js`.
 If you haven't set up the FrontendBridge yet, follow [these steps](https://github.com/scherersoftware/cake-frontend-bridge). There you will also find a template for this file.

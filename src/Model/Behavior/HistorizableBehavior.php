@@ -152,7 +152,7 @@ class HistorizableBehavior extends Behavior
      * @param  EntityInterface  $object  Object to use
      * @return null|object
      */
-    protected function _recursivelyExtractObject(string $path, EntityInterface $object)
+    protected function _recursivelyExtractObject($path, EntityInterface $object)
     {
         if (stripos($path, '.') !== false) {
             $split = explode('.', $path);

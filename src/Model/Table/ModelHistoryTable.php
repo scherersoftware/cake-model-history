@@ -392,17 +392,6 @@ class ModelHistoryTable extends Table
     }
 
     /**
-     * Sorts entries based on date
-     * @param  EntityInterface  $first   First entity
-     * @param  EntityInterface  $second  Second Entity
-     * @return bool
-     */
-    public function sortEntries(EntityInterface $first, EntityInterface $second)
-    {
-        return $first->created < $second->created;
-    }
-
-    /**
      * get Model History entries count
      *
      * @param string $model         model name

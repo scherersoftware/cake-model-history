@@ -5,6 +5,7 @@ use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
 use ModelHistory\Model\Behavior\HistorizableBehavior;
+use ReflectionClass;
 
 /**
  * ModelHistory\Model\Behavior\HistorizableBehavior Test Case
@@ -86,5 +87,25 @@ class HistorizableBehaviorTest extends TestCase
             'lastname' => 'lastname',
             'id' => 'id',
         ], $userNameFieldsWithoutModel);
+    }
+
+    public function testRecursivelyExtractObjects()
+    {
+
+        $entity1 = $this->Articles->newEntity();
+        $entity2 = $this->Articles->newEntity();
+        $entity3 = $this->Articles->newEntity();
+
+        $entity2->article = $entity3;
+        $entity1->article = $entity2;
+
+        $class = new ReflectionClass('ModelHistory\Model\Behavior\HistorizableBehavior');
+        $method = $class->getMethod('_recursivelyExtractObject');
+        $method->setAccessible(true);
+
+        $behavior = new \ModelHistory\Model\Behavior\HistorizableBehavior($this->Articles);
+
+        $res = $method->invokeArgs($behavior, ['article.article', $entity1]);
+        $this->assertEquals($entity3, $res);
     }
 }

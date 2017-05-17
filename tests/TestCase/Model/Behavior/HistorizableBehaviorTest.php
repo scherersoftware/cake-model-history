@@ -91,7 +91,6 @@ class HistorizableBehaviorTest extends TestCase
 
     public function testRecursivelyExtractObjects()
     {
-
         $entity1 = $this->Articles->newEntity();
         $entity2 = $this->Articles->newEntity();
         $entity3 = $this->Articles->newEntity();

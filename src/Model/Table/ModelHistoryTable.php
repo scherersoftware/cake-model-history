@@ -361,6 +361,9 @@ class ModelHistoryTable extends Table
             'model' => $model,
             'foreign_key' => $foreignKey
         ], $conditions);
+        $options = Hash::merge([
+            'includeAssociated' => false
+        ], $options);
 
         if ($options['includeAssociated']) {
             $hashes = $this->find()
@@ -394,7 +397,7 @@ class ModelHistoryTable extends Table
      * @param  EntityInterface  $second  Second Entity
      * @return bool
      */
-    public function sortEntries(EntityInterface $first, EntityInterface $second): bool
+    public function sortEntries(EntityInterface $first, EntityInterface $second)
     {
         return $first->created < $second->created;
     }
@@ -413,6 +416,9 @@ class ModelHistoryTable extends Table
             'model' => $model,
             'foreign_key' => $foreignKey
         ], $conditions);
+        $options = Hash::merge([
+            'includeAssociated' => false
+        ], $options);
 
         if ($options['includeAssociated']) {
             $hashes = $this->find()

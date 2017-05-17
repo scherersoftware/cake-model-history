@@ -19,6 +19,9 @@ use ModelHistory\Model\Entity\ModelHistory;
                 <?php if (!empty($historyEntry->context)): ?>
                      | <?= $this->element('ModelHistory.model_history_context_' . $historyEntry->context['type'], compact('historyEntry')) ?>
                 <?php endif; ?>
+                <?php if ($historyEntry->model != $model): ?>
+                     | <?= $historyEntry->model ?>
+                <?php endif; ?>
             </td>
             <td class="fields">
                 <?= $this->ModelHistory->getLocalizedFieldnames($historyEntry) ?> |

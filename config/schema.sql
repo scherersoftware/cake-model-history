@@ -8,6 +8,7 @@ CREATE TABLE `model_history` (
   `context` mediumblob COMMENT 'JSON blob, schema per action',
   `context_type` varchar(255) DEFAULT NULL,
   `context_slug` varchar(255) DEFAULT NULL,
+  `save_hash` varchar(40) DEFAULT NULL,
   `revision` int(8) NOT NULL,
   `created` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),

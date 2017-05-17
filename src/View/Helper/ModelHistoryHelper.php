@@ -29,7 +29,8 @@ class ModelHistoryHelper extends Helper
         $options = Hash::merge([
             'showCommentBox' => false,
             'showFilterBox' => false,
-            'columnClass' => 'col-md-12'
+            'columnClass' => 'col-md-12',
+            'includeAssociated' => false
         ], $options);
 
         $page = 1;
@@ -37,7 +38,7 @@ class ModelHistoryHelper extends Helper
 
         $modelHistory = TableRegistry::get('ModelHistory.ModelHistory')->getModelHistory($entity->source(), $entity->id, $limit, $page, [], $options);
 
-        $entries = TableRegistry::get('ModelHistory.ModelHistory')->getModelHistoryCount($entity->source(), $entity->id);
+        $entries = TableRegistry::get('ModelHistory.ModelHistory')->getModelHistoryCount($entity->source(), $entity->id, [], $options);
         $showNextEntriesButton = $entries > 0 && $limit * $page < $entries;
         $showPrevEntriesButton = $page > 1;
 
@@ -58,6 +59,7 @@ class ModelHistoryHelper extends Helper
             'showCommentBox' => $options['showCommentBox'],
             'showFilterBox' => $options['showFilterBox'],
             'columnClass' => $options['columnClass'],
+            'includeAssociated' => $options['includeAssociated'],
             'contexts' => $contexts
         ]);
     }

@@ -151,6 +151,9 @@ class ModelHistoryTable extends Table
         if ($action === ModelHistory::ACTION_UPDATE && $options['dirtyFields']) {
             $newData = [];
             foreach ($options['dirtyFields'] as $field) {
+                if (is_array($field)) {
+                    continue;
+                }
                 if (isset($options['data'][$field])) {
                     $newData[$field] = $options['data'][$field];
                 }
@@ -169,32 +172,6 @@ class ModelHistoryTable extends Table
         $contextType = null;
         if (method_exists($entity, 'getHistoryContextType')) {
             $contextType = $entity->getHistoryContextType();
-        }
-
-        $associations = TableRegistry::get($model, $tableConfig)->getAssociations();
-        $foundAssociations = [];
-        if (!empty($associations)) {
-            foreach ($associations as $assoc) {
-                if ($entity === null) {
-                    continue;
-                }
-                if (stripos($assoc, '.') !== false) {
-                    $object = $this->_recursivelyFindObject($assoc, $entity, $entity);
-                } else {
-                    $object = $entity->{$assoc};
-                }
-                if ($object !== null) {
-                    $foundAssociations[$object->source()] = $object->id;
-                }
-            }
-            $mergeAssociations = [
-                'associations' => $foundAssociations
-            ];
-            if (is_array($context)) {
-                $context = Hash::merge($context, $mergeAssociations);
-            } else {
-                $context = $mergeAssociations;
-            }
         }
 
         if (!empty($entries)) {
@@ -218,6 +195,7 @@ class ModelHistoryTable extends Table
                 'context_type' => $contextType,
                 'context' => $context,
                 'context_slug' => $contextSlug,
+                'save_hash' => $entity->save_hash,
                 'user_id' => $userId,
                 'revision' => $this->getNextRevisionNumberForEntity($entity)
             ]);
@@ -225,33 +203,6 @@ class ModelHistoryTable extends Table
         }
 
         return $entry;
-    }
-
-    /**
-     * Recursively find object based on given dot-seperated string representing object properties.
-     *
-     * @param  string           $path    String path
-     * @param  EntityInterface  $object  Object to use
-     * @return object
-     */
-    protected function _recursivelyFindObject(string $path, EntityInterface $object, EntityInterface $sourceEntity): ?EntityInterface
-    {
-        if (stripos($path, '.') !== false) {
-            $split = explode('.', $path);
-            $path = array_shift($split);
-
-            if (count($split) > 0 && $object->{$path} !== null) {
-                return $this->_recursivelyFindObject(implode('.', $split), $object->{$path}, $sourceEntity);
-            }
-        } else {
-            $object = $object->{$path};
-            if (is_object($object)) {
-                $object->source_entity_id = $sourceEntity->id;
-            }
-            return $object;
-        }
-
-        return null;
     }
 
     /**
@@ -411,45 +362,28 @@ class ModelHistoryTable extends Table
             'foreign_key' => $foreignKey
         ], $conditions);
 
-        $options = Hash::merge([
-            'includeAssociated' => false
-        ], $options);
+        if ($options['includeAssociated']) {
+            $hashes = $this->find()
+                ->select(['save_hash'])
+                ->where($conditions);
 
-        $history = $this->find()
-            ->where($conditions)
-            ->order(['revision' => 'DESC'])
+            $history = $this->find()
+                ->where([
+                    'save_hash IN' => $hashes
+                ]);
+        } else {
+            $history = $this->find()
+                ->where($conditions);
+        }
+
+        $history = $history->order([
+                'revision' => 'DESC',
+                'ModelHistory.created' => 'DESC'
+            ])
             ->contain(['Users'])
             ->limit($itemsToShow)
             ->page($page)
             ->toArray();
-
-        if ($options['includeAssociated']) {
-            $additional = [];
-            foreach ($history as $entry) {
-                if (!empty($entry->context) && !empty($entry->context['associations'])) {
-                    foreach ($entry->context['associations'] as $associatedModel => $associatedFk) {
-                        $associated = $this->find()
-                            ->where([
-                                'model' => $associatedModel,
-                                'foreign_key' => $associatedFk
-                            ])
-                            ->contain(['Users'])
-                            ->toArray();
-
-                        foreach ($associated as $assocEntry) {
-                            $additional[$assocEntry->id] = $assocEntry;
-                        }
-                    }
-                }
-            }
-
-            if (!empty($additional)) {
-                foreach ($additional as $additionalEntry) {
-                    $history[] = $additionalEntry;
-                }
-                usort($history, [$this, 'sortEntries']);
-            }
-        }
 
         return $this->_transformDataFields($history, $model);
     }
@@ -473,16 +407,28 @@ class ModelHistoryTable extends Table
      * @param array  $conditions    additional conditions for find
      * @return int
      */
-    public function getModelHistoryCount($model, $foreignKey, array $conditions = [])
+    public function getModelHistoryCount($model, $foreignKey, array $conditions = [], array $options = [])
     {
         $conditions = Hash::merge([
             'model' => $model,
             'foreign_key' => $foreignKey
         ], $conditions);
 
-        return $this->find()
-            ->where($conditions)
-            ->count();
+        if ($options['includeAssociated']) {
+            $hashes = $this->find()
+                ->select(['save_hash'])
+                ->where($conditions);
+
+            $history = $this->find()
+                ->where([
+                    'save_hash IN' => $hashes
+                ]);
+        } else {
+            $history = $this->find()
+                ->where($conditions);
+        }
+
+        return $history->count();
     }
 
     /**

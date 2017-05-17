@@ -10,6 +10,7 @@ use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
+use Cake\Utility\Security;
 use ModelHistory\Model\Entity\ModelHistory;
 
 /**
@@ -76,6 +77,7 @@ class HistorizableBehavior extends Behavior
             'foreignKey' => 'foreign_key',
             'dependent' => false
         ]);
+
         parent::initialize($config);
     }
 
@@ -90,11 +92,80 @@ class HistorizableBehavior extends Behavior
     public function beforeSave(Event $event, EntityInterface $entity, \ArrayObject $options)
     {
         if (!$entity->isNew() && $entity->dirty()) {
-            $fields = array_keys($entity->toArray());
-            $dirtyFields = $entity->extract($fields, true);
-            unset($dirtyFields['modified']);
-            $this->_dirtyFields[$entity->id] = array_keys($dirtyFields);
+            $saveHash = Security::hash(md5(uniqid()));
+            if (empty($entity->save_hash)) {
+                $entity->save_hash = $saveHash;
+                $entity->dirty('save_hash', false);
+            }
+
+            $this->_dirtyFields[$entity->id] = $this->_extractDirtyFields($entity);
+            $this->_applySaveHash($entity, $saveHash);
         }
+    }
+
+    /**
+     * Extract dirty fields of given entity
+     *
+     * @return array
+     */
+    protected function _extractDirtyFields(EntityInterface $entity)
+    {
+        $dirtyFields = [];
+        $fields = array_keys($entity->toArray());
+        $dirtyFields = $entity->extract($fields, true);
+        unset($dirtyFields['modified']);
+
+        return array_keys($dirtyFields);
+    }
+
+    /**
+     * Apply save hash to entity
+     *
+     * @param  EntityInterface  $entity    Entity look for associated dirty fields
+     * @param  string           $saveHash  Hash to identify save process
+     * @return bool
+     */
+    protected function _applySaveHash(EntityInterface $entity, $saveHash)
+    {
+        $output = [];
+        $associations = $this->getAssociations();
+        if (empty($associations)) {
+            return false;
+        }
+
+        foreach ($associations as $assoc) {
+            $object = $this->_recursivelyExtractObject($assoc, $entity);
+
+            if ($object === null) {
+                continue;
+            }
+
+            $object->save_hash = $saveHash;
+            $object->dirty('save_hash', false);
+        }
+    }
+
+    /**
+     * Recursively find object based on given dot-seperated string representing object properties.
+     *
+     * @param  string           $path    String path
+     * @param  EntityInterface  $object  Object to use
+     * @return null|object
+     */
+    protected function _recursivelyExtractObject(string $path, EntityInterface $object)
+    {
+        if (stripos($path, '.') !== false) {
+            $split = explode('.', $path);
+            $path = array_shift($split);
+
+            if (count($split) > 0 && $object->{$path} !== null) {
+                return $this->_recursivelyExtractObject(implode('.', $split), $object->{$path});
+            }
+        } else {
+            return $object->{$path};
+        }
+
+        return null;
     }
 
     /**

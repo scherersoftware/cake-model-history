@@ -45,7 +45,7 @@ class ModelHistoryController extends AppController
      * @param  string  $columnClass     div classes for column
      * @return void
      */
-    public function index($model = null, $foreignKey = null, $limit = null, $page = null, $showFilterBox = null, $showCommentBox = null, $columnClass = '')
+    public function index($model = null, $foreignKey = null, $limit = null, $page = null, $showFilterBox = null, $showCommentBox = null, $includeAssociated = null, $columnClass = '')
     {
         $this->ModelHistory->belongsTo('Users', [
             'foreignKey' => 'user_id'
@@ -59,9 +59,9 @@ class ModelHistoryController extends AppController
                 $this->Flash->error(__('forms.data_not_saved'));
             }
         }
-        $modelHistory = $this->ModelHistory->getModelHistory($model, $foreignKey, $limit, $page);
+        $modelHistory = $this->ModelHistory->getModelHistory($model, $foreignKey, $limit, $page, [], ['includeAssociated' => (bool)$includeAssociated]);
 
-        $entries = TableRegistry::get('ModelHistory.ModelHistory')->getModelHistoryCount($model, $foreignKey);
+        $entries = TableRegistry::get('ModelHistory.ModelHistory')->getModelHistoryCount($model, $foreignKey, [], ['includeAssociated' => (bool)$includeAssociated]);
         $showNextEntriesButton = $entries > 0 && $limit * $page < $entries;
         $showPrevEntriesButton = $page > 1;
 
@@ -76,6 +76,7 @@ class ModelHistoryController extends AppController
         $this->FrontendBridge->setBoth('showPrevEntriesButton', $showPrevEntriesButton);
         $this->FrontendBridge->setBoth('showFilterBox', $showFilterBox);
         $this->FrontendBridge->setBoth('showCommentBox', $showCommentBox);
+        $this->FrontendBridge->setBoth('includeAssociated', $includeAssociated);
         $this->FrontendBridge->setBoth('model', $model);
         $this->FrontendBridge->setBoth('foreignKey', $foreignKey);
         $this->FrontendBridge->setBoth('limit', $limit);
@@ -96,7 +97,7 @@ class ModelHistoryController extends AppController
      * @param  string  $columnClass     div classes for column
      * @return string                   Index View
      */
-    public function filter($model = null, $foreignKey = null, $limit = null, $page = null, $showFilterBox = null, $showCommentBox = null, $columnClass = '')
+    public function filter($model = null, $foreignKey = null, $limit = null, $page = null, $showFilterBox = null, $showCommentBox = null, $includeAssociated = null, $columnClass = '')
     {
         $this->request->allowMethod(['post']);
 
@@ -165,9 +166,9 @@ class ModelHistoryController extends AppController
             }
         }
         $conditions = Hash::merge($filterConditions, $searchConditions);
-        $modelHistory = $this->ModelHistory->getModelHistory($model, $foreignKey, $limit, $page, $conditions);
+        $modelHistory = $this->ModelHistory->getModelHistory($model, $foreignKey, $limit, $page, $conditions, ['includeAssociated' => (bool)$includeAssociated]);
 
-        $entries = TableRegistry::get('ModelHistory.ModelHistory')->getModelHistoryCount($model, $foreignKey, $conditions);
+        $entries = TableRegistry::get('ModelHistory.ModelHistory')->getModelHistoryCount($model, $foreignKey, $conditions, ['includeAssociated' => (bool)$includeAssociated]);
         $showNextEntriesButton = $entries > 0 && $limit * $page < $entries;
         $showPrevEntriesButton = $page > 1;
 
@@ -175,6 +176,7 @@ class ModelHistoryController extends AppController
         $this->FrontendBridge->setBoth('showNextEntriesButton', $showNextEntriesButton);
         $this->FrontendBridge->setBoth('showFilterBox', $showFilterBox);
         $this->FrontendBridge->setBoth('showCommentBox', $showCommentBox);
+        $this->FrontendBridge->setBoth('includeAssociated', $includeAssociated);
         $this->FrontendBridge->setBoth('modelHistory', $modelHistory);
         $this->FrontendBridge->setBoth('limit', $limit);
         $this->FrontendBridge->setBoth('model', $model);

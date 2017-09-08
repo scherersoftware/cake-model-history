@@ -29,25 +29,18 @@ class ArticlesItemsTable extends Table
 
         $this->addBehavior('ModelHistory.Historizable', [
             'fields' => [
-                [
-                    'name' => 'article_id',
+                'article_id' => [
                     'translation' => __('articles_items.article'),
-                    'searchable' => true,
-                    'saveable' => true,
-                    'obfuscated' => false,
                     'type' => 'association',
                     'associationKey' => 'item_id'
                 ],
-                [
-                    'name' => 'item_id',
+                'item_id' => [
                     'translation' => __('articles_items.user'),
-                    'searchable' => true,
-                    'saveable' => true,
-                    'obfuscated' => false,
                     'type' => 'association',
                     'associationKey' => 'article_id'
                 ]
-            ]
+            ],
+            'ignoreFields' => []
         ]);
 
         $this->belongsTo('Articles', [

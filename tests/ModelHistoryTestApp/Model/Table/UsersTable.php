@@ -28,53 +28,19 @@ class UsersTable extends Table
         $this->addBehavior('ModelHistory.Historizable', [
             'userIdCallback' => null,
             'fields' => [
-                [
-                    'name' => 'id',
-                    'translation' => __('users.id'),
-                    'searchable' => true,
-                    'saveable' => true,
-                    'obfuscated' => false,
-                    'type' => 'string',
-                    'displayParser' => null,
-                    'saveParser' => null
-                ],
-                [
-                    'name' => 'firstname',
+                'firstname' => [
                     'translation' => __('users.firstname'),
-                    'searchable' => true,
-                    'saveable' => true,
-                    'obfuscated' => false,
-                    'type' => 'string',
-                    'displayParser' => null,
-                    'saveParser' => null
                 ],
-                [
-                    'name' => 'lastname',
+                'lastname' => [
                     'translation' => __('users.lastname'),
-                    'searchable' => true,
-                    'saveable' => true,
-                    'obfuscated' => false,
-                    'type' => 'string',
-                    'displayParser' => null,
-                    'saveParser' => null
                 ],
-                [
-                    'name' => 'article_id',
+                'article_id' => [
                     'translation' => __('users.article_id'),
-                    'searchable' => true,
                     'saveable' => false,
-                    'obfuscated' => false,
-                    'type' => 'association'
-                ],
-                [
-                    'name' => 'article_id',
-                    'translation' => __('users.article_id'),
-                    'searchable' => true,
-                    'saveable' => false,
-                    'obfuscated' => false,
                     'type' => 'association'
                 ]
-            ]
+            ],
+            'ignoreFields' => []
         ]);
 
         $this->belongsToMany('Articles', [

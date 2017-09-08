@@ -29,37 +29,12 @@ class ItemsTable extends Table
         $this->addBehavior('ModelHistory.Historizable', [
             'userIdCallback' => null,
             'fields' => [
-                [
-                    'name' => 'id',
-                    'translation' => __('items.id'),
-                    'searchable' => true,
-                    'saveable' => false,
-                    'obfuscated' => false,
-                    'type' => 'string',
-                    'displayParser' => null,
-                    'saveParser' => null
-                ],
-                [
-                    'name' => 'name',
-                    'translation' => __('items.name'),
-                    'searchable' => true,
-                    'saveable' => true,
-                    'obfuscated' => false,
-                    'type' => 'string',
-                    'displayParser' => null,
-                    'saveParser' => null
-                ],
-                [
-                    'name' => 'articles',
+                'articles' => [
                     'translation' => __('items.articles'),
-                    'searchable' => true,
-                    'saveable' => true,
-                    'obfuscated' => false,
                     'type' => 'mass_association',
-                    'displayParser' => null,
-                    'saveParser' => null
                 ]
-            ]
+            ],
+            'ignoreFields' => []
         ]);
 
         $this->belongsToMany('Articles', [

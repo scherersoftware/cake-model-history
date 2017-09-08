@@ -17,13 +17,13 @@ CakePHP 3 Historization for database records. Keeps track of changes performed b
 
 ```
 "require": {
-	"codekanzlei/cake-model-history": "2.0.*",
+    "codekanzlei/cake-model-history": "2.0.*",
 }
 ```
 
 Open a terminal in your project-folder and run these commands:
 
-	`$ composer update`
+    `$ composer update`
 
 #### 2. Configure `config/bootstrap.php`
 
@@ -53,7 +53,7 @@ We have to create the database schema with help of the migrations plugin.
 
 ```
 public $helpers =  [
-	'ModelHistory.ModelHistory'
+    'ModelHistory.ModelHistory'
 ]
 ```
 
@@ -67,7 +67,7 @@ Add the Historizable Behavior in the `initialize` function of the **Table** you 
 $this->addBehavior('ModelHistory.Historizable');
 ```
 
-**Note:** By default, the model-history plugin matches changes to a database record to the user that performed and saved them by comparing table-fields 'firstname' and 'lastname' in `UsersTable` (See `$_defaultConfig` in `HistorizableBehavior.php` for these default settings). If your fields are not called 'firstname' and 'lastname', you can easily customize these settings according to the fieldnames in your UsersTable, like so:
+**Note:** By default, the model-history plugin attributes changes to a database record to the user that performed and saved them by comparing table-fields 'firstname' and 'lastname' in `UsersTable` (See `$_defaultConfig` in `HistorizableBehavior.php` for these default settings). If your fields are not called 'firstname' and 'lastname', you can easily customize these settings according to the fieldnames in your UsersTable, like so:
 
 ```
 $this->addBehavior('ModelHistory.Historizable', [
@@ -79,27 +79,35 @@ $this->addBehavior('ModelHistory.Historizable', [
     'userIdCallback' => null,
     'entriesToShow' => 10,
     'fields' => [],
-    'associations' => []
+    'associations' => [],
+    'ignoreFields' => []
 ]);
 ```
 
-To control which fields are saved, how they are transformed for displaying and providing ofuscation and translations.
+By default, the ModelHistory monitors changes for every field it finds in the schema of the table.
+It tries to deduct the type to use from the data type and obfuscates all fields containing "password".
+Otherwise, the default values are `'searchable' => true`, `'saveable' => true` and `'obfuscated' => false`.
+
+To override specific settings, add an array for the field into the 'fields' array and list the values you want to override.
 
 ```
 $this->addBehavior('ModelHistory.Historizable', [
     'fields' => [
-        [
-            // The field name
-            'name' => 'firstname',
+    // The field name
+        'firstname' =>[
             // Allowed translation forms: String, Closure returning string
-            // Its recommended to use the closure, so translations are made after core initialize.
+            // Its recommended to use the closure, so translations are made after core initialize when the correct language was set.
             'translation' => function () {
                 return __('user.firstname');
             },
             // The searchable indicator is used to show the field in the filter box
+            // defaults to true
             'searchable' => true,
-            // The savable indicator is used to decide wether the field is tracked
+            // The savable indicator is used to decide whether the field is tracked
+            // defaults to true
             'saveable' => true,
+            // obfuscate the values of the field in the history view.
+            // defaults to false except for fieldnames containing "password"
             'obfuscated' => false,
             // Allowed: string, bool, number, relation, date, hash, array, association, mass_association.
             'type' => 'string',
@@ -112,6 +120,40 @@ $this->addBehavior('ModelHistory.Historizable', [
             'saveParser' => function ($fieldname, $value, $entity) {
                 return $value;
             },
+        ],
+    ]
+]);
+```
+
+Because the default monitored fields are limited to those in the table, n:m associations and associations
+with foreign_keys in other tables always have to be configured, at least with the type.
+Here are three real world examples from a UsersTable:
+
+```
+$this->addBehavior('ModelHistory.Historizable', [
+    'fields' => [
+        'customer_id' => [
+            'saveable' => false,
+            'type' => 'association'
+        ],
+        'regions' => [
+            'type' => 'mass_association',
+            'displayParser' => function ($fieldName, $value, $entity) {
+                if (is_array($value)) {
+                    return implode(', ', $value);
+                }
+
+                return $value;
+            }
+        ],
+        'contact' => [
+            'type' => 'string',
+            'saveParser' => function ($fieldName, $value, $entity) {
+                return __('user.associated_contact');
+            },
+            'displayParser' => function ($fieldName, $value, $entity) {
+                return __('user.associated_contact');
+            }
         ],
     ]
 ]);
@@ -219,6 +261,20 @@ You can also specify a context getter inside an entity to search for defined con
 ```
 
 
+**Ignoring fields**
+
+By default, the fields `id`, `created` and `modified` are not tracked.
+If you want to overwrite which fields are ignored or not, give `ignoreFields` in the config array and only those fields will be ignored:
+
+```
+$this->addBehavior('ModelHistory.Historizable', [
+    'ignoreFields' => [
+        'secret_field',
+        'created'
+    ]
+]);
+```
+
 #### View setup
 Use `ModelHistoryHelper.php` to create neat view elements containing a record's change history with one call in your view:
 
@@ -230,11 +286,11 @@ Use `ModelHistoryHelper.php` to create neat view elements containing a record's 
 
 - `showCommentBox` (false)
 
-	Additionally renders an comment field (input type text). User input will be saved to the model_history table
+    Additionally renders an comment field (input type text). User input will be saved to the model_history table
 
 - `showFilterBox` (false)
 
-	Additionally renders a filter box which can be used to search for entries.
+    Additionally renders a filter box which can be used to search for entries.
 
 - `includeAssociated` (false)
 

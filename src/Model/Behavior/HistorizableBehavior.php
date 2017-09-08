@@ -33,7 +33,12 @@ class HistorizableBehavior extends Behavior
             'id' => 'Users.id'
         ],
         'fields' => [],
-        'associations' => []
+        'associations' => [],
+        'ignoreFields' => [
+            'id',
+            'created',
+            'modified'
+        ]
     ];
 
     /**
@@ -77,6 +82,101 @@ class HistorizableBehavior extends Behavior
             'foreignKey' => 'foreign_key',
             'dependent' => false
         ]);
+
+        if (isset($config['ignoreFields'])) {
+            $this->setConfig('ignoreFields', $config['ignoreFields'], false);
+        }
+
+        $singularUnderscoredTableName = Inflector::singularize(Inflector::underscore($this->_table->getAlias()));
+        $allColumns = $this->_table->getSchema()->columns();
+
+        foreach ($allColumns as $columnName) {
+            if (in_array($columnName, $this->getConfig('ignoreFields'))) {
+                continue;
+            }
+
+            $obfuscated = false;
+            $searchable = true;
+            $type = 'string';
+
+            if (substr($columnName, -3) === '_id') {
+                $singular = substr($columnName, 0, -3);
+                $associationName = str_replace('_', '', Inflector::pluralize($singular));
+                $association = $this->_table->association($associationName);
+                if (!is_null($association)) {
+                    switch ($association->type()) {
+                        case $association::MANY_TO_MANY:
+                            $type = 'association';
+                            break;
+
+                        case $association::ONE_TO_MANY:
+                        case $association::MANY_TO_ONE:
+                            $type = 'relation';
+                            break;
+                    }
+                }
+            } elseif (strpos($columnName, 'password') !== false) {
+                $obfuscated = true;
+                $searchable = false;
+            } else {
+                switch ($this->_table->getSchema()->columnType($columnName)) {
+                    case 'boolean':
+                        $type = 'bool';
+                        break;
+                    case 'json':
+                        $type = 'hash';
+                        break;
+                    case 'integer':
+                        $type = 'number';
+                        break;
+                    case 'datetime':
+                        $type = 'date';
+                        break;
+                }
+            }
+            $translationIdentifier = $singularUnderscoredTableName . '.' . $columnName;
+
+            $manualConfig = isset($config['fields'][$columnName]) ? $config['fields'][$columnName] : [];
+            $columnConfig = Hash::merge([
+                'name' => $columnName,
+                'translation' => function () use ($translationIdentifier) {
+                    return __($translationIdentifier);
+                },
+                'searchable' => $searchable,
+                'saveable' => true,
+                'obfuscated' => $obfuscated,
+                'type' => $type
+            ], $manualConfig);
+
+            $this->setConfig('fields.' . $columnName, $columnConfig, false);
+        }
+
+        // fill the config array of fields not in the table schema with default values
+        if (!empty($config['fields'])) {
+            foreach ($config['fields'] as $columnName => $manualConfig) {
+                if (!in_array($columnName, $allColumns)) {
+                    if (empty($manualConfig['type'])) {
+                        throw new Exception(
+                            sprintf('ModelHistory config for field %s is missing a type.', $columnName)
+                        );
+                    }
+
+                    $translationIdentifier = $singularUnderscoredTableName . '.' . $columnName;
+
+                    $columnConfig = Hash::merge([
+                        'name' => $columnName,
+                        'translation' => function () use ($translationIdentifier) {
+                            return __($translationIdentifier);
+                        },
+                        'searchable' => true,
+                        'saveable' => true,
+                        'obfuscated' => false,
+                    ], $manualConfig);
+
+                    $this->setConfig('fields.' . $columnName, $columnConfig, false);
+                }
+            }
+        }
 
         parent::initialize($config);
     }
@@ -255,7 +355,7 @@ class HistorizableBehavior extends Behavior
     {
         $tableName = Inflector::camelize(Inflector::pluralize(str_replace('_id', '', $fieldName)));
 
-        $fieldConfig = $this->getFields()[$fieldName];
+        $fieldConfig = $this->getConfig('fields.' . $fieldName);
 
         // reads the url defined for the given behavior (empty array if not defined)
         $fieldUrl = $this->getUrl();
@@ -340,14 +440,7 @@ class HistorizableBehavior extends Behavior
      */
     public function getFields()
     {
-        return Hash::apply($this->config('fields'), '{n}', function ($array) {
-            $output = [];
-            foreach ($array as $data) {
-                $output[$data['name']] = $data;
-            }
-
-            return $output;
-        });
+        return $this->getConfig('fields');
     }
 
     /**
@@ -371,7 +464,7 @@ class HistorizableBehavior extends Behavior
      */
     public function getTranslatedFields()
     {
-        return Hash::apply($this->config('fields'), '{n}[searchable=true]', function ($array) {
+        return Hash::apply($this->config('fields'), '{*}[searchable=true]', function ($array) {
             $formatted = [];
             foreach ($array as $data) {
                 $formatted[$data['name']] = $data['translation'];
@@ -388,7 +481,7 @@ class HistorizableBehavior extends Behavior
      */
     public function getSaveableFields()
     {
-        return Hash::apply($this->config('fields'), '{n}[saveable=true]', function ($array) {
+        return Hash::apply($this->config('fields'), '{*}[saveable=true]', function ($array) {
             $formatted = [];
             foreach ($array as $data) {
                 $formatted[$data['name']] = $data;

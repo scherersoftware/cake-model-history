@@ -26,6 +26,8 @@ if ($vendorPos !== false) {
     $loader = require __DIR__ . '/../vendor/autoload.php';
 }
 
+require_once 'vendor/cakephp/cakephp/src/basics.php';
+
 Cake\Datasource\ConnectionManager::config('test', [
     'className' => 'Cake\Database\Connection',
     'driver' => 'Cake\Database\Driver\Mysql',

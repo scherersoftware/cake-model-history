@@ -190,8 +190,7 @@ $this->addBehavior('ModelHistory.Historizable', [
         'action' => 'index'
     ],
     'fields' => [
-        [
-            'name' => 'firstname',
+        'firstname' => [
             'translation' => function () {
                 return __('user.firstname');
             },

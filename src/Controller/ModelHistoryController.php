@@ -3,6 +3,7 @@ namespace ModelHistory\Controller;
 
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
+use Cake\Http\Response;
 use Cake\I18n\Time;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -45,7 +46,16 @@ class ModelHistoryController extends AppController
      * @param  string  $columnClass     div classes for column
      * @return void
      */
-    public function index($model = null, $foreignKey = null, $limit = null, $page = null, $showFilterBox = null, $showCommentBox = null, $includeAssociated = null, $columnClass = '')
+    public function index(
+        $model = null,
+        $foreignKey = null,
+        $limit = null,
+        $page = null,
+        $showFilterBox = null,
+        $showCommentBox = null,
+        $includeAssociated = null,
+        $columnClass = ''
+    ): void
     {
         $this->ModelHistory->belongsTo('Users', [
             'foreignKey' => 'user_id'
@@ -95,9 +105,18 @@ class ModelHistoryController extends AppController
      * @param  bool    $showFilterBox   Show Filter Box
      * @param  bool    $showCommentBox  Show comment Box
      * @param  string  $columnClass     div classes for column
-     * @return string                   Index View
+     * @return \Cake\Http\Response      Index View
      */
-    public function filter($model = null, $foreignKey = null, $limit = null, $page = null, $showFilterBox = null, $showCommentBox = null, $includeAssociated = null, $columnClass = '')
+    public function filter(
+        $model = null,
+        $foreignKey = null,
+        $limit = null,
+        $page = null,
+        $showFilterBox = null,
+        $showCommentBox = null,
+        $includeAssociated = null,
+        $columnClass = ''
+    ): Response
     {
         $this->request->allowMethod(['post']);
 
@@ -203,7 +222,7 @@ class ModelHistoryController extends AppController
      * @param  string   $currentId   UUID of ModelHistory entry to get diff for
      * @return void
      */
-    public function diff($currentId = null)
+    public function diff($currentId = null): void
     {
         $historyEntry = $this->ModelHistory->get($currentId);
         $this->FrontendBridge->setBoth('diffOutput', $this->ModelHistory->buildDiff($historyEntry));

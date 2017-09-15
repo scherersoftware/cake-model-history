@@ -62,7 +62,7 @@ class HistorizableBehavior extends Behavior
      * @param array $config The configuration settings provided to this behavior.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         // Set default translations
         $this->config('translations', [
@@ -189,7 +189,7 @@ class HistorizableBehavior extends Behavior
      * @param ArrayObject $options Additional options
      * @return void
      */
-    public function beforeSave(Event $event, EntityInterface $entity, \ArrayObject $options)
+    public function beforeSave(Event $event, EntityInterface $entity, \ArrayObject $options): void
     {
         if (!$entity->isNew() && $entity->dirty()) {
             $saveHash = Security::hash(md5(uniqid()));
@@ -208,7 +208,7 @@ class HistorizableBehavior extends Behavior
      *
      * @return array
      */
-    protected function _extractDirtyFields(EntityInterface $entity)
+    protected function _extractDirtyFields(EntityInterface $entity): array
     {
         $dirtyFields = [];
         $fields = array_keys($entity->toArray());
@@ -225,7 +225,7 @@ class HistorizableBehavior extends Behavior
      * @param  string           $saveHash  Hash to identify save process
      * @return bool
      */
-    protected function _applySaveHash(EntityInterface $entity, $saveHash)
+    protected function _applySaveHash(EntityInterface $entity, string $saveHash): bool
     {
         $output = [];
         if (defined('PHPUNIT_TESTSUITE')) {
@@ -251,6 +251,8 @@ class HistorizableBehavior extends Behavior
             $object->save_hash = $saveHash;
             $object->dirty('save_hash', false);
         }
+
+        return true;
     }
 
     /**
@@ -260,7 +262,7 @@ class HistorizableBehavior extends Behavior
      * @param  EntityInterface  $object  Object to use
      * @return null|object
      */
-    protected function _recursivelyExtractObject($path, EntityInterface $object)
+    protected function _recursivelyExtractObject(string $path, EntityInterface $object): ?EntityInterface
     {
         if (stripos($path, '.') !== false) {
             $split = explode('.', $path);
@@ -283,7 +285,7 @@ class HistorizableBehavior extends Behavior
      * @param EntityInterface $entity Entity that was saved
      * @return void
      */
-    public function afterSave(Event $event, EntityInterface $entity)
+    public function afterSave(Event $event, EntityInterface $entity): void
     {
         $action = $entity->isNew() ? ModelHistory::ACTION_CREATE : ModelHistory::ACTION_UPDATE;
 
@@ -306,7 +308,7 @@ class HistorizableBehavior extends Behavior
      * @param ArrayObject $options Additional options
      * @return void
      */
-    public function afterDelete(Event $event, EntityInterface $entity, $options)
+    public function afterDelete(Event $event, EntityInterface $entity, \ArrayObject $options): void
     {
         $this->ModelHistory->add($entity, ModelHistory::ACTION_DELETE, $this->_getUserId());
     }
@@ -319,7 +321,7 @@ class HistorizableBehavior extends Behavior
      * @param string $userId Commenting User
      * @return ModelHistory
      */
-    public function addCommentToHistory(EntityInterface $entity, $comment, $userId = null)
+    public function addCommentToHistory(EntityInterface $entity, string $comment, string $userId = null)
     {
         if (!$userId) {
             $userId = $this->_getUserId();
@@ -333,7 +335,7 @@ class HistorizableBehavior extends Behavior
      *
      * @return string|null
      */
-    protected function _getUserId()
+    protected function _getUserId(): ?string
     {
         $userId = null;
         $callback = $this->config('userIdCallback');
@@ -351,7 +353,7 @@ class HistorizableBehavior extends Behavior
      * @param  string  $fieldValue  Value
      * @return string
      */
-    public function getRelationLink($fieldName, $fieldValue = null)
+    public function getRelationLink(string $fieldName, string $fieldValue = null): string
     {
         $tableName = Inflector::camelize(Inflector::pluralize(str_replace('_id', '', $fieldName)));
 
@@ -397,7 +399,7 @@ class HistorizableBehavior extends Behavior
      * @param callable $callback Callback which must return the user id
      * @return void
      */
-    public function setModelHistoryUserIdCallback(callable $callback)
+    public function setModelHistoryUserIdCallback(callable $callback): void
     {
         $this->config('userIdCallback', $callback);
     }
@@ -408,7 +410,7 @@ class HistorizableBehavior extends Behavior
      * @param  bool $withoutModel set to true to only get the field names without model name
      * @return array
      */
-    public function getUserNameFields($withoutModel = false)
+    public function getUserNameFields(bool $withoutModel = false): array
     {
         $userNameFields = $this->config('userNameFields');
         if ($withoutModel) {
@@ -428,7 +430,7 @@ class HistorizableBehavior extends Behavior
      *
      * @return int
      */
-    public function getEntriesLimit()
+    public function getEntriesLimit(): int
     {
         return $this->config('entriesToShow');
     }
@@ -438,7 +440,7 @@ class HistorizableBehavior extends Behavior
      *
      * @return array
      */
-    public function getFields()
+    public function getFields(): array
     {
         return $this->getConfig('fields');
     }
@@ -448,7 +450,7 @@ class HistorizableBehavior extends Behavior
      *
      * @return array
      */
-    public function getUrl()
+    public function getUrl(): array
     {
         if (is_array($this->config('url'))) {
             return $this->config('url');
@@ -462,7 +464,7 @@ class HistorizableBehavior extends Behavior
      *
      * @return array
      */
-    public function getTranslatedFields()
+    public function getTranslatedFields(): array
     {
         return Hash::apply($this->config('fields'), '{*}[searchable=true]', function ($array) {
             $formatted = [];
@@ -479,7 +481,7 @@ class HistorizableBehavior extends Behavior
      *
      * @return array
      */
-    public function getSaveableFields()
+    public function getSaveableFields(): array
     {
         return Hash::apply($this->config('fields'), '{*}[saveable=true]', function ($array) {
             $formatted = [];
@@ -496,7 +498,7 @@ class HistorizableBehavior extends Behavior
      *
      * @return array
      */
-    public function getAssociations()
+    public function getAssociations(): array
     {
         return $this->config('associations');
     }

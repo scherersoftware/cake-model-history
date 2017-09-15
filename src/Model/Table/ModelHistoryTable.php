@@ -107,9 +107,6 @@ class ModelHistoryTable extends Table
         } else {
             foreach ($saveableFields as $fieldName => $data) {
                 if (isset($options['data'][$fieldName])) {
-                    if ($data['obfuscated'] === true) {
-                        $options['data'][$fieldName] = '****************';
-                    }
                     if (isset($data['saveParser']) && is_callable($data['saveParser'])) {
                         $callback = $data['saveParser'];
                         $options['data'][$fieldName] = $callback($fieldName, $options['data'][$fieldName], $entity);
@@ -133,6 +130,9 @@ class ModelHistoryTable extends Table
                                 $options['data'][$fieldName] = $filterClass->save($fieldName, $data, $entity);
                             }
                         }
+                    }
+                    if ($data['obfuscated'] === true) {
+                        $options['data'][$fieldName] = '****************';
                     }
                     $saveFields[$fieldName] = $options['data'][$fieldName];
                 }

@@ -55,8 +55,7 @@ class ModelHistoryController extends AppController
         $showCommentBox = null,
         $includeAssociated = null,
         $columnClass = ''
-    ): void
-    {
+    ): void {
         $this->ModelHistory->belongsTo('Users', [
             'foreignKey' => 'user_id'
         ]);
@@ -116,8 +115,7 @@ class ModelHistoryController extends AppController
         $showCommentBox = null,
         $includeAssociated = null,
         $columnClass = ''
-    ): Response
-    {
+    ): Response {
         $this->request->allowMethod(['post']);
 
         $filterConditions = [];

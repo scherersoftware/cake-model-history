@@ -2,6 +2,7 @@
 declare(strict_types = 1);
 namespace ModelHistory\View\Helper;
 
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
@@ -24,10 +25,10 @@ class ModelHistoryHelper extends Helper
     /**
      * Render the model history area where needed
      *
-     * @param \ModelHistory\Model\Entity\ModelHistory $entity One historizable entity
+     * @param \Cake\Datasource\EntityInterface $entity One historizable entity
      * @param array $options options array
      */
-    public function modelHistoryArea(ModelHistory $entity, array $options = []): string
+    public function modelHistoryArea(EntityInterface $entity, array $options = []): string
     {
         $options = Hash::merge([
             'showCommentBox' => false,

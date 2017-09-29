@@ -346,14 +346,14 @@ class ModelHistoryTable extends Table
      * Get Model History
      *
      * @param string $model Model name
-     * @param string $foreignKey Foreign key
+     * @param mixed $foreignKey Foreign key
      * @param int $itemsToShow Amount of items to be shown
      * @param int $page Current position
      * @param array $conditions Additional conditions for find
      * @param array $options Additional options
      * @return array
      */
-    public function getModelHistory(string $model, string $foreignKey, int $itemsToShow, int $page, array $conditions = [], array $options = []): array
+    public function getModelHistory(string $model, $foreignKey, int $itemsToShow, int $page, array $conditions = [], array $options = []): array
     {
         $conditions = Hash::merge([
             'model' => $model,
@@ -393,11 +393,11 @@ class ModelHistoryTable extends Table
      * Get Model History entries count
      *
      * @param string $model model name
-     * @param string $foreignKey foreign key
+     * @param mixed $foreignKey foreign key
      * @param array $conditions additional conditions for find
      * @return int
      */
-    public function getModelHistoryCount(string $model, string $foreignKey, array $conditions = [], array $options = []): int
+    public function getModelHistoryCount(string $model, $foreignKey, array $conditions = [], array $options = []): int
     {
         $conditions = Hash::merge([
             'model' => $model,

@@ -1,16 +1,10 @@
 <?php
+declare(strict_types = 1);
 namespace ModelHistory\Test\TestCase\Model\Table;
 
-use App\Lib\Status;
-use Cake\Database\Driver;
-use Cake\Datasource\EntityInterface;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
-use Cake\Utility\Hash;
-use ModelHistoryTestApp\Table\ArticlesTable;
-use ModelHistoryTestApp\Table\ArticlesUsersTable;
 use ModelHistory\Model\Entity\ModelHistory;
-use ModelHistory\Model\Table\ModelHistoryTable;
 
 /**
  * ModelHistory\Model\Table\ModelHistoryTable Test Case
@@ -37,7 +31,7 @@ class ModelHistoryTableTest extends TestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         TableRegistry::clear();
@@ -60,7 +54,7 @@ class ModelHistoryTableTest extends TestCase
      *
      * @return void
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->ModelHistory);
         unset($this->Articles);
@@ -69,7 +63,13 @@ class ModelHistoryTableTest extends TestCase
         parent::tearDown();
     }
 
-    protected function _getBehaviorConfig($callback = null)
+    /**
+     * Get behavior config helper method
+     *
+     * @param callable $callback Callback
+     * @return void
+     */
+    protected function _getBehaviorConfig(callable $callback = null): array
     {
         return [
             'userIdCallback' => $callback,
@@ -117,7 +117,7 @@ class ModelHistoryTableTest extends TestCase
      *
      * @return void
      */
-    public function testBasicCreateAndUpdateAndDelete()
+    public function testBasicCreateAndUpdateAndDelete(): void
     {
         $this->Articles->addBehavior('ModelHistory.Historizable', $this->_getBehaviorConfig());
         $article = $this->Articles->newEntity([
@@ -169,7 +169,7 @@ class ModelHistoryTableTest extends TestCase
      *
      * @return void
      */
-    public function testPassUserIdCallbackWithBehaviorConfig()
+    public function testPassUserIdCallbackWithBehaviorConfig(): void
     {
         $userId = '481fc6d0-b920-43e0-a40d-6d1740cf8562';
         $this->Articles->addBehavior('ModelHistory.Historizable', $this->_getBehaviorConfig(function () use ($userId) {
@@ -189,7 +189,7 @@ class ModelHistoryTableTest extends TestCase
      *
      * @return void
      */
-    public function testPassUserIdCallbackWithMethod()
+    public function testPassUserIdCallbackWithMethod(): void
     {
         $userId = '481fc6d0-b920-43e0-a40d-6d1740cf8562';
         $callback = function () use ($userId) {
@@ -213,7 +213,7 @@ class ModelHistoryTableTest extends TestCase
      *
      * @return void
      */
-    public function testModelHistoryRevision()
+    public function testModelHistoryRevision(): void
     {
         $this->Articles->addBehavior('ModelHistory.Historizable', $this->_getBehaviorConfig());
         $article = $this->Articles->newEntity([
@@ -255,7 +255,7 @@ class ModelHistoryTableTest extends TestCase
      *
      * @return void
      */
-    public function testDataDiff()
+    public function testDataDiff(): void
     {
         $this->Articles->addBehavior('ModelHistory.Historizable', $this->_getBehaviorConfig());
         $article = $this->Articles->newEntity([
@@ -286,7 +286,7 @@ class ModelHistoryTableTest extends TestCase
      *
      * @return void
      */
-    public function testCommenting()
+    public function testCommenting(): void
     {
         $userId = '481fc6d0-b920-43e0-a40d-6d1740cf8562';
         $comment = 'foo bar baz';
@@ -317,7 +317,7 @@ class ModelHistoryTableTest extends TestCase
      *
      * @return void
      */
-    public function testSearchableFields()
+    public function testSearchableFields(): void
     {
         $this->Articles->addBehavior('ModelHistory.Historizable', $this->_getBehaviorConfig());
         $fields = $this->Articles->getFields();
@@ -339,7 +339,7 @@ class ModelHistoryTableTest extends TestCase
      *
      * @return void
      */
-    public function testSaveableFields()
+    public function testSaveableFields(): void
     {
         $this->Articles->addBehavior('ModelHistory.Historizable', $this->_getBehaviorConfig());
         $fields = $this->Articles->getFields();
@@ -361,7 +361,7 @@ class ModelHistoryTableTest extends TestCase
      *
      * @return void
      */
-    public function testGetEntityWithHistory()
+    public function testGetEntityWithHistory(): void
     {
         $userId = '481fc6d0-b920-43e0-a40d-6d1740cf8562';
         $this->Articles->addBehavior('ModelHistory.Historizable', $this->_getBehaviorConfig());
@@ -383,7 +383,7 @@ class ModelHistoryTableTest extends TestCase
         }
     }
 
-    public function testGetModelHistory()
+    public function testGetModelHistory(): void
     {
         $userId = '481fc6d0-b920-43e0-a40d-6d1740cf8562';
         $this->Articles->addBehavior('ModelHistory.Historizable', [
@@ -445,7 +445,7 @@ class ModelHistoryTableTest extends TestCase
      *
      * @return void
      */
-    public function testBuildDiff()
+    public function testBuildDiff(): void
     {
         $userId = '481fc6d0-b920-43e0-a40d-6d1740cf8562';
         $this->Articles->addBehavior('ModelHistory.Historizable', $this->_getBehaviorConfig());
@@ -521,7 +521,7 @@ class ModelHistoryTableTest extends TestCase
      *
      * @return void
      */
-    public function testSaveAssociation()
+    public function testSaveAssociation(): void
     {
         $articleUser = $this->ArticlesUsers->addBehavior('ModelHistory.Historizable', [
             'userIdCallback' => null,
@@ -578,7 +578,7 @@ class ModelHistoryTableTest extends TestCase
      *
      * @return void
      */
-    public function testMassAssociation()
+    public function testMassAssociation(): void
     {
         $itemData = [
             'name' => 'foobar',

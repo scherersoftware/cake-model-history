@@ -1,8 +1,8 @@
 <?php
+declare(strict_types = 1);
 namespace ModelHistory\Model\Entity;
 
 use Cake\ORM\Entity;
-use Cake\ORM\TableRegistry;
 
 /**
  * ModelHistory Entity.
@@ -40,10 +40,10 @@ class ModelHistory extends Entity
     /**
      * getter for data
      *
-     * @param string $data data
+     * @param array $data data
      * @return array
      */
-    protected function _getData($data)
+    protected function _getData(array $data): array
     {
         // Stringify empty values
         if (!empty($data)) {
@@ -58,7 +58,7 @@ class ModelHistory extends Entity
     /**
      * Transform null and boolean values to their string representation.
      *
-     * @param  mixed  $value  The Value to be checked
+     * @param  mixed  $value The Value to be checked
      * @return mixed
      */
     protected function _stringifyEmptyValue($value)
@@ -77,7 +77,7 @@ class ModelHistory extends Entity
      *
      * @return array
      */
-    public static function getContextTypes()
+    public static function getContextTypes(): array
     {
         return [
             self::CONTEXT_TYPE_CONTROLLER => __d('model_history', 'context.type.controller'),

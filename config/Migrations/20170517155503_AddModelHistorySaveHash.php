@@ -1,10 +1,11 @@
 <?php
+declare(strict_types = 1);
 use Migrations\AbstractMigration;
 
 class AddModelHistorySaveHash extends AbstractMigration
 {
 
-    public function up()
+    public function up(): void
     {
 
         $this->table('model_history')
@@ -17,7 +18,7 @@ class AddModelHistorySaveHash extends AbstractMigration
             ->update();
     }
 
-    public function down()
+    public function down(): void
     {
 
         $this->table('model_history')

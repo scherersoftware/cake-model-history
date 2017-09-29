@@ -1,11 +1,8 @@
 <?php
+declare(strict_types = 1);
 namespace ModelHistoryTestApp\Model\Table;
 
-use Cake\ORM\Query;
-use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
-use Cake\Validation\Validator;
-use ModelHistoryTestApp\Model\Entity\ArticlesUser;
 
 /**
  * ArticlesUsersTable Model
@@ -19,7 +16,7 @@ class ArticlesUsersTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         parent::initialize($config);
 

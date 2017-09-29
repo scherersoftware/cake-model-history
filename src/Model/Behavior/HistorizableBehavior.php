@@ -1,11 +1,11 @@
 <?php
+declare(strict_types = 1);
 namespace ModelHistory\Model\Behavior;
 
 use Cake\Core\Exception\Exception;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
 use Cake\ORM\Behavior;
-use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
@@ -44,7 +44,7 @@ class HistorizableBehavior extends Behavior
     /**
      * Instance of the ModelHistoryTable model
      *
-     * @var ModelHistoryTable
+     * @var \ModelHistory\Model\Table\ModelHistoryTable
      */
     public $ModelHistory;
 
@@ -321,7 +321,7 @@ class HistorizableBehavior extends Behavior
      * @param string $userId Commenting User
      * @return ModelHistory
      */
-    public function addCommentToHistory(EntityInterface $entity, string $comment, string $userId = null)
+    public function addCommentToHistory(EntityInterface $entity, string $comment, string $userId = null): ModelHistory
     {
         if (!$userId) {
             $userId = $this->_getUserId();

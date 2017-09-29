@@ -14,7 +14,9 @@ before_script:
 
 script:
   - vendor/bin/phpunit --coverage-clover=coverage.xml
-  - vendor/bin/phpcs -pn --extensions=php --standard=vendor/cakephp/cakephp-codesniffer/CakePHP ./src ./tests
+  - vendor/bin/phpcs -pn --extensions=php --ignore=./config/Migrations/* --standard=vendor/cakephp/cakephp-codesniffer/CakePHP ./src ./tests ./config
+  - vendor/bin/phpcs --colors -p --ignore=./config/Migrations/* --standard=vendor/scherersoftware/coding-standard/scherersoftware ./src ./tests ./config
+  - php -d memory_limit=-1 vendor/bin/phpstan analyse -c phpstan.neon -l 1 ./src
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)

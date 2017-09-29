@@ -1,9 +1,10 @@
 <?php
+declare(strict_types = 1);
 use Migrations\AbstractMigration;
 
 class Initial extends AbstractMigration
 {
-    public function up()
+    public function up(): void
     {
 
         $this->table('model_history', ['id' => false, 'primary_key' => ['id']])
@@ -72,7 +73,7 @@ class Initial extends AbstractMigration
             ->create();
     }
 
-    public function down()
+    public function down(): void
     {
         $this->dropTable('model_history');
     }

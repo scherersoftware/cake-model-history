@@ -1,11 +1,9 @@
 <?php
+declare(strict_types = 1);
 namespace ModelHistoryTestApp\Model\Table;
 
-use Cake\ORM\Query;
-use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use ModelHistoryTestApp\Model\Entity\User;
 
 /**
  * Users Model
@@ -19,7 +17,7 @@ class UsersTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         $this->table('users');
         $this->displayField('firstname');
@@ -56,7 +54,7 @@ class UsersTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): \Cake\Validation\Validator
     {
         $validator
             ->add('id', 'valid', ['rule' => 'uuid'])

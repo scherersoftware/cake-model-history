@@ -2,12 +2,12 @@
 declare(strict_types = 1);
 namespace ModelHistory\Controller;
 
+use App\Controller\AppController;
 use Cake\Http\Response;
 use Cake\I18n\Time;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Utility\Text;
-use App\Controller\AppController;
 
 class ModelHistoryController extends AppController
 {

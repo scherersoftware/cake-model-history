@@ -1,11 +1,9 @@
 <?php
+declare(strict_types = 1);
 namespace ModelHistoryTestApp\Model\Table;
 
-use Cake\ORM\Query;
-use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use ModelHistoryTestApp\Model\Entity\User;
 
 /**
  * Users Model
@@ -19,7 +17,7 @@ class UsersTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         $this->table('users');
         $this->displayField('firstname');
@@ -28,53 +26,19 @@ class UsersTable extends Table
         $this->addBehavior('ModelHistory.Historizable', [
             'userIdCallback' => null,
             'fields' => [
-                [
-                    'name' => 'id',
-                    'translation' => __('users.id'),
-                    'searchable' => true,
-                    'saveable' => true,
-                    'obfuscated' => false,
-                    'type' => 'string',
-                    'displayParser' => null,
-                    'saveParser' => null
-                ],
-                [
-                    'name' => 'firstname',
+                'firstname' => [
                     'translation' => __('users.firstname'),
-                    'searchable' => true,
-                    'saveable' => true,
-                    'obfuscated' => false,
-                    'type' => 'string',
-                    'displayParser' => null,
-                    'saveParser' => null
                 ],
-                [
-                    'name' => 'lastname',
+                'lastname' => [
                     'translation' => __('users.lastname'),
-                    'searchable' => true,
-                    'saveable' => true,
-                    'obfuscated' => false,
-                    'type' => 'string',
-                    'displayParser' => null,
-                    'saveParser' => null
                 ],
-                [
-                    'name' => 'article_id',
+                'article_id' => [
                     'translation' => __('users.article_id'),
-                    'searchable' => true,
                     'saveable' => false,
-                    'obfuscated' => false,
-                    'type' => 'association'
-                ],
-                [
-                    'name' => 'article_id',
-                    'translation' => __('users.article_id'),
-                    'searchable' => true,
-                    'saveable' => false,
-                    'obfuscated' => false,
                     'type' => 'association'
                 ]
-            ]
+            ],
+            'ignoreFields' => []
         ]);
 
         $this->belongsToMany('Articles', [
@@ -90,7 +54,7 @@ class UsersTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): \Cake\Validation\Validator
     {
         $validator
             ->add('id', 'valid', ['rule' => 'uuid'])

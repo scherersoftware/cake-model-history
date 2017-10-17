@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace ModelHistory\View\Helper;
 
 use Cake\Datasource\EntityInterface;
@@ -6,7 +7,6 @@ use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
 use Cake\View\Helper;
-use Cake\View\View;
 use ModelHistory\Model\Entity\ModelHistory;
 
 /**
@@ -15,16 +15,20 @@ use ModelHistory\Model\Entity\ModelHistory;
 class ModelHistoryHelper extends Helper
 {
 
+    /**
+     * List of helpers used by this helper
+     *
+     * @var array
+     */
     public $helpers = ['Html'];
 
     /**
      * Render the model history area where needed
      *
-     * @param  Entity $entity  one historizable entity
-     * @param  array  $options options array
-     * @return string History area
+     * @param \Cake\Datasource\EntityInterface $entity One historizable entity
+     * @param array $options options array
      */
-    public function modelHistoryArea($entity, array $options = [])
+    public function modelHistoryArea(EntityInterface $entity, array $options = []): string
     {
         $options = Hash::merge([
             'showCommentBox' => false,
@@ -70,7 +74,7 @@ class ModelHistoryHelper extends Helper
      * @param  string  $action  History Action
      * @return string
      */
-    public function actionClass($action)
+    public function actionClass(string $action): string
     {
         switch ($action) {
             case ModelHistory::ACTION_CREATE:
@@ -97,7 +101,7 @@ class ModelHistoryHelper extends Helper
      * @param ModelHistory $history one ModelHistory entity
      * @return string
      */
-    public function historyText(ModelHistory $history)
+    public function historyText(ModelHistory $history): string
     {
         $action = '';
         switch ($history->action) {
@@ -133,7 +137,7 @@ class ModelHistoryHelper extends Helper
      * @param ModelHistory $history one ModelHistory entity
      * @return string
      */
-    public function historyBadge(ModelHistory $history)
+    public function historyBadge(ModelHistory $history): string
     {
         $action = '';
         switch ($history->action) {
@@ -161,7 +165,7 @@ class ModelHistoryHelper extends Helper
      * @param  ModelHistory  $historyEntry  A History entry
      * @return string
      */
-    public function getLocalizedFieldnames(ModelHistory $historyEntry)
+    public function getLocalizedFieldnames(ModelHistory $historyEntry): string
     {
         $fields = join(', ', array_map(function ($value) use ($historyEntry) {
             if (!is_string($value)) {
@@ -200,7 +204,7 @@ class ModelHistoryHelper extends Helper
      * @param  ModelHistory  $historyEntry  HistoryEntry entity to get data from
      * @return string
      */
-    public function getLocalizedSlug(ModelHistory $historyEntry)
+    public function getLocalizedSlug(ModelHistory $historyEntry): string
     {
         $slug = $historyEntry->context_slug;
         if (!empty($historyEntry->context) && !empty($historyEntry->context['namespace'])) {

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace ModelHistory\Model\Entity;
 
@@ -13,20 +14,38 @@ use InvalidArgumentException;
  */
 trait HistoryContextTrait
 {
+
+    /**
+     * Context
+     *
+     * @var mixed
+     */
     protected $_context = null;
+
+    /**
+     * Context slug
+     *
+     * @var mixed
+     */
     protected $_contextSlug = null;
+
+    /**
+     * Context type
+     *
+     * @var mixed
+     */
     protected $_contextType = null;
 
     /**
      * Sets a context given through a request to identify the creation
      * point of the revision.
      *
-     * @param string  $type        Context type
-     * @param object  $dataObject  Optional dataobject to get additional data from
-     * @param string  $slug        Optional slug. Must implement getContexts() when using
+     * @param string $type Context type
+     * @param object $dataObject Optional dataobject to get additional data from
+     * @param string $slug Optional slug. Must implement getContexts() when using
      * @return void
      */
-    public function setHistoryContext($type, $dataObject = null, $slug = null)
+    public function setHistoryContext(string $type, $dataObject = null, $slug = null): void
     {
         if (!in_array($type, array_keys(ModelHistory::getContextTypes()))) {
             throw new InvalidArgumentException("$type is not allowed as context type. Allowed types are: " . implode(', ', ModelHistory::getContextTypes()));
@@ -94,7 +113,7 @@ trait HistoryContextTrait
      *
      * @return array
      */
-    public function getHistoryContext()
+    public function getHistoryContext(): ?array
     {
         return $this->_context;
     }
@@ -104,7 +123,7 @@ trait HistoryContextTrait
      *
      * @return string
      */
-    public function getHistoryContextSlug()
+    public function getHistoryContextSlug(): ?string
     {
         return $this->_contextSlug;
     }
@@ -114,7 +133,7 @@ trait HistoryContextTrait
      *
      * @return string
      */
-    public function getHistoryContextType()
+    public function getHistoryContextType(): ?string
     {
         return $this->_contextType;
     }

@@ -1,14 +1,13 @@
 <?php
+declare(strict_types = 1);
 namespace ModelHistory\Controller;
 
-use Cake\Core\Configure;
-use Cake\Core\Plugin;
+use App\Controller\AppController;
+use Cake\Http\Response;
 use Cake\I18n\Time;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Utility\Text;
-use FrontendBridge\Lib\ServiceResponse;
-use ModelHistory\Controller\AppController;
 
 class ModelHistoryController extends AppController
 {
@@ -27,26 +26,35 @@ class ModelHistoryController extends AppController
      *
      * @return void
      */
-    public function initialize()
+    public function initialize(): void
     {
         $this->loadModel('ModelHistory.ModelHistory');
         parent::initialize();
     }
 
     /**
-     * index function
+     * Index function
      *
-     * @param  string $model           name of the model
-     * @param  string $foreignKey      id of the entity
-     * @param  int    $limit           Items to show
-     * @param  int    $page            Current page
-     * @param  bool   $showFilterBox   Show Filter Box
-     * @param  bool   $showCommentBox  Show comment Box
-     * @param  string  $columnClass     div classes for column
+     * @param string $model Name of the model
+     * @param string $foreignKey Id of the entity
+     * @param int $limit Items to show
+     * @param int $page Current page
+     * @param bool $showFilterBox Show Filter Box
+     * @param bool $showCommentBox Show comment Box
+     * @param mixed $includeAssociated Included Assocation
+     * @param string  $columnClass Div classes for column
      * @return void
      */
-    public function index($model = null, $foreignKey = null, $limit = null, $page = null, $showFilterBox = null, $showCommentBox = null, $includeAssociated = null, $columnClass = '')
-    {
+    public function index(
+        string $model = null,
+        string $foreignKey = null,
+        int $limit = null,
+        int $page = null,
+        bool $showFilterBox = null,
+        bool $showCommentBox = null,
+        $includeAssociated = null,
+        string $columnClass = ''
+    ): void {
         $this->ModelHistory->belongsTo('Users', [
             'foreignKey' => 'user_id'
         ]);
@@ -88,17 +96,26 @@ class ModelHistoryController extends AppController
     /**
      * Load entries and filter them if necessary.
      *
-     * @param  string  $model           Model name
-     * @param  string  $foreignKey      Model's foreign key
-     * @param  int     $limit           Entries limit
-     * @param  int     $page            Current page to view
-     * @param  bool    $showFilterBox   Show Filter Box
-     * @param  bool    $showCommentBox  Show comment Box
-     * @param  string  $columnClass     div classes for column
-     * @return string                   Index View
+     * @param string $model Model name
+     * @param string $foreignKey Model's foreign key
+     * @param int $limit Entries limit
+     * @param int $page Current page to view
+     * @param bool $showFilterBox Show Filter Box
+     * @param bool $showCommentBox Show comment Box
+     * @param mixed $includeAssociated Included Assocation
+     * @param string  $columnClass Div classes for column
+     * @return \Cake\Http\Response Index View
      */
-    public function filter($model = null, $foreignKey = null, $limit = null, $page = null, $showFilterBox = null, $showCommentBox = null, $includeAssociated = null, $columnClass = '')
-    {
+    public function filter(
+        string $model = null,
+        string $foreignKey = null,
+        int $limit = null,
+        int $page = null,
+        bool $showFilterBox = null,
+        bool $showCommentBox = null,
+        $includeAssociated = null,
+        string $columnClass = ''
+    ): Response {
         $this->request->allowMethod(['post']);
 
         $filterConditions = [];
@@ -203,7 +220,7 @@ class ModelHistoryController extends AppController
      * @param  string   $currentId   UUID of ModelHistory entry to get diff for
      * @return void
      */
-    public function diff($currentId = null)
+    public function diff(string $currentId = null): void
     {
         $historyEntry = $this->ModelHistory->get($currentId);
         $this->FrontendBridge->setBoth('diffOutput', $this->ModelHistory->buildDiff($historyEntry));

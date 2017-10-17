@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 use Cake\Cache\Cache;
 use Cake\Core\Configure;
@@ -25,6 +26,8 @@ if ($vendorPos !== false) {
     // Package itself (cloned standalone)
     $loader = require __DIR__ . '/../vendor/autoload.php';
 }
+
+require_once 'vendor/cakephp/cakephp/src/basics.php';
 
 Cake\Datasource\ConnectionManager::config('test', [
     'className' => 'Cake\Database\Connection',

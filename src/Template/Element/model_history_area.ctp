@@ -1,5 +1,4 @@
 <?php
-use Cake\Routing\Router;
 ?>
 <div class="model-history-wrapper">
     <div class="row">

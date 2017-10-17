@@ -1,10 +1,10 @@
 <?php
+declare(strict_types = 1);
 namespace ModelHistory\Test\TestCase\Model\Entity;
 
 use Cake\Network\Request;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
-use ModelHistoryTestApp\Model\Entity\Article;
 use ModelHistory\Model\Entity\ModelHistory;
 
 /**
@@ -28,7 +28,7 @@ class ModelHistoryTableTest extends TestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->Articles = TableRegistry::get('ArticlesTable', ['className' => 'ModelHistoryTestApp\Model\Table\ArticlesTable']);
         $this->ModelHistory = TableRegistry::get('ModelHistory', ['className' => 'ModelHistory\Model\Table\ModelHistoryTable']);
@@ -42,7 +42,7 @@ class ModelHistoryTableTest extends TestCase
      *
      * @return void
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->Articles);
         unset($this->ModelHistory);
@@ -55,7 +55,7 @@ class ModelHistoryTableTest extends TestCase
      * @expectedException     InvalidArgumentException
      * @return void
      */
-    public function testHistoryContextWrongType()
+    public function testHistoryContextWrongType(): void
     {
         $dataObject = new \stdClass();
         $article = $this->Articles->newEntity();
@@ -68,7 +68,7 @@ class ModelHistoryTableTest extends TestCase
      * @expectedException     InvalidArgumentException
      * @return void
      */
-    public function testSettingFaultyShellContext()
+    public function testSettingFaultyShellContext(): void
     {
         $article = $this->Articles->newEntity();
         $article->setHistoryContext(ModelHistory::CONTEXT_TYPE_SHELL, null);
@@ -80,7 +80,7 @@ class ModelHistoryTableTest extends TestCase
      *
      * @return void
      */
-    public function testSettingShellContext()
+    public function testSettingShellContext(): void
     {
         $dataObject = new \Cake\Console\Shell();
 
@@ -114,7 +114,7 @@ class ModelHistoryTableTest extends TestCase
      * @expectedException     InvalidArgumentException
      * @return void
      */
-    public function testSettingFaultyControllerContext()
+    public function testSettingFaultyControllerContext(): void
     {
         $article = $this->Articles->newEntity();
         $article->setHistoryContext(ModelHistory::CONTEXT_TYPE_CONTROLLER, null);
@@ -126,7 +126,7 @@ class ModelHistoryTableTest extends TestCase
      *
      * @return void
      */
-    public function testSettingControllerContext()
+    public function testSettingControllerContext(): void
     {
         $slug = 'a_slug';
         $request = new Request();
@@ -165,7 +165,7 @@ class ModelHistoryTableTest extends TestCase
      * @expectedException     InvalidArgumentException
      * @return void
      */
-    public function testSettingFaultySlugContext()
+    public function testSettingFaultySlugContext(): void
     {
         $article = $this->Articles->newEntity();
         $article->setHistoryContext(ModelHistory::CONTEXT_TYPE_SLUG, null, null);
@@ -177,7 +177,7 @@ class ModelHistoryTableTest extends TestCase
      *
      * @return void
      */
-    public function testSettingSlugContext()
+    public function testSettingSlugContext(): void
     {
         $slug = 'asdf';
         $article = $this->Articles->newEntity();

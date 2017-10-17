@@ -1,0 +1,3 @@
+parameters:
+    ignoreErrors:
+        - '#Class App\\Controller\\AppController not found and could not be autoloaded.#'

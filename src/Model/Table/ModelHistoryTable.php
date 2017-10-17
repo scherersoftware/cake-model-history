@@ -1,11 +1,8 @@
 <?php
+declare(strict_types = 1);
 namespace ModelHistory\Model\Table;
 
 use Cake\Datasource\EntityInterface;
-use Cake\I18n\Date;
-use Cake\I18n\Time;
-use Cake\ORM\Query;
-use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -26,7 +23,7 @@ class ModelHistoryTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         $this->table('model_history');
         $this->displayField('id');
@@ -45,7 +42,7 @@ class ModelHistoryTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): \Cake\Validation\Validator
     {
         $validator->add('data', 'custom', [
             'rule' => function ($value, $context) {
@@ -70,7 +67,7 @@ class ModelHistoryTable extends Table
      * @param array $options Additional options
      * @return ModelHistory|false
      */
-    public function add(EntityInterface $entity, $action, $userId = null, array $options = [])
+    public function add(EntityInterface $entity, string $action, string $userId = null, array $options = [])
     {
         $options = Hash::merge([
             'dirtyFields' => null,
@@ -107,9 +104,6 @@ class ModelHistoryTable extends Table
         } else {
             foreach ($saveableFields as $fieldName => $data) {
                 if (isset($options['data'][$fieldName])) {
-                    if ($data['obfuscated'] === true) {
-                        $options['data'][$fieldName] = '****************';
-                    }
                     if (isset($data['saveParser']) && is_callable($data['saveParser'])) {
                         $callback = $data['saveParser'];
                         $options['data'][$fieldName] = $callback($fieldName, $options['data'][$fieldName], $entity);
@@ -133,6 +127,9 @@ class ModelHistoryTable extends Table
                                 $options['data'][$fieldName] = $filterClass->save($fieldName, $data, $entity);
                             }
                         }
+                    }
+                    if ($data['obfuscated'] === true) {
+                        $options['data'][$fieldName] = '****************';
                     }
                     $saveFields[$fieldName] = $options['data'][$fieldName];
                 }
@@ -174,6 +171,7 @@ class ModelHistoryTable extends Table
             $contextType = $entity->getHistoryContextType();
         }
 
+        $entry = false;
         if (!empty($entries)) {
             foreach ($entries as $entry) {
                 $entry = $this->patchEntity($entry, [
@@ -208,11 +206,11 @@ class ModelHistoryTable extends Table
     /**
      * Transforms data fields to human readable form
      *
-     * @param  array   $history  Data
-     * @param  string  $model    Model name
+     * @param array $history Data
+     * @param string $model Model name
      * @return array
      */
-    protected function _transformDataFields(array $history, $model)
+    protected function _transformDataFields(array $history, string $model): array
     {
         $tableConfig = [];
         if (defined('PHPUNIT_TESTSUITE')) {
@@ -248,7 +246,7 @@ class ModelHistoryTable extends Table
      * @param string $userId User which wrote the note
      * @return ModelHistory
      */
-    public function addComment(EntityInterface $entity, $comment, $userId = null)
+    public function addComment(EntityInterface $entity, string $comment, string $userId = null): ModelHistory
     {
         $add = $this->add($entity, ModelHistory::ACTION_COMMENT, $userId, [
             'data' => [
@@ -265,7 +263,7 @@ class ModelHistoryTable extends Table
      * @param EntityInterface $entity Entity to get the revision number for
      * @return int
      */
-    public function getNextRevisionNumberForEntity(EntityInterface $entity)
+    public function getNextRevisionNumberForEntity(EntityInterface $entity): int
     {
         $revision = 1;
         $last = $this->find()
@@ -291,7 +289,7 @@ class ModelHistoryTable extends Table
      * @param EntityInterface $entity Entity
      * @return string
      */
-    public function getEntityModel(EntityInterface $entity)
+    public function getEntityModel(EntityInterface $entity): string
     {
         $source = $entity->source();
         if (substr($source, -5) == 'Table') {
@@ -302,14 +300,14 @@ class ModelHistoryTable extends Table
     }
 
     /**
-     * getEntityWithHistory function
+     * GetEntityWithHistory function
      *
-     * @param string  $model          Model
-     * @param string  $foreignKey     ForeignKey
-     * @param array   $options        Options
-     * @return Entity
+     * @param string $model Model
+     * @param string $foreignKey ForeignKey
+     * @param array $options Options
+     * @return \Cake\Datasource\EntityInterface
      */
-    public function getEntityWithHistory($model, $foreignKey, array $options = [])
+    public function getEntityWithHistory(string $model, string $foreignKey, array $options = []): EntityInterface
     {
         $tableConfig = [];
         if (defined('PHPUNIT_TESTSUITE')) {
@@ -345,17 +343,17 @@ class ModelHistoryTable extends Table
     }
 
     /**
-     * get Model History
+     * Get Model History
      *
-     * @param string  $model        model name
-     * @param string  $foreignKey   foreign key
-     * @param int     $itemsToShow  Amount of items to be shown
-     * @param int     $page         Current position
-     * @param array   $conditions   additional conditions for find
-     * @param array   $options      Additional options
+     * @param string $model Model name
+     * @param mixed $foreignKey Foreign key
+     * @param int $itemsToShow Amount of items to be shown
+     * @param int $page Current position
+     * @param array $conditions Additional conditions for find
+     * @param array $options Additional options
      * @return array
      */
-    public function getModelHistory($model, $foreignKey, $itemsToShow, $page, array $conditions = [], array $options = [])
+    public function getModelHistory(string $model, $foreignKey, int $itemsToShow, int $page, array $conditions = [], array $options = []): array
     {
         $conditions = Hash::merge([
             'model' => $model,
@@ -392,14 +390,14 @@ class ModelHistoryTable extends Table
     }
 
     /**
-     * get Model History entries count
+     * Get Model History entries count
      *
-     * @param string $model         model name
-     * @param string $foreignKey    foreign key
-     * @param array  $conditions    additional conditions for find
+     * @param string $model model name
+     * @param mixed $foreignKey foreign key
+     * @param array $conditions additional conditions for find
      * @return int
      */
-    public function getModelHistoryCount($model, $foreignKey, array $conditions = [], array $options = [])
+    public function getModelHistoryCount(string $model, $foreignKey, array $conditions = [], array $options = []): int
     {
         $conditions = Hash::merge([
             'model' => $model,
@@ -432,7 +430,7 @@ class ModelHistoryTable extends Table
      * @param  ModelHistory  $historyEntry  ModelHistory Entry to build diff for
      * @return array
      */
-    public function buildDiff(ModelHistory $historyEntry)
+    public function buildDiff(ModelHistory $historyEntry): array
     {
         if ($historyEntry->revision == 1) {
             return [];
@@ -575,7 +573,7 @@ class ModelHistoryTable extends Table
      * @param  string  $model      Model
      * @return string
      */
-    protected function _translateFieldname($fieldname, $model)
+    protected function _translateFieldname(string $fieldname, string $model): string
     {
         // Try to get the generic model.field translation string
         $localeSlug = strtolower(Inflector::singularize(Inflector::delimit($model))) . '.' . strtolower($fieldname);

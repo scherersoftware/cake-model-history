@@ -1,11 +1,11 @@
 <?php
+declare(strict_types = 1);
 namespace ModelHistory\Model\Behavior;
 
 use Cake\Core\Exception\Exception;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
 use Cake\ORM\Behavior;
-use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
@@ -33,13 +33,18 @@ class HistorizableBehavior extends Behavior
             'id' => 'Users.id'
         ],
         'fields' => [],
-        'associations' => []
+        'associations' => [],
+        'ignoreFields' => [
+            'id',
+            'created',
+            'modified'
+        ]
     ];
 
     /**
      * Instance of the ModelHistoryTable model
      *
-     * @var ModelHistoryTable
+     * @var \ModelHistory\Model\Table\ModelHistoryTable
      */
     public $ModelHistory;
 
@@ -57,7 +62,7 @@ class HistorizableBehavior extends Behavior
      * @param array $config The configuration settings provided to this behavior.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         // Set default translations
         $this->config('translations', [
@@ -78,6 +83,101 @@ class HistorizableBehavior extends Behavior
             'dependent' => false
         ]);
 
+        if (isset($config['ignoreFields'])) {
+            $this->setConfig('ignoreFields', $config['ignoreFields'], false);
+        }
+
+        $singularUnderscoredTableName = Inflector::singularize(Inflector::underscore($this->_table->getAlias()));
+        $allColumns = $this->_table->getSchema()->columns();
+
+        foreach ($allColumns as $columnName) {
+            if (in_array($columnName, $this->getConfig('ignoreFields'))) {
+                continue;
+            }
+
+            $obfuscated = false;
+            $searchable = true;
+            $type = 'string';
+
+            if (substr($columnName, -3) === '_id') {
+                $singular = substr($columnName, 0, -3);
+                $associationName = str_replace('_', '', Inflector::pluralize($singular));
+                $association = $this->_table->association($associationName);
+                if (!is_null($association)) {
+                    switch ($association->type()) {
+                        case $association::MANY_TO_MANY:
+                            $type = 'association';
+                            break;
+
+                        case $association::ONE_TO_MANY:
+                        case $association::MANY_TO_ONE:
+                            $type = 'relation';
+                            break;
+                    }
+                }
+            } elseif (strpos($columnName, 'password') !== false) {
+                $obfuscated = true;
+                $searchable = false;
+            } else {
+                switch ($this->_table->getSchema()->columnType($columnName)) {
+                    case 'boolean':
+                        $type = 'bool';
+                        break;
+                    case 'json':
+                        $type = 'hash';
+                        break;
+                    case 'integer':
+                        $type = 'number';
+                        break;
+                    case 'datetime':
+                        $type = 'date';
+                        break;
+                }
+            }
+            $translationIdentifier = $singularUnderscoredTableName . '.' . $columnName;
+
+            $manualConfig = isset($config['fields'][$columnName]) ? $config['fields'][$columnName] : [];
+            $columnConfig = Hash::merge([
+                'name' => $columnName,
+                'translation' => function () use ($translationIdentifier) {
+                    return __($translationIdentifier);
+                },
+                'searchable' => $searchable,
+                'saveable' => true,
+                'obfuscated' => $obfuscated,
+                'type' => $type
+            ], $manualConfig);
+
+            $this->setConfig('fields.' . $columnName, $columnConfig, false);
+        }
+
+        // fill the config array of fields not in the table schema with default values
+        if (!empty($config['fields'])) {
+            foreach ($config['fields'] as $columnName => $manualConfig) {
+                if (!in_array($columnName, $allColumns)) {
+                    if (empty($manualConfig['type'])) {
+                        throw new Exception(
+                            sprintf('ModelHistory config for field %s is missing a type.', $columnName)
+                        );
+                    }
+
+                    $translationIdentifier = $singularUnderscoredTableName . '.' . $columnName;
+
+                    $columnConfig = Hash::merge([
+                        'name' => $columnName,
+                        'translation' => function () use ($translationIdentifier) {
+                            return __($translationIdentifier);
+                        },
+                        'searchable' => true,
+                        'saveable' => true,
+                        'obfuscated' => false,
+                    ], $manualConfig);
+
+                    $this->setConfig('fields.' . $columnName, $columnConfig, false);
+                }
+            }
+        }
+
         parent::initialize($config);
     }
 
@@ -89,7 +189,7 @@ class HistorizableBehavior extends Behavior
      * @param ArrayObject $options Additional options
      * @return void
      */
-    public function beforeSave(Event $event, EntityInterface $entity, \ArrayObject $options)
+    public function beforeSave(Event $event, EntityInterface $entity, \ArrayObject $options): void
     {
         if (!$entity->isNew() && $entity->dirty()) {
             $saveHash = Security::hash(md5(uniqid()));
@@ -108,7 +208,7 @@ class HistorizableBehavior extends Behavior
      *
      * @return array
      */
-    protected function _extractDirtyFields(EntityInterface $entity)
+    protected function _extractDirtyFields(EntityInterface $entity): array
     {
         $dirtyFields = [];
         $fields = array_keys($entity->toArray());
@@ -125,7 +225,7 @@ class HistorizableBehavior extends Behavior
      * @param  string           $saveHash  Hash to identify save process
      * @return bool
      */
-    protected function _applySaveHash(EntityInterface $entity, $saveHash)
+    protected function _applySaveHash(EntityInterface $entity, string $saveHash): bool
     {
         $output = [];
         if (defined('PHPUNIT_TESTSUITE')) {
@@ -151,6 +251,8 @@ class HistorizableBehavior extends Behavior
             $object->save_hash = $saveHash;
             $object->dirty('save_hash', false);
         }
+
+        return true;
     }
 
     /**
@@ -160,7 +262,7 @@ class HistorizableBehavior extends Behavior
      * @param  EntityInterface  $object  Object to use
      * @return null|object
      */
-    protected function _recursivelyExtractObject($path, EntityInterface $object)
+    protected function _recursivelyExtractObject(string $path, EntityInterface $object): ?EntityInterface
     {
         if (stripos($path, '.') !== false) {
             $split = explode('.', $path);
@@ -183,7 +285,7 @@ class HistorizableBehavior extends Behavior
      * @param EntityInterface $entity Entity that was saved
      * @return void
      */
-    public function afterSave(Event $event, EntityInterface $entity)
+    public function afterSave(Event $event, EntityInterface $entity): void
     {
         $action = $entity->isNew() ? ModelHistory::ACTION_CREATE : ModelHistory::ACTION_UPDATE;
 
@@ -206,7 +308,7 @@ class HistorizableBehavior extends Behavior
      * @param ArrayObject $options Additional options
      * @return void
      */
-    public function afterDelete(Event $event, EntityInterface $entity, $options)
+    public function afterDelete(Event $event, EntityInterface $entity, \ArrayObject $options): void
     {
         $this->ModelHistory->add($entity, ModelHistory::ACTION_DELETE, $this->_getUserId());
     }
@@ -219,7 +321,7 @@ class HistorizableBehavior extends Behavior
      * @param string $userId Commenting User
      * @return ModelHistory
      */
-    public function addCommentToHistory(EntityInterface $entity, $comment, $userId = null)
+    public function addCommentToHistory(EntityInterface $entity, string $comment, string $userId = null): ModelHistory
     {
         if (!$userId) {
             $userId = $this->_getUserId();
@@ -233,7 +335,7 @@ class HistorizableBehavior extends Behavior
      *
      * @return string|null
      */
-    protected function _getUserId()
+    protected function _getUserId(): ?string
     {
         $userId = null;
         $callback = $this->config('userIdCallback');
@@ -251,11 +353,11 @@ class HistorizableBehavior extends Behavior
      * @param  string  $fieldValue  Value
      * @return string
      */
-    public function getRelationLink($fieldName, $fieldValue = null)
+    public function getRelationLink(string $fieldName, string $fieldValue = null): string
     {
         $tableName = Inflector::camelize(Inflector::pluralize(str_replace('_id', '', $fieldName)));
 
-        $fieldConfig = $this->getFields()[$fieldName];
+        $fieldConfig = $this->getConfig('fields.' . $fieldName);
 
         // reads the url defined for the given behavior (empty array if not defined)
         $fieldUrl = $this->getUrl();
@@ -297,7 +399,7 @@ class HistorizableBehavior extends Behavior
      * @param callable $callback Callback which must return the user id
      * @return void
      */
-    public function setModelHistoryUserIdCallback(callable $callback)
+    public function setModelHistoryUserIdCallback(callable $callback): void
     {
         $this->config('userIdCallback', $callback);
     }
@@ -308,7 +410,7 @@ class HistorizableBehavior extends Behavior
      * @param  bool $withoutModel set to true to only get the field names without model name
      * @return array
      */
-    public function getUserNameFields($withoutModel = false)
+    public function getUserNameFields(bool $withoutModel = false): array
     {
         $userNameFields = $this->config('userNameFields');
         if ($withoutModel) {
@@ -328,7 +430,7 @@ class HistorizableBehavior extends Behavior
      *
      * @return int
      */
-    public function getEntriesLimit()
+    public function getEntriesLimit(): int
     {
         return $this->config('entriesToShow');
     }
@@ -338,16 +440,9 @@ class HistorizableBehavior extends Behavior
      *
      * @return array
      */
-    public function getFields()
+    public function getFields(): array
     {
-        return Hash::apply($this->config('fields'), '{n}', function ($array) {
-            $output = [];
-            foreach ($array as $data) {
-                $output[$data['name']] = $data;
-            }
-
-            return $output;
-        });
+        return $this->getConfig('fields');
     }
 
     /**
@@ -355,7 +450,7 @@ class HistorizableBehavior extends Behavior
      *
      * @return array
      */
-    public function getUrl()
+    public function getUrl(): array
     {
         if (is_array($this->config('url'))) {
             return $this->config('url');
@@ -369,9 +464,9 @@ class HistorizableBehavior extends Behavior
      *
      * @return array
      */
-    public function getTranslatedFields()
+    public function getTranslatedFields(): array
     {
-        return Hash::apply($this->config('fields'), '{n}[searchable=true]', function ($array) {
+        return Hash::apply($this->config('fields'), '{*}[searchable=true]', function ($array) {
             $formatted = [];
             foreach ($array as $data) {
                 $formatted[$data['name']] = $data['translation'];
@@ -386,9 +481,9 @@ class HistorizableBehavior extends Behavior
      *
      * @return array
      */
-    public function getSaveableFields()
+    public function getSaveableFields(): array
     {
-        return Hash::apply($this->config('fields'), '{n}[saveable=true]', function ($array) {
+        return Hash::apply($this->config('fields'), '{*}[saveable=true]', function ($array) {
             $formatted = [];
             foreach ($array as $data) {
                 $formatted[$data['name']] = $data;
@@ -403,7 +498,7 @@ class HistorizableBehavior extends Behavior
      *
      * @return array
      */
-    public function getAssociations()
+    public function getAssociations(): array
     {
         return $this->config('associations');
     }

@@ -1,11 +1,9 @@
 <?php
+declare(strict_types = 1);
 namespace ModelHistory\Test\TestCase\Model\Transform;
 
-use Cake\Database\Driver;
-use Cake\Datasource\EntityInterface;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
-use ModelHistoryTestApp\Table\ArticlesTable;
 use ModelHistory\Model\Transform\Transform;
 
 /**
@@ -30,7 +28,7 @@ class TransformTest extends TestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->Articles = TableRegistry::get('ArticlesTable', ['className' => 'ModelHistoryTestApp\Model\Table\ArticlesTable']);
 
@@ -42,7 +40,7 @@ class TransformTest extends TestCase
      *
      * @return void
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
     }
@@ -53,12 +51,12 @@ class TransformTest extends TestCase
      * @expectedException     InvalidArgumentException
      * @return void
      */
-    public function testFaultyGet()
+    public function testFaultyGet(): void
     {
         Transform::get('fo');
     }
 
-    public function testStringTransformSave()
+    public function testStringTransformSave(): void
     {
         $aritcle = $this->Articles->get('7997df22-ed8e-4703-b971-d9514179904b');
 
@@ -66,7 +64,7 @@ class TransformTest extends TestCase
         $this->assertEquals('check', $trans->save('content', [], $aritcle));
     }
 
-    public function testRelationTransformSave()
+    public function testRelationTransformSave(): void
     {
         $aritcle = $this->Articles->get('7997df22-ed8e-4703-b971-d9514179904b');
 
@@ -74,13 +72,13 @@ class TransformTest extends TestCase
         $this->assertEquals('check', $trans->save('content', [], $aritcle));
     }
 
-    public function testRelationTransformDisplay()
+    public function testRelationTransformDisplay(): void
     {
         $trans = Transform::get('relation');
         $this->assertEquals('7997df22-ed8e-4703-b971-d9514179904b', $trans->display('article_id', '7997df22-ed8e-4703-b971-d9514179904b', null));
     }
 
-    public function testAssociationTransformSave()
+    public function testAssociationTransformSave(): void
     {
         $aritcle = $this->Articles->get('7997df22-ed8e-4703-b971-d9514179904b');
 
@@ -88,7 +86,7 @@ class TransformTest extends TestCase
         $this->assertEquals('check', $trans->save('content', ['associationKey' => 'content'], $aritcle));
     }
 
-    public function testAssociationTransformDisplay()
+    public function testAssociationTransformDisplay(): void
     {
         $trans = Transform::get('association');
         $this->assertEquals('7997df22-ed8e-4703-b971-d9514179904b', $trans->display('article_id', '7997df22-ed8e-4703-b971-d9514179904b', null));

@@ -7,14 +7,16 @@
         "installer-name": "ModelHistory"
     },
     "require": {
-        "php": ">=5.4",
+        "php": ">=7.1",
         "codekanzlei/cake-cktools": "^1.3",
         "codekanzlei/cake-frontend-bridge": "^1.2"
     },
     "require-dev": {
-        "phpunit/phpunit": "3.7.*",
-        "cakephp/cakephp": "3.3.*",
-        "cakephp/cakephp-codesniffer": "dev-master"
+        "phpunit/phpunit": "^6.0",
+        "cakephp/cakephp": "^3.4",
+        "phpstan/phpstan": "^0.8",
+        "cakephp/cakephp-codesniffer": "^3.0",
+        "scherersoftware/coding-standard": "^3.0"
     },
     "autoload": {
         "psr-4": {

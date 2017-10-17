@@ -1,10 +1,10 @@
 <?php
+declare(strict_types = 1);
 namespace ModelHistory\Test\TestCase\Model\Behavior;
 
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
-use ModelHistory\Model\Behavior\HistorizableBehavior;
 use ReflectionClass;
 
 /**
@@ -29,7 +29,7 @@ class HistorizableBehaviorTest extends TestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->Articles = TableRegistry::get('ArticlesTable', ['className' => 'ModelHistoryTestApp\Model\Table\ArticlesTable']);
         $this->ModelHistory = TableRegistry::get('ModelHistory', ['className' => 'ModelHistory\Model\Table\ModelHistoryTable']);
@@ -43,7 +43,7 @@ class HistorizableBehaviorTest extends TestCase
      *
      * @return void
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->Articles);
         unset($this->ModelHistory);
@@ -54,7 +54,7 @@ class HistorizableBehaviorTest extends TestCase
      *
      * @return void
      */
-    public function testGetRelationLink()
+    public function testGetRelationLink(): void
     {
         $userId = '481fc6d0-b920-43e0-a40d-6d1740cf8562';
         $articlesId = '99dbcad7-21d5-4dd1-b193-e00543c0224c';
@@ -72,7 +72,7 @@ class HistorizableBehaviorTest extends TestCase
         $this->assertEquals($fieldValue, $relationLink);
     }
 
-    public function testGetUserNameFields()
+    public function testGetUserNameFields(): void
     {
         $userNameFieldsWithModel = $this->Articles->getUserNameFields();
         $this->assertEquals([
@@ -89,7 +89,7 @@ class HistorizableBehaviorTest extends TestCase
         ], $userNameFieldsWithoutModel);
     }
 
-    public function testRecursivelyExtractObjects()
+    public function testRecursivelyExtractObjects(): void
     {
         $entity1 = $this->Articles->newEntity();
         $entity2 = $this->Articles->newEntity();
@@ -108,7 +108,7 @@ class HistorizableBehaviorTest extends TestCase
         $this->assertEquals($entity3, $res);
     }
 
-    public function testApplySaveHash()
+    public function testApplySaveHash(): void
     {
         $entity1 = $this->Articles->newEntity();
         $entity2 = $this->Articles->newEntity();
